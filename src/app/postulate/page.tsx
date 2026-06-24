@@ -53,11 +53,11 @@ export default function PostulatePage() {
       <section className="bg-brand-blue py-16 md:py-24 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-navy/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-deep-blue/30 rounded-full blur-3xl" />
         </div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-16 relative z-10">
           <div className="max-w-2xl">
-            <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
+            <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
               Encuentra trabajo rápido,
               <br className="hidden sm:block" />
               sin complicaciones
@@ -176,7 +176,7 @@ export default function PostulatePage() {
             </div>
 
             {/* Aplicar por email */}
-            <div className="bg-brand-navy rounded-2xl p-6 md:p-8 text-white">
+            <div className="bg-brand-gradient rounded-2xl p-6 md:p-8 text-white">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center">
                   <span

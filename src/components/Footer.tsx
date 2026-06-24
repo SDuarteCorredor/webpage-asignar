@@ -90,6 +90,20 @@ export default function Footer() {
                 </a>
               ))}
             </div>
+
+            {/* Filial */}
+            <div className="pt-4">
+              <p className="text-xs text-white/40 mb-1">Empresa filial</p>
+              <a
+                href="https://www.conexionoutsourcing.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-white/70 hover:text-brand-light-blue transition-colors"
+              >
+                <span className="material-symbols-outlined text-base">link</span>
+                Conexión Outsourcing S.A.S.
+              </a>
+            </div>
           </div>
 
           {/* Sedes */}
@@ -133,6 +147,33 @@ export default function Footer() {
               Contacto
             </h4>
             <ul className="space-y-3">
+              <li className="flex items-start gap-2">
+                <span className="material-symbols-outlined text-brand-light-blue text-lg mt-0.5">
+                  location_on
+                </span>
+                <div>
+                  <p className="text-xs text-white/40">Sede Principal · Medellín</p>
+                  <p className="text-sm text-white/70 leading-relaxed">
+                    C.C Monterrey oficina 925
+                    <br />
+                    Cra 48 # 10-45, El Poblado
+                  </p>
+                </div>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="material-symbols-outlined text-brand-light-blue text-lg mt-0.5">
+                  call
+                </span>
+                <div>
+                  <p className="text-xs text-white/40">Línea IP</p>
+                  <a
+                    href="tel:+576043220310"
+                    className="text-sm text-white/70 hover:text-brand-light-blue transition-colors"
+                  >
+                    604 322 0310
+                  </a>
+                </div>
+              </li>
               <li className="flex items-start gap-2">
                 <span className="material-symbols-outlined text-brand-light-blue text-lg mt-0.5">
                   mail

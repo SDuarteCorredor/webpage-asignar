@@ -1,149 +1,145 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
+const words = ["talento", "futuro", "equipo", "camino"];
+
 export default function HeroSection() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setIndex((prev) => (prev + 1) % words.length),
+      2600
+    );
+    return () => clearInterval(id);
+  }, []);
+
   return (
-    <section className="relative w-full min-h-[90vh] flex items-center overflow-hidden bg-surface-gray">
-      {/* Background gradient */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-navy/5 via-transparent to-brand-blue/5" />
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-brand-blue/[0.03] to-transparent" />
+    <section className="relative w-full min-h-[92vh] flex items-center overflow-hidden bg-white">
+      <div className="absolute inset-0">
+        <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] bg-brand-blue/[0.04] rounded-full blur-[100px]" />
+        <div className="absolute bottom-[-10%] right-[5%] w-[500px] h-[500px] bg-brand-light-blue/[0.05] rounded-full blur-[90px]" />
       </div>
 
-      <div className="relative z-10 w-full px-4 md:px-16 max-w-[1280px] mx-auto flex flex-col md:flex-row items-center gap-12 py-16 md:py-0">
-        {/* Left: Content */}
-        <div className="flex-1 space-y-6">
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-sm">
-            <span
-              className="material-symbols-outlined text-brand-blue"
-              style={{ fontVariationSettings: '"FILL" 1' }}
-            >
-              workspace_premium
-            </span>
-            <span className="font-[var(--font-ui)] text-sm font-bold text-text-secondary">
-              +20 años de excelencia
-            </span>
-          </div>
+      <div className="relative z-10 w-full px-4 md:px-16 max-w-[1280px] mx-auto py-20 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left: copy */}
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2.5 bg-brand-blue/[0.06] rounded-full px-4 py-2 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-blue" />
+              <span className="font-[var(--font-ui)] text-xs font-semibold text-brand-blue tracking-wide uppercase">
+                +20 años conectando talento
+              </span>
+            </div>
 
-          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl lg:text-[56px] font-extrabold text-brand-navy leading-tight tracking-tight">
-            Creemos en ti y{" "}
-            <br className="hidden sm:block" />
-            <span className="text-brand-blue">en tu talento</span>
-          </h1>
+            <h1 className="font-[var(--font-display)] text-[40px] sm:text-[56px] md:text-[64px] lg:text-[68px] font-bold text-brand-navy leading-[1.05] tracking-[-0.03em]">
+              Creemos en ti
+              <br />
+              y en tu{" "}
+              <span key={index} className="word-swap text-brand-blue">
+                {words[index]}
+              </span>
+            </h1>
 
-          <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-xl leading-relaxed">
-            Conectamos el mejor talento humano con las empresas más destacadas
-            de Colombia. Encuentra tu próximo empleo o la solución de personal
-            que tu operación necesita.
-          </p>
+            <p className="font-[var(--font-body)] text-lg md:text-xl text-text-secondary max-w-2xl leading-relaxed mt-6 md:mt-8">
+              Conectamos el mejor talento humano con las empresas más destacadas
+              de Colombia. Tu próximo empleo o la solución de personal que tu
+              operación necesita.
+            </p>
 
-          {/* Dual CTA — two audiences */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <Link
-              href="/vacantes"
-              className="inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full shadow-[0_4px_14px_0_rgba(0,122,254,0.39)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <span
-                className="material-symbols-outlined text-lg"
-                style={{ fontVariationSettings: '"FILL" 1' }}
+            <div className="flex flex-col sm:flex-row gap-4 mt-8 md:mt-10">
+              <Link
+                href="/vacantes"
+                className="group inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full shadow-[0_4px_14px_0_rgba(0,122,254,0.35)] hover:shadow-[0_8px_24px_rgba(0,122,254,0.3)] hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 transition-all"
+                style={{
+                  transitionDuration: "var(--duration-base)",
+                  transitionTimingFunction: "var(--ease-spring)",
+                }}
               >
-                work
-              </span>
-              Ver Vacantes
-            </Link>
-            <Link
-              href="/contacto"
-              className="inline-flex items-center justify-center gap-2 bg-white text-brand-navy border border-border font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full shadow-sm hover:bg-surface-gray hover:border-brand-blue/30 transition-all duration-200"
-            >
-              <span
-                className="material-symbols-outlined text-lg"
-                style={{ fontVariationSettings: '"FILL" 0' }}
+                Ver Vacantes
+                <span
+                  className="material-symbols-outlined text-lg group-hover:translate-x-0.5 transition-transform"
+                  style={{ transitionTimingFunction: "var(--ease-spring)" }}
+                >
+                  arrow_forward
+                </span>
+              </Link>
+              <Link
+                href="/contacto"
+                className="inline-flex items-center justify-center gap-2 bg-white text-brand-blue border-2 border-brand-blue/25 font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:border-brand-blue hover:bg-brand-blue/[0.04] transition-all"
+                style={{ transitionDuration: "var(--duration-base)" }}
               >
-                business_center
-              </span>
-              Soluciones Empresariales
-            </Link>
-          </div>
+                Soluciones Empresariales
+              </Link>
+            </div>
 
-          {/* Quick trust signals */}
-          <div className="flex flex-wrap items-center gap-6 pt-4 text-text-muted">
-            <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-brand-blue text-lg">
-                verified
-              </span>
-              <span className="font-[var(--font-ui)] text-xs font-medium">
-                Licencia MinTrabajo
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-brand-blue text-lg">
-                location_on
-              </span>
-              <span className="font-[var(--font-ui)] text-xs font-medium">
-                7+ sedes en Colombia
-              </span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-brand-blue text-lg">
-                groups
-              </span>
-              <span className="font-[var(--font-ui)] text-xs font-medium">
-                Miles de trabajadores
-              </span>
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-4 mt-14 pt-8 border-t border-border/40">
+              {[
+                { label: "Licencia MinTrabajo", icon: "verified" },
+                { label: "7+ sedes en Colombia", icon: "location_on" },
+                { label: "+500 empresas cliente", icon: "handshake" },
+              ].map((signal) => (
+                <div key={signal.label} className="flex items-center gap-2">
+                  <span
+                    className="material-symbols-outlined text-brand-blue/50 text-lg"
+                    style={{ fontVariationSettings: '"FILL" 1' }}
+                  >
+                    {signal.icon}
+                  </span>
+                  <span className="font-[var(--font-ui)] text-sm text-text-muted font-medium">
+                    {signal.label}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Right: Visual element */}
-        <div className="flex-1 hidden md:flex justify-center">
-          <div className="relative w-full max-w-md aspect-square">
-            {/* Spinning circles */}
-            <div className="absolute inset-0 border-2 border-brand-blue/15 rounded-full animate-[spin_60s_linear_infinite]" />
-            <div className="absolute inset-4 border border-brand-blue/10 rounded-full animate-[spin_40s_linear_infinite_reverse]" />
-            <div className="absolute inset-8 border border-brand-light-blue/10 rounded-full animate-[spin_50s_linear_infinite]" />
-
-            {/* Center glass card */}
-            <div className="absolute inset-16 glass-panel rounded-full shadow-xl flex items-center justify-center">
-              <div className="text-center space-y-1">
-                <span className="block font-[var(--font-display)] text-5xl font-extrabold text-brand-blue">
-                  +20
-                </span>
-                <span className="block font-[var(--font-ui)] text-xs font-medium text-text-secondary uppercase tracking-widest">
-                  Años de
-                  <br />
-                  Experiencia
-                </span>
+          {/* Right: image + floating cards */}
+          <div className="hidden lg:block lg:col-span-5">
+            <div className="relative aspect-[4/5] w-full">
+              <div
+                className="absolute inset-0 rounded-[2rem] bg-cover bg-center shadow-[0_30px_60px_-20px_rgba(0,122,254,0.35)]"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=80')",
+                }}
+                role="img"
+                aria-label="Equipo de trabajo conectado por Asignar SAS"
+              >
+                <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-t from-brand-deep-blue/45 via-transparent to-transparent" />
               </div>
-            </div>
 
-            {/* Floating badges */}
-            <div className="absolute top-8 right-4 bg-white rounded-xl shadow-lg border border-border p-3 flex items-center gap-2 animate-[bounce_3s_ease-in-out_infinite]">
-              <div className="w-8 h-8 rounded-full bg-green-50 flex items-center justify-center">
-                <span className="material-symbols-outlined text-green-600 text-sm">
-                  trending_up
-                </span>
+              {/* Floating award card */}
+              <div className="absolute -bottom-6 -left-6 bg-white/90 backdrop-blur-md rounded-2xl p-5 card-elevated max-w-[260px]">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-brand-blue/[0.1] flex items-center justify-center shrink-0">
+                    <span
+                      className="material-symbols-outlined text-brand-blue text-2xl"
+                      style={{ fontVariationSettings: '"FILL" 1' }}
+                    >
+                      workspace_premium
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-[var(--font-display)] text-sm font-bold text-brand-navy leading-tight">
+                      Premio a la Excelencia
+                    </p>
+                    <p className="font-[var(--font-ui)] text-xs text-text-muted">
+                      Business Management Awards 2023
+                    </p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="font-[var(--font-ui)] text-xs font-bold text-brand-navy">
-                  Hotelería
+
+              {/* Floating stat card */}
+              <div className="absolute -top-5 -right-4 bg-white/90 backdrop-blur-md rounded-2xl px-5 py-4 card-elevated">
+                <p className="font-[var(--font-display)] text-2xl font-extrabold text-brand-blue leading-none">
+                  +5 mil
                 </p>
-                <p className="font-[var(--font-ui)] text-[10px] text-text-muted">
-                  Sector líder
-                </p>
-              </div>
-            </div>
-
-            <div className="absolute bottom-12 left-0 bg-white rounded-xl shadow-lg border border-border p-3 flex items-center gap-2 animate-[bounce_4s_ease-in-out_infinite_0.5s]">
-              <div className="w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center">
-                <span className="material-symbols-outlined text-brand-blue text-sm">
-                  restaurant
-                </span>
-              </div>
-              <div>
-                <p className="font-[var(--font-ui)] text-xs font-bold text-brand-navy">
-                  Restaurantes
-                </p>
-                <p className="font-[var(--font-ui)] text-[10px] text-text-muted">
-                  Alto volumen
+                <p className="font-[var(--font-ui)] text-xs text-text-muted mt-1">
+                  colaboradores en misión
                 </p>
               </div>
             </div>

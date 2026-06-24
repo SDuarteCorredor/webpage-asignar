@@ -80,7 +80,7 @@ export default function NosotrosPage() {
             <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-blue mb-3 block">
               Sobre Nosotros
             </span>
-            <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-extrabold text-brand-navy leading-tight mb-6">
+            <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-brand-navy leading-tight mb-6">
               Creemos en las personas
               <br className="hidden md:block" />y en su potencial
             </h1>
@@ -166,7 +166,7 @@ export default function NosotrosPage() {
       </section>
 
       {/* DOCA */}
-      <section className="py-16 md:py-20 bg-brand-navy">
+      <section className="py-16 md:py-20 bg-brand-gradient">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
           <div className="text-center mb-12">
             <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-gold mb-2 block">

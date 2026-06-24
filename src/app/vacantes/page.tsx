@@ -162,7 +162,7 @@ export default function VacantesPage() {
           <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-blue mb-3 block">
             Oportunidades de empleo
           </span>
-          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-extrabold text-brand-navy leading-tight mb-4">
+          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-brand-navy leading-tight mb-4">
             Encuentra tu próximo empleo
           </h1>
           <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl">

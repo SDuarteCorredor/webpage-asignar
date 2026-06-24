@@ -10,33 +10,33 @@ const beneficios = [
 
 export default function B2BSection() {
   return (
-    <section className="py-16 md:py-20 bg-brand-navy relative overflow-hidden">
-      {/* Background decoration */}
+    <section className="py-20 md:py-28 bg-brand-gradient relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-deep-blue/20 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-light-blue/20 rounded-full blur-[120px]" />
       </div>
 
       <div className="max-w-[1280px] mx-auto px-4 md:px-16 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Content */}
-          <div className="space-y-6">
-            <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-gold block">
+          <div className="space-y-6 scroll-reveal">
+            <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-gold block">
               Para empresas
             </span>
-            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-white leading-tight">
+            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-white leading-tight tracking-[-0.02em]">
               ¿Necesitas personal temporal para tu operación?
             </h2>
             <p className="font-[var(--font-body)] text-base text-white/70 leading-relaxed max-w-lg">
               Más de 20 años garantizando que tu operación nunca se quede sin
-              equipo. Te entregamos personal calificado, cumpliendo con toda la
-              normativa laboral colombiana.
+              equipo. Personal calificado, cumpliendo toda la normativa laboral.
             </p>
 
             <ul className="space-y-3">
               {beneficios.map((b) => (
                 <li key={b} className="flex items-start gap-3">
-                  <span className="material-symbols-outlined text-brand-gold text-lg mt-0.5 flex-shrink-0">
+                  <span
+                    className="material-symbols-outlined text-brand-gold text-lg mt-0.5 flex-shrink-0"
+                    style={{ fontVariationSettings: '"FILL" 1' }}
+                  >
                     check_circle
                   </span>
                   <span className="font-[var(--font-body)] text-sm text-white/80">
@@ -49,7 +49,8 @@ export default function B2BSection() {
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
                 href="/contacto"
-                className="inline-flex items-center justify-center gap-2 bg-white text-brand-navy font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:bg-surface-gray transition-colors duration-200"
+                className="inline-flex items-center justify-center gap-2 bg-white text-brand-blue font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:bg-surface transition-colors"
+                style={{ transitionDuration: "var(--duration-base)" }}
               >
                 Solicitar propuesta
                 <span className="material-symbols-outlined text-base">
@@ -58,18 +59,18 @@ export default function B2BSection() {
               </Link>
               <Link
                 href="/soluciones"
-                className="inline-flex items-center justify-center gap-2 border border-white/30 text-white font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:bg-white/10 transition-colors duration-200"
+                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:bg-white/10 transition-colors"
+                style={{ transitionDuration: "var(--duration-base)" }}
               >
                 Ver servicios
               </Link>
             </div>
           </div>
 
-          {/* Right: Visual card */}
-          <div className="hidden lg:block">
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8 space-y-6">
+          <div className="hidden lg:block scroll-reveal" data-delay="200">
+            <div className="bg-white/[0.04] backdrop-blur-sm rounded-2xl p-8 space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-brand-gold/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-2xl bg-brand-gold/20 flex items-center justify-center">
                   <span
                     className="material-symbols-outlined text-brand-gold text-2xl"
                     style={{ fontVariationSettings: '"FILL" 1' }}
@@ -96,12 +97,12 @@ export default function B2BSection() {
                 ].map((sector) => (
                   <div
                     key={sector.label}
-                    className="bg-white/5 rounded-xl p-4 border border-white/5"
+                    className="bg-white/[0.04] rounded-2xl p-4"
                   >
-                    <span className="material-symbols-outlined text-white/50 text-lg">
+                    <span className="material-symbols-outlined text-white/40 text-lg">
                       {sector.icon}
                     </span>
-                    <p className="font-[var(--font-ui)] text-xs text-white/60 mt-2">
+                    <p className="font-[var(--font-ui)] text-xs text-white/50 mt-2">
                       {sector.label}
                     </p>
                     <p className="font-[var(--font-display)] text-xl font-bold text-white">

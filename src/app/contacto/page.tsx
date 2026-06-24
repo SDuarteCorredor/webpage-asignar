@@ -29,7 +29,7 @@ export default function ContactoPage() {
           <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-blue mb-3 block">
             Contacto Empresarial
           </span>
-          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-extrabold text-brand-navy leading-tight mb-4">
+          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-brand-navy leading-tight mb-4">
             Hablemos de tu operación
           </h1>
           <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl">
@@ -186,7 +186,7 @@ export default function ContactoPage() {
                 </ul>
               </div>
 
-              <div className="bg-brand-navy rounded-2xl p-6 text-white">
+              <div className="bg-brand-gradient rounded-2xl p-6 text-white">
                 <h3 className="font-[var(--font-display)] text-lg font-bold mb-4">
                   Contacto directo
                 </h3>

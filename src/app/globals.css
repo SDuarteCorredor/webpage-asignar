@@ -1,35 +1,38 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Brand Colors */
   --color-brand-blue: #007AFE;
   --color-brand-light-blue: #05B8FD;
   --color-brand-deep-blue: #0056B3;
   --color-brand-navy: #001233;
   --color-brand-gold: #FFC000;
 
-  /* Surface Colors */
-  --color-surface: #F9F9F9;
-  --color-surface-gray: #F8FAFC;
+  --color-surface: #F6F8FB;
+  --color-surface-gray: #EDF1F6;
+  --color-surface-elevated: #FFFFFF;
   --color-border: #E2E8F0;
-  --color-text-primary: #1A1C1C;
-  --color-text-secondary: #414754;
-  --color-text-muted: #717786;
+  --color-text-primary: #0F1419;
+  --color-text-secondary: #3D4551;
+  --color-text-muted: #6B7280;
 
-  /* Fonts */
   --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-ui: "Inter", system-ui, sans-serif;
 
-  /* Spacing */
   --spacing-section: 80px;
   --spacing-section-mobile: 48px;
-
-  /* Container */
   --container-max: 1280px;
 }
 
-/* Base styles */
+:root {
+  --ease-soft: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 180ms;
+  --duration-base: 240ms;
+  --duration-slow: 400ms;
+}
+
 body {
   font-family: var(--font-body);
   background: var(--color-surface);
@@ -43,23 +46,102 @@ body {
   color: white;
 }
 
-/* Glass panel effect */
+/* Accessible focus ring — visible for keyboard users, hidden on mouse click */
+:where(a, button, input, select, textarea, summary, [tabindex], [role="button"]):focus-visible {
+  outline: 2px solid var(--color-brand-blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Crisp hairline-lifted cards: definition without a heavy/generic 1px border */
+.card-elevated {
+  box-shadow: 0 0 0 1px rgba(0, 18, 51, 0.04), 0 1px 3px rgba(0, 18, 51, 0.06),
+    0 6px 16px rgba(0, 18, 51, 0.04);
+  transition: box-shadow var(--duration-base) var(--ease-soft),
+    transform var(--duration-base) var(--ease-spring);
+}
+
+.card-elevated:hover {
+  box-shadow: 0 0 0 1px rgba(0, 122, 254, 0.08),
+    0 4px 12px rgba(0, 18, 51, 0.08), 0 16px 32px rgba(0, 18, 51, 0.06);
+}
+
 .glass-panel {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-/* Text gradient */
 .text-gradient {
-  background: linear-gradient(135deg, #001233 0%, #007AFE 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-deep-blue) 0%,
+    var(--color-brand-blue) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Hide scrollbar */
+/* Rich primary-blue fill for large feature blocks (replaces navy outside footer) */
+.bg-brand-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-blue) 0%,
+    var(--color-brand-deep-blue) 100%
+  );
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-soft), transform 0.7s var(--ease-soft);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hero word swap — JS-driven, re-triggers on each word change via React key */
+@keyframes word-in {
+  0% {
+    opacity: 0;
+    transform: translateY(0.5em);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.word-swap {
+  display: inline-block;
+  animation: word-in 0.55s var(--ease-out);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -68,13 +150,20 @@ body {
   scrollbar-width: none;
 }
 
-/* Counter animation */
-@keyframes countUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Smooth scroll */
 html {
   scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .word-swap {
+    animation: none !important;
+  }
+  .marquee-track {
+    animation-play-state: paused !important;
+  }
 }

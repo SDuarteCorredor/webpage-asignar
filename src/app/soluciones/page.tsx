@@ -72,15 +72,15 @@ export default function SolucionesPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-brand-navy py-20 md:py-28 relative overflow-hidden">
+      <section className="bg-brand-gradient py-20 md:py-28 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue/10 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
         </div>
         <div className="max-w-[1280px] mx-auto px-4 md:px-16 relative z-10">
           <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-gold mb-3 block">
             Para Empresas
           </span>
-          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-extrabold text-white leading-tight mb-4">
+          <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-white leading-tight mb-4">
             La solución en talento humano
             <br className="hidden md:block" />
             que tu operación necesita
