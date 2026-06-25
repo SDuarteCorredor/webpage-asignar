@@ -1,87 +1,91 @@
-# Archivo · Automatización de Afiliaciones (Root)
+# Archivo · Automatización de Afiliaciones
 
-Flujo de **n8n** que cada día a las **6:00 a.m.** revisa el correo corporativo de Root,
-descarga los PDFs de afiliaciones, los archiva en el Dropbox de Root dentro de la carpeta
-del colaborador (buscando por cédula) y lleva el control en el Sheet **`out afiliaciones`**.
+Flujo de **n8n** que automatiza el archivo de afiliaciones del correo
+**`archivobog@asignar.com.co`** hacia el Dropbox de la empresa, con trazabilidad en
+Google Sheets. Independiente del sitio web (no toca `src/`).
 
-> Este flujo es independiente del sitio web. No toca nada de `src/`.
+Archivo a importar: **`archivo-afiliaciones.n8n.json`** → en n8n: *Workflows → ⋯ → Import from File*.
 
-## Archivo a importar
-
-`archivo-afiliaciones.n8n.json` → en n8n: **Workflows → ⋯ → Import from File**.
-
-## Qué hace (resumen del flujo)
+## Flujo (de extremo a extremo)
 
 ```
 ⏰ 6:00 AM
-   └─ ⚙️ Configuración (IDs, correo, pestañas)
-       └─ 📧 Buscar correos de afiliaciones (Gmail de Root, con adjuntos)
-           └─ 🧩 Normalizar y separar PDFs  → 1 item por PDF
-               ├─ ¿Datos completos? ── sí ──┐
-               └─ no → 📄 Leer texto PDF → 🤖 Lector IA (Claude) → 🔗 Fusionar campos
-                                                                        │
-               ┌────────────────────────────────────────── ➕ Unir rutas
-               ▼
-        🔍 Buscar carpeta por cédula (Dropbox, todo el árbol)
-               └─ 📎 Recombinar binario → 🗂️ Definir carpeta/nombre
-                   └─ ¿Carpeta encontrada?
-                        ├─ sí → ⬆️ Archivar en Dropbox → ✅ Reporte: Realizadas
-                        └─ no → ⏳ Reporte: Pendientes → ✉️ Notificar a Root
+ └ ⚙️ Configuración
+   └ 📧 Buscar correos (sin etiqueta "Procesado-Afiliaciones", con adjuntos)
+     └ 🧩 Separar adjuntos            → 1 item por PDF/imagen (uid = messageId::archivo)
+       └ 📄 Extraer texto
+         └ ¿Necesita OCR?  ── imagen / texto vacío → 🔎 OCR (OCR.space) → 📝 texto
+           └ 🤖 Lector IA (Claude)    → cédula, nombre, entidad, tipo, fechas
+             └ 🧮 Consolidar datos    → mejor fecha + clasificación + nombre AFIL TIPO FECHA
+               └ 🔍 Dropbox search_v2 (acotado a "/Asignar Bogotá/12. Archivo")
+                 └ 🗂️ Resolver carpeta (por cédula; si no, por nombre)
+                   └ ↔️ Resultado
+                       ├ ARCHIVAR  → ⬆️ Dropbox (.../AFILIACIONES/) → ✅ OK
+                       ├ REVISIÓN  → ✉️ aviso (varias carpetas coinciden)
+                       └ ERROR     → ✉️ aviso (sin carpeta)
+                            └ 🧾 Registrar en Control → 🏷️ Marcar correo procesado
 ```
 
-### Las dos rutas que pediste
-1. **Ruta archivo (Dropbox):** ubica la carpeta del colaborador por cédula y guarda el PDF
-   en la subcarpeta `AFILIACIONES`, renombrado a:
-   `\<cédula\> \<ENTIDAD\> \<TIPO\> \<dd-mm-aaaa\>.pdf`
-2. **Ruta datos (Sheets):** registra cada PDF en `out afiliaciones`, en pestañas separadas
-   **Realizadas** y **Pendientes**.
+## Reglas de negocio implementadas
 
-### Extracción híbrida
-- **Código (rápido y predecible):** saca la cédula y la entidad del nombre del PDF y
-  clasifica `EPS` vs `CAJA` (replica tu Apps Script).
-- **IA / Claude (respaldo):** si el nombre no trae los datos, el **Lector IA** lee el
-  texto del PDF y completa cédula, entidad, tipo y fecha de ingreso.
+- **Clasificación de entidad** (IA + palabras clave de respaldo): `EPS`, `CCF`, `AFP`, `ARL`.
+- **Nombre del archivo**: `AFIL <TIPO> <AAAA-MM-DD>.pdf` (ej. `AFIL EPS 2026-06-15.pdf`).
+- **Mejor fecha** por prioridad: novedad → ingreso → documento → fecha del correo.
+- **Búsqueda de colaborador**: por **cédula** y, si no aparece, por **nombre**
+  (tolerante a tildes, mayúsculas y espacios dobles).
+- **Multi-coincidencia** → estado `REVISIÓN MANUAL`. **Sin carpeta** → estado `ERROR`. Ambos notifican.
+- **OCR** (OCR.space, opcional) cuando el adjunto es imagen o el PDF no trae texto.
+- **Anti-duplicados**: el correo se procesa solo si NO tiene la etiqueta `Procesado-Afiliaciones`;
+  al terminar se etiqueta. La hoja Control guarda el `Message ID` para auditoría.
+- **Reintentos** automáticos en Gmail, OCR, Dropbox y Sheets; errores de un documento no
+  detienen el lote (`onError: continueRegularOutput`).
 
-### Dropbox desordenado
-La búsqueda usa `search` por **número de cédula sobre todo el árbol**, así que no importa en
-qué subcarpeta esté el colaborador. Si hay varias coincidencias, prioriza la carpeta cuya
-ruta contiene la cédula.
+## Configuración (nodo ⚙️ Configuración)
 
-## Configuración (antes de activar)
-
-Abre el nodo **⚙️ Configuración** y reemplaza:
-
-| Campo | Qué poner |
+| Campo | Valor |
 |---|---|
-| `spreadsheetId` | ID del Sheet **out afiliaciones** (la parte entre `/d/` y `/edit`) |
-| `notifyEmail` | Correo de Root para las notificaciones |
-| `gmailQuery` | Ya viene con `AFILIACIONES / AFILIACION / "ARCHIVO NUEVA EPS Y SURA"`. Ajusta si cambia el asunto |
-| `tabRealizadas` / `tabPendientes` | Nombres de las pestañas (por defecto `Realizadas` / `Pendientes`) |
+| `gmailQuery` | `has:attachment newer_than:3d -label:Procesado-Afiliaciones` (ajustable) |
+| `dropboxRoot` | `/Asignar Bogotá/12. Archivo` |
+| `spreadsheetId` | **PENDIENTE** — ID del Sheet de control |
+| `controlTab` | `Control` |
+| `notifyEmail` | `archivobog@asignar.com.co` (o el correo de Ruth) |
+| `processedLabelId` | **PENDIENTE** — ID de la etiqueta de Gmail (no el nombre) |
+| `ocrApiKey` | Opcional — API key de OCR.space (gratis en ocr.space) |
 
 ### Credenciales a conectar en n8n
-- **Gmail (cuenta de Root)** → nodos `📧 Buscar correos` y `✉️ Notificar`.
-- **Dropbox de Root** → nodos `🔍 Buscar` y `⬆️ Archivar`.
-- **Google Sheets** → nodos de reporte.
-- **Anthropic (Claude)** → nodo `Claude Sonnet`.
+- **Gmail** (cuenta `archivobog`) → buscar, notificar, etiquetar.
+- **Dropbox** (workspace Asignar) → search_v2 (HTTP, credencial predefinida) + upload.
+- **Google Sheets** → hoja Control.
+- **Anthropic (Claude)** → nodo lector.
 
-### Sheet `out afiliaciones`
-Crea dos pestañas con estos encabezados en la fila 1:
+### Hoja de control (una sola pestaña `Control`)
+Encabezados en la fila 1:
 
 ```
-Fecha proceso | Cédula | Entidad | Tipo | Fecha ingreso | Archivo | Carpeta Dropbox | Estado | Remitente
+Fecha procesamiento | Message ID | Remitente | Asunto | Nombre colaborador | Cédula |
+Entidad | Tipo | Fecha documento | Archivo original | Archivo guardado | Ruta Dropbox |
+Estado | Observación
 ```
+
+> **Cambio respecto a la primera versión:** el prompt maestro pide una **tabla de control
+> única con estado** (OK / REVISIÓN / ERROR), así que reemplacé las pestañas separadas
+> *Realizadas/Pendientes* por esta hoja única filtrable por `Estado`. Si prefieres volver a
+> dos pestañas, lo cambio en 2 minutos.
 
 ## Pruebas antes de Deploy
-1. **Sin cron:** usa *Execute Workflow* manual con un correo de prueba ya en la bandeja.
-2. Revisa que `🧩 Normalizar y separar PDFs` saque bien la cédula/entidad.
-3. Verifica un caso **con carpeta** (debe quedar en `AFILIACIONES` y en *Realizadas*) y uno
-   **sin carpeta** (debe ir a *Pendientes* y llegar correo a Root).
-4. Cuando todo esté ok, marca el workflow como **Active** para que corra a las 6 a.m.
+1. *Execute Workflow* manual con un correo real ya en la bandeja (sin la etiqueta).
+2. Validar `🧩 Separar adjuntos` (cédula del nombre) y `🤖 Lector IA` (campos extraídos).
+3. Caso **con carpeta** → debe quedar en `…/AFILIACIONES/` y estado `OK`.
+4. Caso **sin carpeta** y **multi-coincidencia** → estados `ERROR` / `REVISIÓN` + correo.
+5. Confirmar que el correo queda etiquetado y no se reprocesa al volver a correr.
+6. Activar el workflow (cron 6:00 a.m., zona `America/Bogota`).
 
-## Pendientes / datos que faltan
-- [ ] **Correo completo de Root** (la cuenta a monitorear).
-- [ ] **ID del Sheet `out afiliaciones`**.
-- [ ] Confirmar **versiones de los nodos** según tu instancia de n8n (puede pedir ajustar
-  `typeVersion` al importar; n8n lo resuelve solo en la mayoría de casos).
-- [ ] Validar la **estructura real del Dropbox** para afinar la elección de carpeta cuando
-  haya múltiples coincidencias.
+## Pendientes / a validar
+- [ ] **ID del Sheet de control** y **ID de la etiqueta** de Gmail.
+- [ ] **Estructura real de `/Asignar Bogotá/12. Archivo`** (no pude scrapear Dropbox desde
+  aquí): con un pantallazo del árbol afino la selección cuando una cédula tenga varias carpetas
+  y confirmo si el destino es subcarpeta `AFILIACIONES` o la raíz de la carpeta del colaborador.
+- [ ] ¿Qué hacer con **varios adjuntos del mismo colaborador** en un correo? Hoy archiva cada uno.
+- [ ] Reglas finas de **AFP/ARL** si hay entidades específicas que no estén en la lista de keywords.
+- [ ] Confirmar **versiones de nodos** según tu instancia de n8n (al importar puede pedir ajustar `typeVersion`).
+```
