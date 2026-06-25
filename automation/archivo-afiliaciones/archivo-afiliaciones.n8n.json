@@ -131,6 +131,19 @@
       }
     },
     {
+      "id": "limit_demo",
+      "name": "🔢 Límite demo",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -730,
+        360
+      ],
+      "parameters": {
+        "maxItems": 10
+      }
+    },
+    {
       "id": "extract_pdf",
       "name": "📄 Extraer texto",
       "type": "n8n-nodes-base.extractFromFile",
@@ -910,6 +923,17 @@
       ]
     },
     "🧩 Separar adjuntos": {
+      "main": [
+        [
+          {
+            "node": "🔢 Límite demo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔢 Límite demo": {
       "main": [
         [
           {
