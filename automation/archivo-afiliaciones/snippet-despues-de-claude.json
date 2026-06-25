@@ -1,0 +1,640 @@
+{
+  "nodes": [
+    {
+      "id": "code_consolidate",
+      "name": "🧮 Consolidar datos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Une lo extraído por la IA con los metadatos originales (via pairedItem) y aplica reglas de negocio.\nconst ai = $json.output || {};\nconst orig = $('🧩 Separar adjuntos').item;\nconst j = orig.json;\nlet texto = '';\ntry { texto = ($json.text || '') + ''; } catch (e) {}\n\nconst digits = s => (s || '').toString().replace(/\\D/g, '');\nconst cedula = digits(ai.cedula || j.cedulaNombre || '');\n\nlet nombre = (ai.nombreCompleto || ai.nombre || '').toString().toUpperCase();\nconst nombreNorm = nombre.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\\s+/g, ' ').trim();\n\nconst blob = (texto + ' ' + (j.fileName || '') + ' ' + (ai.entidad || '') + ' ' + (j.subject || '')).toUpperCase();\nconst has = re => re.test(blob);\nlet tipo = (ai.tipoAfiliacion || '').toUpperCase();\nif (!['EPS', 'CCF', 'AFP', 'ARL'].includes(tipo)) {\n  if (has(/\\bARL\\b|RIESGOS LABORALES|POSITIVA|COLMENA/)) tipo = 'ARL';\n  else if (has(/\\bAFP\\b|PENSION|PORVENIR|PROTECCION|COLFONDOS|SKANDIA/)) tipo = 'AFP';\n  else if (has(/\\bCCF\\b|CAJA DE COMPENSACION|COMPENSAR|COLSUBSIDIO|CAFAM|COMFAMA|COMFENALCO|COMFANDI/)) tipo = 'CCF';\n  else tipo = 'EPS';\n}\n\nfunction parseFecha(s) {\n  if (!s) return null; s = s.toString().trim();\n  let m = s.match(/(\\d{4})[-\\/.](\\d{1,2})[-\\/.](\\d{1,2})/);\n  if (m) return `${m[1]}-${m[2].padStart(2,'0')}-${m[3].padStart(2,'0')}`;\n  m = s.match(/(\\d{1,2})[-\\/.](\\d{1,2})[-\\/.](\\d{4})/);\n  if (m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;\n  const d = new Date(s); if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);\n  return null;\n}\n// Prioridad: novedad > ingreso > documento > correo\nconst fecha = parseFecha(ai.fechaNovedad) || parseFecha(ai.fechaIngreso)\n           || parseFecha(ai.fechaDocumento) || parseFecha(j.fechaCorreo) || 'SIN-FECHA';\n\nconst entidad = (ai.entidad || '').toString().toUpperCase().trim();\nconst nombreArchivo = `AFIL ${tipo} ${fecha}.pdf`;\n\nreturn [{\n  json: { ...j, cedula, nombre: nombreNorm, entidad, tipo, fecha, nombreArchivo,\n          datosOk: Boolean(cedula || nombreNorm) },\n  binary: orig.binary,\n}];"
+      }
+    },
+    {
+      "id": "http_search_ced",
+      "name": "🔍 Drive: buscar carpeta",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        360
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ (() => { const c=$json.cedula||''; const n=($json.nombre||'').replace(/'/g,''); const p=[]; if(c)p.push(\"name contains '\"+c+\"'\"); if(n)p.push(\"name contains '\"+n+\"'\"); const cond=p.length?('('+p.join(' or ')+')'):\"name contains 'zzzzzz'\"; return \"mimeType='application/vnd.google-apps.folder' and trashed=false and \"+cond; })() }}"
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name,parents)"
+            },
+            {
+              "name": "pageSize",
+              "value": "100"
+            },
+            {
+              "name": "supportsAllDrives",
+              "value": "true"
+            },
+            {
+              "name": "includeItemsFromAllDrives",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Drive Ruth"
+        }
+      },
+      "onError": "continueRegularOutput",
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000
+    },
+    {
+      "id": "code_eval",
+      "name": "🗂️ Resolver carpeta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Evalúa la respuesta de Google Drive (files API) contra la cédula/nombre del item consolidado.\nconst resp = $json || {};\nconst prev = $('🧮 Consolidar datos').item.json;\nconst ced = prev.cedula || '';\nconst nombre = (prev.nombre || '').toLowerCase();\n\nconst folders = (resp.files || []).filter(f => f && f.id);\n\nconst norm = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();\nlet hits = ced ? folders.filter(f => (f.name || '').replace(/\\D/g, '').includes(ced)) : [];\nlet foundBy = 'cedula';\nif (hits.length === 0 && nombre) {\n  hits = folders.filter(f => norm(f.name).includes(norm(nombre)));\n  foundBy = 'nombre';\n}\n\nlet resolved = 'NONE', folderId = '', folderName = '';\nif (hits.length === 1) { resolved = 'FOUND'; folderId = hits[0].id; folderName = hits[0].name; }\nelse if (hits.length > 1) { resolved = 'MULTIPLE'; folderName = hits.map(h => h.name).join(' | '); }\n\nreturn [{\n  json: { ...prev, resolved, folderId, folderName, folderPath: folderName,\n          foundBy: resolved === 'FOUND' ? foundBy : '', candidatos: folders.length },\n  binary: $('🧮 Consolidar datos').item.binary,\n}];"
+      }
+    },
+    {
+      "id": "switch_res",
+      "name": "↔️ Resultado",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        1380,
+        360
+      ],
+      "parameters": {
+        "mode": "rules",
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.resolved }}",
+                    "rightValue": "FOUND",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "ARCHIVAR"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "typeValidation": "loose"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.resolved }}",
+                    "rightValue": "MULTIPLE",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "REVISION"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "ERROR"
+        }
+      }
+    },
+    {
+      "id": "code_destino",
+      "name": "🏷️ Armar ruta destino",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1600,
+        200
+      ],
+      "parameters": {
+        "jsCode": "// Prepara el archivo final para subir a Google Drive dentro de la carpeta del colaborador.\nconst j = $json;\nreturn [{\n  json: { ...j, archivoGuardado: j.nombreArchivo, rutaDrive: j.folderName, rutaDropbox: j.folderName },\n  binary: $('🧮 Consolidar datos').item.binary,\n}];"
+      }
+    },
+    {
+      "id": "dropbox_upload",
+      "name": "⬆️ Archivar en Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1820,
+        200
+      ],
+      "parameters": {
+        "resource": "file",
+        "operation": "upload",
+        "inputDataFieldName": "data",
+        "name": "={{ $json.nombreArchivo }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.folderId }}"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Drive Ruth"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000
+    },
+    {
+      "id": "set_ok",
+      "name": "✅ Estado OK",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2040,
+        200
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "k1",
+              "name": "estado",
+              "type": "string",
+              "value": "OK"
+            },
+            {
+              "id": "k2",
+              "name": "observacion",
+              "type": "string",
+              "value": "=Archivado en carpeta '{{ $json.folderName }}' (Drive, por {{ $json.foundBy }})"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "set_revision",
+      "name": "🟠 Estado REVISIÓN",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        380
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "r1",
+              "name": "estado",
+              "type": "string",
+              "value": "REVISIÓN MANUAL"
+            },
+            {
+              "id": "r2",
+              "name": "observacion",
+              "type": "string",
+              "value": "=Varias carpetas coinciden: {{ $json.folderPath }}"
+            },
+            {
+              "id": "r3",
+              "name": "archivoGuardado",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "r4",
+              "name": "rutaDropbox",
+              "type": "string",
+              "value": "={{ $json.folderPath }}"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "set_error",
+      "name": "🔴 Estado ERROR",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1600,
+        560
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e1",
+              "name": "estado",
+              "type": "string",
+              "value": "ERROR - SIN CARPETA"
+            },
+            {
+              "id": "e2",
+              "name": "observacion",
+              "type": "string",
+              "value": "=No se encontró carpeta para cédula {{ $json.cedula }} / {{ $json.nombre }}. Candidatos revisados: {{ $json.candidatos }}"
+            },
+            {
+              "id": "e3",
+              "name": "archivoGuardado",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "e4",
+              "name": "rutaDropbox",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        },
+        "includeOtherFields": true
+      }
+    },
+    {
+      "id": "notify",
+      "name": "✉️ Notificar a Root",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1840,
+        470
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('⚙️ Configuración').first().json.notifyEmail }}",
+        "subject": "=[Archivo] {{ $json.estado }} · {{ $json.cedula }} {{ $json.nombre }}",
+        "emailType": "text",
+        "message": "=Hola,\n\nEl flujo automático de afiliaciones requiere tu revisión:\n\n• Estado: {{ $json.estado }}\n• Cédula: {{ $json.cedula }}\n• Nombre: {{ $json.nombre }}\n• Entidad/Tipo: {{ $json.entidad }} ({{ $json.tipo }})\n• Archivo: {{ $json.fileName }}\n• Detalle: {{ $json.observacion }}\n• Correo origen: {{ $json.remitente }} — {{ $json.subject }}\n\nQuedó registrado en la hoja de control.\n\n— Automatización de Archivo (n8n)",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REEMPLAZAR",
+          "name": "Gmail archivobog"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "merge_estados",
+      "name": "➕ Unir (para etiquetar)",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2560,
+        360
+      ],
+      "parameters": {
+        "mode": "append",
+        "numberInputs": 2
+      }
+    },
+    {
+      "id": "sheet_mov",
+      "name": "🧾 Registrar MOVIMIENTOS",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2300,
+        200
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').first().json.tabMovimientos }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID MENSAJE": "={{ $('🏷️ Armar ruta destino').item.json.messageId }}",
+            "CEDULA": "={{ $('🏷️ Armar ruta destino').item.json.cedula }}",
+            "ARCHIVO ORIGINAL": "={{ $('🏷️ Armar ruta destino').item.json.fileName }}",
+            "ARCHIVO FINAL": "={{ $('🏷️ Armar ruta destino').item.json.nombreArchivo }}",
+            "RESULTADO": "={{ $json.estado }}",
+            "DETALLE": "={{ $json.observacion || '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Sheets"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000
+    },
+    {
+      "id": "sheet_ne",
+      "name": "🧾 Registrar NO ENCONTRADAS",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2300,
+        520
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').first().json.tabNoEncontradas }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "FECHA REGISTRO": "={{ $now.toISO() }}",
+            "CEDULA": "={{ $json.cedula }}",
+            "ENTIDAD": "={{ $json.entidad }}",
+            "ARCHIVO ORIGINAL": "={{ $json.fileName }}",
+            "REMITENTE": "={{ $json.remitente }}",
+            "ASUNTO": "={{ $json.subject }}",
+            "OBSERVACION": "={{ $json.estado }} · {{ $json.observacion || '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Sheets"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000
+    },
+    {
+      "id": "gmail_label",
+      "name": "🏷️ Marcar correo procesado",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2780,
+        360
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{ $('🧮 Consolidar datos').item.json.messageId }}",
+        "labelIds": [
+          "={{ $('⚙️ Configuración').first().json.processedLabelId }}"
+        ]
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REEMPLAZAR",
+          "name": "Gmail archivobog"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "note3",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        80
+      ],
+      "parameters": {
+        "width": 560,
+        "height": 200,
+        "content": "### Resolver carpeta y archivar (Google Drive)\nBusca en el **Drive de Ruth** la carpeta cuyo nombre contiene la **cédula** y, si falla, el **nombre**.\n- **1 coincidencia** → sube el PDF a esa carpeta y registra en **MOVIMIENTOS** (OK).\n- **Varias** → **REVISIÓN** + correo → NO ENCONTRADAS.\n- **Ninguna** → **ERROR** + correo → NO ENCONTRADAS.\nEl correo se etiqueta como procesado (anti-duplicado)."
+      }
+    }
+  ],
+  "connections": {
+    "🧮 Consolidar datos": {
+      "main": [
+        [
+          {
+            "node": "🔍 Drive: buscar carpeta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Drive: buscar carpeta": {
+      "main": [
+        [
+          {
+            "node": "🗂️ Resolver carpeta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🗂️ Resolver carpeta": {
+      "main": [
+        [
+          {
+            "node": "↔️ Resultado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "↔️ Resultado": {
+      "main": [
+        [
+          {
+            "node": "🏷️ Armar ruta destino",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🟠 Estado REVISIÓN",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "🔴 Estado ERROR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🏷️ Armar ruta destino": {
+      "main": [
+        [
+          {
+            "node": "⬆️ Archivar en Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⬆️ Archivar en Drive": {
+      "main": [
+        [
+          {
+            "node": "✅ Estado OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "✅ Estado OK": {
+      "main": [
+        [
+          {
+            "node": "🧾 Registrar MOVIMIENTOS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧾 Registrar MOVIMIENTOS": {
+      "main": [
+        [
+          {
+            "node": "➕ Unir (para etiquetar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🟠 Estado REVISIÓN": {
+      "main": [
+        [
+          {
+            "node": "🧾 Registrar NO ENCONTRADAS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "✉️ Notificar a Root",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔴 Estado ERROR": {
+      "main": [
+        [
+          {
+            "node": "🧾 Registrar NO ENCONTRADAS",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "✉️ Notificar a Root",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧾 Registrar NO ENCONTRADAS": {
+      "main": [
+        [
+          {
+            "node": "➕ Unir (para etiquetar)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "➕ Unir (para etiquetar)": {
+      "main": [
+        [
+          {
+            "node": "🏷️ Marcar correo procesado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
