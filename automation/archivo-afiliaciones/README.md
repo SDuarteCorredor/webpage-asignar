@@ -47,9 +47,15 @@ Archivo a importar: **`archivo-afiliaciones.n8n.json`** → en n8n: *Workflows �
 
 ## Pendiente: conectar credenciales en n8n
 - **Gmail** (`archivobog`) → buscar, notificar, etiquetar.
-- **Dropbox** (workspace Asignar) → search_v2 (HTTP, credencial predefinida) + upload.
+- **Google Drive** (Drive de Ruth) → buscar carpeta del colaborador (HTTP, credencial predefinida) + subir el PDF.
 - **Google Sheets** → AUT AFILIACIONES.
 - **Anthropic (Claude)** → nodo lector.
+
+> **Nota:** se reemplazó Dropbox por **Google Drive** (el Dropbox Business tiene políticas
+> que bloquean apps de terceros). La carpeta del colaborador se busca **por nombre que
+> contenga la cédula** (y, si falla, el nombre) en el Drive de Ruth, y el PDF se sube ahí.
+> Para que funcione el camino feliz en la demo, deben existir carpetas en ese Drive cuyo
+> nombre incluya la cédula del colaborador.
 
 ## Dos hallazgos importantes (a decidir)
 

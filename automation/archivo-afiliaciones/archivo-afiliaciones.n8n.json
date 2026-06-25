@@ -41,9 +41,9 @@
             },
             {
               "id": "c2",
-              "name": "dropboxRoot",
+              "name": "driveRootFolderId",
               "type": "string",
-              "value": "/Asignar Bogotá/12. Archivo"
+              "value": ""
             },
             {
               "id": "c3",
@@ -381,7 +381,7 @@
     },
     {
       "id": "http_search_ced",
-      "name": "🔍 Dropbox search (cédula+nombre)",
+      "name": "🔍 Drive: buscar carpeta",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -389,28 +389,41 @@
         360
       ],
       "parameters": {
-        "method": "POST",
-        "url": "https://api.dropboxapi.com/2/files/search_v2",
+        "method": "GET",
+        "url": "https://www.googleapis.com/drive/v3/files",
         "authentication": "predefinedCredentialType",
-        "nodeCredentialType": "dropboxOAuth2Api",
-        "sendHeaders": true,
-        "headerParameters": {
+        "nodeCredentialType": "googleDriveOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
           "parameters": [
             {
-              "name": "Content-Type",
-              "value": "application/json"
+              "name": "q",
+              "value": "={{ (() => { const c=$json.cedula||''; const n=($json.nombre||'').replace(/'/g,''); const p=[]; if(c)p.push(\"name contains '\"+c+\"'\"); if(n)p.push(\"name contains '\"+n+\"'\"); const cond=p.length?('('+p.join(' or ')+')'):\"name contains 'zzzzzz'\"; return \"mimeType='application/vnd.google-apps.folder' and trashed=false and \"+cond; })() }}"
+            },
+            {
+              "name": "fields",
+              "value": "files(id,name,parents)"
+            },
+            {
+              "name": "pageSize",
+              "value": "100"
+            },
+            {
+              "name": "supportsAllDrives",
+              "value": "true"
+            },
+            {
+              "name": "includeItemsFromAllDrives",
+              "value": "true"
             }
           ]
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ query: ($json.cedula || $json.nombre || ' '), options: { path: $('⚙️ Configuración').item.json.dropboxRoot, max_results: 50, file_status: 'active', filename_only: false } }) }}",
         "options": {}
       },
       "credentials": {
-        "dropboxOAuth2Api": {
+        "googleDriveOAuth2Api": {
           "id": "REEMPLAZAR",
-          "name": "Dropbox Root"
+          "name": "Google Drive Ruth"
         }
       },
       "onError": "continueRegularOutput",
@@ -428,7 +441,7 @@
         360
       ],
       "parameters": {
-        "jsCode": "// Evalúa la respuesta de Dropbox search_v2 (en $json) contra la cédula/nombre del item consolidado.\nconst resp = $json || {};\nconst prev = $('🧮 Consolidar datos').item.json;\nconst root = ($('⚙️ Configuración').item.json.dropboxRoot || '').toLowerCase();\nconst ced = prev.cedula || '';\nconst nombre = (prev.nombre || '').toLowerCase();\n\nconst matches = resp.matches || [];\nconst folders = [];\nfor (const m of matches) {\n  const md = (m && m.metadata && m.metadata.metadata) || (m && m.metadata) || {};\n  const tag = md['.tag'] || md.tag;\n  if (tag !== 'folder') continue;\n  const path = md.path_display || md.path_lower || '';\n  if (root && !path.toLowerCase().includes(root)) continue;\n  folders.push(path);\n}\n\nconst norm = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();\nlet hits = ced ? folders.filter(p => p.replace(/\\D/g, '').includes(ced)) : [];\nlet foundBy = 'cedula';\nif (hits.length === 0 && nombre) {\n  hits = folders.filter(p => norm(p).includes(norm(nombre)));\n  foundBy = 'nombre';\n}\n\nlet resolved = 'NONE', folderPath = '';\nif (hits.length === 1) { resolved = 'FOUND'; folderPath = hits[0]; }\nelse if (hits.length > 1) { resolved = 'MULTIPLE'; folderPath = hits.join(' | '); }\n\nreturn [{\n  json: { ...prev, resolved, folderPath, foundBy: resolved === 'FOUND' ? foundBy : '',\n          candidatos: folders.length },\n  binary: $('🧮 Consolidar datos').item.binary,\n}];"
+        "jsCode": "// Evalúa la respuesta de Google Drive (files API) contra la cédula/nombre del item consolidado.\nconst resp = $json || {};\nconst prev = $('🧮 Consolidar datos').item.json;\nconst ced = prev.cedula || '';\nconst nombre = (prev.nombre || '').toLowerCase();\n\nconst folders = (resp.files || []).filter(f => f && f.id);\n\nconst norm = s => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();\nlet hits = ced ? folders.filter(f => (f.name || '').replace(/\\D/g, '').includes(ced)) : [];\nlet foundBy = 'cedula';\nif (hits.length === 0 && nombre) {\n  hits = folders.filter(f => norm(f.name).includes(norm(nombre)));\n  foundBy = 'nombre';\n}\n\nlet resolved = 'NONE', folderId = '', folderName = '';\nif (hits.length === 1) { resolved = 'FOUND'; folderId = hits[0].id; folderName = hits[0].name; }\nelse if (hits.length > 1) { resolved = 'MULTIPLE'; folderName = hits.map(h => h.name).join(' | '); }\n\nreturn [{\n  json: { ...prev, resolved, folderId, folderName, folderPath: folderName,\n          foundBy: resolved === 'FOUND' ? foundBy : '', candidatos: folders.length },\n  binary: $('🧮 Consolidar datos').item.binary,\n}];"
       }
     },
     {
@@ -504,14 +517,14 @@
         200
       ],
       "parameters": {
-        "jsCode": "const j = $json;\nconst dest = `${j.folderPath}/AFILIACIONES/${j.nombreArchivo}`;\nreturn [{\n  json: { ...j, destino: dest, archivoGuardado: j.nombreArchivo, rutaDropbox: dest },\n  binary: $('🧮 Consolidar datos').item.binary,\n}];"
+        "jsCode": "// Prepara el archivo final para subir a Google Drive dentro de la carpeta del colaborador.\nconst j = $json;\nreturn [{\n  json: { ...j, archivoGuardado: j.nombreArchivo, rutaDrive: j.folderName, rutaDropbox: j.folderName },\n  binary: $('🧮 Consolidar datos').item.binary,\n}];"
       }
     },
     {
       "id": "dropbox_upload",
-      "name": "⬆️ Archivar en Dropbox",
-      "type": "n8n-nodes-base.dropbox",
-      "typeVersion": 1,
+      "name": "⬆️ Archivar en Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
       "position": [
         1820,
         200
@@ -519,15 +532,24 @@
       "parameters": {
         "resource": "file",
         "operation": "upload",
-        "path": "={{ $json.destino }}",
-        "binaryData": true,
-        "binaryPropertyName": "data",
+        "inputDataFieldName": "data",
+        "name": "={{ $json.nombreArchivo }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.folderId }}"
+        },
         "options": {}
       },
       "credentials": {
-        "dropboxOAuth2Api": {
+        "googleDriveOAuth2Api": {
           "id": "REEMPLAZAR",
-          "name": "Dropbox Root"
+          "name": "Google Drive Ruth"
         }
       },
       "retryOnFail": true,
@@ -556,7 +578,7 @@
               "id": "k2",
               "name": "observacion",
               "type": "string",
-              "value": "=Archivado en {{ $json.rutaDropbox }} (por {{ $json.foundBy }})"
+              "value": "=Archivado en carpeta '{{ $json.folderName }}' (Drive, por {{ $json.foundBy }})"
             }
           ]
         },
@@ -849,7 +871,7 @@
       "parameters": {
         "width": 560,
         "height": 200,
-        "content": "### Resolver carpeta y archivar\nBúsqueda en `12. Archivo` por **cédula** y, si falla, por **nombre**.\n- **1 coincidencia** → archiva en `…/AFILIACIONES/` y estado **OK**.\n- **Varias** → **REVISIÓN MANUAL** + correo.\n- **Ninguna** → **ERROR** + correo.\nTodo queda en la hoja **Control** y el correo se etiqueta como procesado (anti-duplicado)."
+        "content": "### Resolver carpeta y archivar (Google Drive)\nBusca en el **Drive de Ruth** la carpeta cuyo nombre contiene la **cédula** y, si falla, el **nombre**.\n- **1 coincidencia** → sube el PDF a esa carpeta y registra en **MOVIMIENTOS** (OK).\n- **Varias** → **REVISIÓN** + correo → NO ENCONTRADAS.\n- **Ninguna** → **ERROR** + correo → NO ENCONTRADAS.\nEl correo se etiqueta como procesado (anti-duplicado)."
       }
     }
   ],
@@ -986,14 +1008,14 @@
       "main": [
         [
           {
-            "node": "🔍 Dropbox search (cédula+nombre)",
+            "node": "🔍 Drive: buscar carpeta",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "🔍 Dropbox search (cédula+nombre)": {
+    "🔍 Drive: buscar carpeta": {
       "main": [
         [
           {
@@ -1044,14 +1066,14 @@
       "main": [
         [
           {
-            "node": "⬆️ Archivar en Dropbox",
+            "node": "⬆️ Archivar en Drive",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "⬆️ Archivar en Dropbox": {
+    "⬆️ Archivar en Drive": {
       "main": [
         [
           {
