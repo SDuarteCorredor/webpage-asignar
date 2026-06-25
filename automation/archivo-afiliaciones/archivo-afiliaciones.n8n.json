@@ -37,7 +37,7 @@
               "id": "c1",
               "name": "gmailQuery",
               "type": "string",
-              "value": "has:attachment newer_than:3d -label:Procesado-Afiliaciones"
+              "value": "subject:ARCHIVO has:attachment newer_than:3d -label:Procesado-Afiliaciones"
             },
             {
               "id": "c2",
@@ -49,28 +49,34 @@
               "id": "c3",
               "name": "spreadsheetId",
               "type": "string",
-              "value": "PEGAR_ID_SHEET_CONTROL"
+              "value": "1mc1G6U5AljXGjtl2FNjtWY4YPPPH_bGj8fC4l9ewGEM"
             },
             {
               "id": "c4",
-              "name": "controlTab",
+              "name": "tabMovimientos",
               "type": "string",
-              "value": "Control"
+              "value": "MOVIMIENTOS"
             },
             {
               "id": "c5",
+              "name": "tabNoEncontradas",
+              "type": "string",
+              "value": "NO ENCONTRADAS"
+            },
+            {
+              "id": "c6",
               "name": "notifyEmail",
               "type": "string",
               "value": "archivobog@asignar.com.co"
             },
             {
-              "id": "c6",
+              "id": "c7",
               "name": "processedLabelId",
               "type": "string",
-              "value": "Label_XXXX (ID de la etiqueta)"
+              "value": "Label_32"
             },
             {
-              "id": "c7",
+              "id": "c8",
               "name": "ocrApiKey",
               "type": "string",
               "value": "OPCIONAL_OCRSPACE_APIKEY"
@@ -667,11 +673,11 @@
     },
     {
       "id": "merge_estados",
-      "name": "➕ Unir estados",
+      "name": "➕ Unir (para etiquetar)",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
       "position": [
-        2300,
+        2560,
         360
       ],
       "parameters": {
@@ -680,13 +686,13 @@
       }
     },
     {
-      "id": "sheet_control",
-      "name": "🧾 Registrar en Control",
+      "id": "sheet_mov",
+      "name": "🧾 Registrar MOVIMIENTOS",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        2520,
-        360
+        2300,
+        200
       ],
       "parameters": {
         "operation": "append",
@@ -697,26 +703,67 @@
         },
         "sheetName": {
           "__rl": true,
-          "value": "={{ $('⚙️ Configuración').item.json.controlTab }}",
+          "value": "={{ $('⚙️ Configuración').item.json.tabMovimientos }}",
           "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "Fecha procesamiento": "={{ $now.toISO() }}",
-            "Message ID": "={{ $json.messageId }}",
-            "Remitente": "={{ $json.remitente }}",
-            "Asunto": "={{ $json.subject }}",
-            "Nombre colaborador": "={{ $json.nombre }}",
-            "Cédula": "={{ $json.cedula }}",
-            "Entidad": "={{ $json.entidad }}",
-            "Tipo": "={{ $json.tipo }}",
-            "Fecha documento": "={{ $json.fecha }}",
-            "Archivo original": "={{ $json.fileName }}",
-            "Archivo guardado": "={{ $json.archivoGuardado || '' }}",
-            "Ruta Dropbox": "={{ $json.rutaDropbox || '' }}",
-            "Estado": "={{ $json.estado }}",
-            "Observación": "={{ $json.observacion || '' }}"
+            "ID MENSAJE": "={{ $json.messageId }}",
+            "CEDULA": "={{ $json.cedula }}",
+            "ARCHIVO ORIGINAL": "={{ $json.fileName }}",
+            "ARCHIVO FINAL": "={{ $json.archivoGuardado || '' }}",
+            "RESULTADO": "={{ $json.estado }}",
+            "DETALLE": "={{ $json.observacion || '' }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Sheets"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000
+    },
+    {
+      "id": "sheet_ne",
+      "name": "🧾 Registrar NO ENCONTRADAS",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        2300,
+        520
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').item.json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').item.json.tabNoEncontradas }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "FECHA REGISTRO": "={{ $now.toISO() }}",
+            "CEDULA": "={{ $json.cedula }}",
+            "ENTIDAD": "={{ $json.entidad }}",
+            "ARCHIVO ORIGINAL": "={{ $json.fileName }}",
+            "REMITENTE": "={{ $json.remitente }}",
+            "ASUNTO": "={{ $json.subject }}",
+            "OBSERVACION": "={{ $json.estado }} · {{ $json.observacion || '' }}"
           },
           "matchingColumns": [],
           "schema": [],
@@ -741,7 +788,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        2740,
+        2780,
         360
       ],
       "parameters": {
@@ -1019,7 +1066,18 @@
       "main": [
         [
           {
-            "node": "➕ Unir estados",
+            "node": "🧾 Registrar MOVIMIENTOS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧾 Registrar MOVIMIENTOS": {
+      "main": [
+        [
+          {
+            "node": "➕ Unir (para etiquetar)",
             "type": "main",
             "index": 0
           }
@@ -1052,25 +1110,25 @@
       "main": [
         [
           {
-            "node": "➕ Unir estados",
-            "type": "main",
-            "index": 1
-          }
-        ]
-      ]
-    },
-    "➕ Unir estados": {
-      "main": [
-        [
-          {
-            "node": "🧾 Registrar en Control",
+            "node": "🧾 Registrar NO ENCONTRADAS",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "🧾 Registrar en Control": {
+    "🧾 Registrar NO ENCONTRADAS": {
+      "main": [
+        [
+          {
+            "node": "➕ Unir (para etiquetar)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "➕ Unir (para etiquetar)": {
       "main": [
         [
           {
