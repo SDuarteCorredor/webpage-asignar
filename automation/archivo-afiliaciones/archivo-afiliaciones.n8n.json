@@ -101,7 +101,7 @@
         "limit": 50,
         "simple": false,
         "filters": {
-          "q": "={{ $('⚙️ Configuración').item.json.gmailQuery }}"
+          "q": "={{ $('⚙️ Configuración').first().json.gmailQuery }}"
         },
         "options": {
           "downloadAttachments": true
@@ -204,7 +204,7 @@
           "parameters": [
             {
               "name": "apikey",
-              "value": "={{ $('⚙️ Configuración').item.json.ocrApiKey }}"
+              "value": "={{ $('⚙️ Configuración').first().json.ocrApiKey }}"
             }
           ]
         },
@@ -679,7 +679,7 @@
       "parameters": {
         "resource": "message",
         "operation": "send",
-        "sendTo": "={{ $('⚙️ Configuración').item.json.notifyEmail }}",
+        "sendTo": "={{ $('⚙️ Configuración').first().json.notifyEmail }}",
         "subject": "=[Archivo] {{ $json.estado }} · {{ $json.cedula }} {{ $json.nombre }}",
         "emailType": "text",
         "message": "=Hola,\n\nEl flujo automático de afiliaciones requiere tu revisión:\n\n• Estado: {{ $json.estado }}\n• Cédula: {{ $json.cedula }}\n• Nombre: {{ $json.nombre }}\n• Entidad/Tipo: {{ $json.entidad }} ({{ $json.tipo }})\n• Archivo: {{ $json.fileName }}\n• Detalle: {{ $json.observacion }}\n• Correo origen: {{ $json.remitente }} — {{ $json.subject }}\n\nQuedó registrado en la hoja de control.\n\n— Automatización de Archivo (n8n)",
@@ -720,21 +720,21 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('⚙️ Configuración').item.json.spreadsheetId }}",
+          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetId }}",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "={{ $('⚙️ Configuración').item.json.tabMovimientos }}",
+          "value": "={{ $('⚙️ Configuración').first().json.tabMovimientos }}",
           "mode": "name"
         },
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "ID MENSAJE": "={{ $json.messageId }}",
-            "CEDULA": "={{ $json.cedula }}",
-            "ARCHIVO ORIGINAL": "={{ $json.fileName }}",
-            "ARCHIVO FINAL": "={{ $json.archivoGuardado || '' }}",
+            "ID MENSAJE": "={{ $('🏷️ Armar ruta destino').item.json.messageId }}",
+            "CEDULA": "={{ $('🏷️ Armar ruta destino').item.json.cedula }}",
+            "ARCHIVO ORIGINAL": "={{ $('🏷️ Armar ruta destino').item.json.fileName }}",
+            "ARCHIVO FINAL": "={{ $('🏷️ Armar ruta destino').item.json.nombreArchivo }}",
             "RESULTADO": "={{ $json.estado }}",
             "DETALLE": "={{ $json.observacion || '' }}"
           },
@@ -768,12 +768,12 @@
         "operation": "append",
         "documentId": {
           "__rl": true,
-          "value": "={{ $('⚙️ Configuración').item.json.spreadsheetId }}",
+          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetId }}",
           "mode": "id"
         },
         "sheetName": {
           "__rl": true,
-          "value": "={{ $('⚙️ Configuración').item.json.tabNoEncontradas }}",
+          "value": "={{ $('⚙️ Configuración').first().json.tabNoEncontradas }}",
           "mode": "name"
         },
         "columns": {
@@ -816,9 +816,9 @@
       "parameters": {
         "resource": "message",
         "operation": "addLabels",
-        "messageId": "={{ $json.messageId }}",
+        "messageId": "={{ $('🧮 Consolidar datos').item.json.messageId }}",
         "labelIds": [
-          "={{ $('⚙️ Configuración').item.json.processedLabelId }}"
+          "={{ $('⚙️ Configuración').first().json.processedLabelId }}"
         ]
       },
       "credentials": {
@@ -1110,6 +1110,11 @@
       "main": [
         [
           {
+            "node": "🧾 Registrar NO ENCONTRADAS",
+            "type": "main",
+            "index": 0
+          },
+          {
             "node": "✉️ Notificar a Root",
             "type": "main",
             "index": 0
@@ -1121,18 +1126,12 @@
       "main": [
         [
           {
-            "node": "✉️ Notificar a Root",
+            "node": "🧾 Registrar NO ENCONTRADAS",
             "type": "main",
             "index": 0
-          }
-        ]
-      ]
-    },
-    "✉️ Notificar a Root": {
-      "main": [
-        [
+          },
           {
-            "node": "🧾 Registrar NO ENCONTRADAS",
+            "node": "✉️ Notificar a Root",
             "type": "main",
             "index": 0
           }
