@@ -1,0 +1,778 @@
+{
+  "name": "Archivo - Afiliaciones (Root)",
+  "nodes": [
+    {
+      "id": "trigger",
+      "name": "⏰ 6:00 AM (diario)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1280,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 6 * * *"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "config",
+      "name": "⚙️ Configuración",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1060,
+        300
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c1",
+              "name": "gmailQuery",
+              "type": "string",
+              "value": "(subject:AFILIACIONES OR subject:AFILIACION OR subject:\"ARCHIVO NUEVA EPS Y SURA\") has:attachment newer_than:2d"
+            },
+            {
+              "id": "c2",
+              "name": "spreadsheetId",
+              "type": "string",
+              "value": "PEGAR_ID_OUT_AFILIACIONES"
+            },
+            {
+              "id": "c3",
+              "name": "tabRealizadas",
+              "type": "string",
+              "value": "Realizadas"
+            },
+            {
+              "id": "c4",
+              "name": "tabPendientes",
+              "type": "string",
+              "value": "Pendientes"
+            },
+            {
+              "id": "c5",
+              "name": "notifyEmail",
+              "type": "string",
+              "value": "CORREO_DE_ROOT@asignar.com.co"
+            },
+            {
+              "id": "c6",
+              "name": "dropboxRootHint",
+              "type": "string",
+              "value": "/"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gmail_search",
+      "name": "📧 Buscar correos de afiliaciones",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -840,
+        300
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 25,
+        "simple": false,
+        "filters": {
+          "q": "={{ $('⚙️ Configuración').item.json.gmailQuery }}"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REEMPLAZAR",
+          "name": "Gmail Root"
+        }
+      }
+    },
+    {
+      "id": "code_split",
+      "name": "🧩 Normalizar y separar PDFs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -620,
+        300
+      ],
+      "parameters": {
+        "jsCode": "// Toma los correos de Gmail (con adjuntos descargados) y emite UN item por cada PDF.\n// Extracción determinista: cédula = primer bloque largo de dígitos del nombre del archivo.\nconst out = [];\nfor (const item of $input.all()) {\n  const binary = item.binary || {};\n  const j = item.json || {};\n  const fechaCorreo = j.date || j.internalDate || j.Date || '';\n  let remitente = '';\n  if (j.from && typeof j.from === 'object') {\n    remitente = j.from.text || (j.from.value && j.from.value[0] && j.from.value[0].address) || '';\n  } else {\n    remitente = j.from || j.From || '';\n  }\n  for (const key of Object.keys(binary)) {\n    const b = binary[key];\n    const name = (b.fileName || '').trim();\n    if (!/\\.pdf$/i.test(name)) continue;\n    const base = name.replace(/\\.pdf$/i, '').trim();\n    const ced = (base.match(/\\d{6,}/) || [''])[0];\n    const resto = base.replace(ced, '').replace(/[-_]+/g, ' ').trim();\n    const entidad = resto.toUpperCase();\n    let tipo = 'EPS';\n    if (/CAJA|COMFA|COMPENSAR|COLSUBSIDIO|CAFAM|COMPENSACI|COMFENALCO|COMFANDI/i.test(entidad)) tipo = 'CAJA';\n    out.push({\n      json: {\n        cedula: ced,\n        entidadRaw: resto,\n        entidad: entidad,\n        tipo: tipo,\n        fechaCorreo: fechaCorreo,\n        fechaIngreso: '',\n        remitente: remitente,\n        fileName: name,\n        datosCompletos: Boolean(ced && entidad),\n      },\n      binary: { data: b },\n    });\n  }\n}\nreturn out;"
+      }
+    },
+    {
+      "id": "if_complete",
+      "name": "¿Datos completos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "x1",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.datosCompletos }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "extract_pdf",
+      "name": "📄 Leer texto del PDF",
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        460
+      ],
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "data",
+        "options": {}
+      }
+    },
+    {
+      "id": "ai_extract",
+      "name": "🤖 Lector IA (Claude)",
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.1,
+      "position": [
+        120,
+        460
+      ],
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "schemaType": "manual",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "cedula",
+              "type": "string",
+              "description": "Número de cédula del colaborador (solo dígitos)",
+              "required": true
+            },
+            {
+              "name": "entidad",
+              "type": "string",
+              "description": "Entidad de afiliación, ej. NUEVA EPS, SURA, COMFAMA",
+              "required": true
+            },
+            {
+              "name": "tipoAfiliacion",
+              "type": "string",
+              "description": "EPS o CAJA de compensación",
+              "required": false
+            },
+            {
+              "name": "fechaIngreso",
+              "type": "string",
+              "description": "Fecha de ingreso o novedad (dd/mm/aaaa)",
+              "required": false
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "Eres un asistente de archivo. Extrae los datos de afiliación del documento. Responde solo con los campos solicitados."
+        }
+      }
+    },
+    {
+      "id": "anthropic_model",
+      "name": "Claude Sonnet",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        60,
+        640
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "Claude Sonnet 4.6"
+        },
+        "options": {
+          "temperature": 0
+        }
+      },
+      "credentials": {
+        "anthropicApi": {
+          "id": "REEMPLAZAR",
+          "name": "Anthropic"
+        }
+      }
+    },
+    {
+      "id": "set_merge_ai",
+      "name": "🔗 Fusionar campos IA",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        380,
+        460
+      ],
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a1",
+              "name": "cedula",
+              "type": "string",
+              "value": "={{ $json.output?.cedula || $json.cedula }}"
+            },
+            {
+              "id": "a2",
+              "name": "entidad",
+              "type": "string",
+              "value": "={{ ($json.output?.entidad || $json.entidad || '').toUpperCase() }}"
+            },
+            {
+              "id": "a3",
+              "name": "tipo",
+              "type": "string",
+              "value": "={{ $json.output?.tipoAfiliacion || $json.tipo }}"
+            },
+            {
+              "id": "a4",
+              "name": "fechaIngreso",
+              "type": "string",
+              "value": "={{ $json.output?.fechaIngreso || $json.fechaIngreso || $json.fechaCorreo }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "merge",
+      "name": "➕ Unir rutas (código/IA)",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        620,
+        320
+      ],
+      "parameters": {
+        "mode": "append",
+        "numberInputs": 2
+      }
+    },
+    {
+      "id": "dropbox_search",
+      "name": "🔍 Buscar carpeta por cédula",
+      "type": "n8n-nodes-base.dropbox",
+      "typeVersion": 1,
+      "position": [
+        860,
+        200
+      ],
+      "parameters": {
+        "resource": "search",
+        "query": "={{ $json.cedula }}",
+        "fileStatus": "active",
+        "filters": {},
+        "options": {}
+      },
+      "credentials": {
+        "dropboxOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Dropbox Root"
+        }
+      }
+    },
+    {
+      "id": "merge_bin",
+      "name": "📎 Recombinar binario + búsqueda",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1080,
+        320
+      ],
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 2,
+        "options": {}
+      }
+    },
+    {
+      "id": "code_dest",
+      "name": "🗂️ Definir carpeta y nombre",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1300,
+        320
+      ],
+      "parameters": {
+        "jsCode": "// Recibe (input combinado) el item con binario + el resultado de búsqueda de Dropbox.\n// Elige la carpeta del colaborador y arma la ruta destino dentro de la subcarpeta AFILIACIONES.\nconst j = $json;\nconst cedula = j.cedula;\nconst matches = j.matches || j.results || [];\nlet folderPath = '';\nfor (const m of matches) {\n  const md = (m && m.metadata && m.metadata.metadata) || (m && m.metadata) || m;\n  const tag = md['.tag'] || md.tag;\n  if (tag === 'folder') {\n    const path = md.path_lower || md.path_display || '';\n    if (path && path.replace(/\\D/g, '').includes(cedula)) { folderPath = md.path_display || path; break; }\n    if (!folderPath) folderPath = md.path_display || path; // primer folder como respaldo\n  }\n}\nconst encontrada = Boolean(folderPath);\n// Fecha legible dd-mm-aaaa\nlet f = (j.fechaIngreso || j.fechaCorreo || '').toString();\nlet fecha = 'SIN-FECHA';\nconst d = new Date(f);\nif (!isNaN(d.getTime())) {\n  const dd = String(d.getDate()).padStart(2, '0');\n  const mm = String(d.getMonth() + 1).padStart(2, '0');\n  fecha = `${dd}-${mm}-${d.getFullYear()}`;\n} else if (f) {\n  fecha = f.replace(/[\\/]/g, '-');\n}\nconst entidad = (j.entidad || '').trim();\nconst tipo = (j.tipo || 'EPS').trim();\nconst nombreArchivo = `${cedula} ${entidad} ${tipo} ${fecha}.pdf`.replace(/\\s+/g, ' ').trim();\nconst destino = encontrada ? `${folderPath}/AFILIACIONES/${nombreArchivo}` : '';\nreturn [{\n  json: { ...j, encontrada, folderPath, nombreArchivo, destino,\n          estado: encontrada ? 'ARCHIVADO' : 'NO ENCONTRADA', fechaArchivo: fecha },\n  binary: $input.item.binary,\n}];"
+      }
+    },
+    {
+      "id": "if_found",
+      "name": "¿Carpeta encontrada?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1520,
+        320
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "y1",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.encontrada }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "dropbox_upload",
+      "name": "⬆️ Archivar PDF en Dropbox",
+      "type": "n8n-nodes-base.dropbox",
+      "typeVersion": 1,
+      "position": [
+        1760,
+        200
+      ],
+      "parameters": {
+        "resource": "file",
+        "operation": "upload",
+        "path": "={{ $json.destino }}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "credentials": {
+        "dropboxOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Dropbox Root"
+        }
+      }
+    },
+    {
+      "id": "sheet_done",
+      "name": "✅ Reporte: Realizadas",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1980,
+        200
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').item.json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').item.json.tabRealizadas }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha proceso": "={{ $now.format('yyyy-LL-dd') }}",
+            "Cédula": "={{ $json.cedula }}",
+            "Entidad": "={{ $json.entidad }}",
+            "Tipo": "={{ $json.tipo }}",
+            "Fecha ingreso": "={{ $json.fechaArchivo }}",
+            "Archivo": "={{ $json.nombreArchivo }}",
+            "Carpeta Dropbox": "={{ $json.folderPath }}",
+            "Estado": "=ARCHIVADO",
+            "Remitente": "={{ $json.remitente }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Sheets Root"
+        }
+      }
+    },
+    {
+      "id": "sheet_pending",
+      "name": "⏳ Reporte: Pendientes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1760,
+        460
+      ],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').item.json.spreadsheetId }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "={{ $('⚙️ Configuración').item.json.tabPendientes }}",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha proceso": "={{ $now.format('yyyy-LL-dd') }}",
+            "Cédula": "={{ $json.cedula }}",
+            "Entidad": "={{ $json.entidad }}",
+            "Tipo": "={{ $json.tipo }}",
+            "Fecha ingreso": "={{ $json.fechaArchivo }}",
+            "Archivo": "={{ $json.nombreArchivo }}",
+            "Carpeta Dropbox": "={{ $json.folderPath }}",
+            "Estado": "=NO ENCONTRADA - REVISAR",
+            "Remitente": "={{ $json.remitente }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REEMPLAZAR",
+          "name": "Google Sheets Root"
+        }
+      }
+    },
+    {
+      "id": "notify",
+      "name": "✉️ Notificar a Root",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1980,
+        460
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('⚙️ Configuración').item.json.notifyEmail }}",
+        "subject": "=[Archivo] Afiliación pendiente de revisar: {{ $json.cedula }} - {{ $json.entidad }}",
+        "emailType": "text",
+        "message": "=Hola Root,\n\nEl flujo automático no encontró la carpeta del colaborador en Dropbox para archivar este PDF:\n\n• Cédula: {{ $json.cedula }}\n• Entidad: {{ $json.entidad }} ({{ $json.tipo }})\n• Archivo: {{ $json.fileName }}\n• Recibido de: {{ $json.remitente }}\n• Fecha correo: {{ $json.fechaCorreo }}\n\nQuedó registrado en la pestaña \"Pendientes\" del reporte. Por favor revisa y archívalo manualmente.\n\n— Automatización de Archivo (n8n)",
+        "options": {}
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "REEMPLAZAR",
+          "name": "Gmail Root"
+        }
+      }
+    },
+    {
+      "id": "note1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1320,
+        80
+      ],
+      "parameters": {
+        "width": 520,
+        "height": 180,
+        "content": "## ⚙️ Antes de activar\n1. Edita **Configuración**: ID del Sheet `out afiliaciones`, correo de Root y nombres de pestañas.\n2. Conecta credenciales: **Gmail (cuenta de Root)**, **Dropbox de Root**, **Google Sheets**, **Anthropic**.\n3. Crea en el Sheet las pestañas **Realizadas** y **Pendientes** con encabezados.\n4. Prueba con *Execute Workflow* antes de activar el cron."
+      }
+    },
+    {
+      "id": "note2",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        700
+      ],
+      "parameters": {
+        "width": 700,
+        "height": 150,
+        "content": "### Extracción híbrida\nEl código saca cédula/entidad del nombre del PDF. Si faltan datos (`datosCompletos = false`), entra el **lector IA (Claude)** que lee el texto del PDF y completa los campos."
+      }
+    },
+    {
+      "id": "note3",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        80
+      ],
+      "parameters": {
+        "width": 700,
+        "height": 160,
+        "content": "### Archivo y reporte\nBúsqueda **por cédula en todo el árbol** del Dropbox (estructura desordenada). Si existe la carpeta → archiva en subcarpeta `AFILIACIONES` y registra en **Realizadas**. Si NO existe → registra en **Pendientes** y notifica a Root."
+      }
+    }
+  ],
+  "connections": {
+    "⏰ 6:00 AM (diario)": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Configuración": {
+      "main": [
+        [
+          {
+            "node": "📧 Buscar correos de afiliaciones",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📧 Buscar correos de afiliaciones": {
+      "main": [
+        [
+          {
+            "node": "🧩 Normalizar y separar PDFs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧩 Normalizar y separar PDFs": {
+      "main": [
+        [
+          {
+            "node": "¿Datos completos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Datos completos?": {
+      "main": [
+        [
+          {
+            "node": "➕ Unir rutas (código/IA)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📄 Leer texto del PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📄 Leer texto del PDF": {
+      "main": [
+        [
+          {
+            "node": "🤖 Lector IA (Claude)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🤖 Lector IA (Claude)": {
+      "main": [
+        [
+          {
+            "node": "🔗 Fusionar campos IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔗 Fusionar campos IA": {
+      "main": [
+        [
+          {
+            "node": "➕ Unir rutas (código/IA)",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Claude Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "🤖 Lector IA (Claude)",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "➕ Unir rutas (código/IA)": {
+      "main": [
+        [
+          {
+            "node": "🔍 Buscar carpeta por cédula",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📎 Recombinar binario + búsqueda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔍 Buscar carpeta por cédula": {
+      "main": [
+        [
+          {
+            "node": "📎 Recombinar binario + búsqueda",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "📎 Recombinar binario + búsqueda": {
+      "main": [
+        [
+          {
+            "node": "🗂️ Definir carpeta y nombre",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🗂️ Definir carpeta y nombre": {
+      "main": [
+        [
+          {
+            "node": "¿Carpeta encontrada?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Carpeta encontrada?": {
+      "main": [
+        [
+          {
+            "node": "⬆️ Archivar PDF en Dropbox",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "⏳ Reporte: Pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⬆️ Archivar PDF en Dropbox": {
+      "main": [
+        [
+          {
+            "node": "✅ Reporte: Realizadas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⏳ Reporte: Pendientes": {
+      "main": [
+        [
+          {
+            "node": "✉️ Notificar a Root",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Bogota"
+  },
+  "pinData": {},
+  "meta": {
+    "templatecredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "archivo"
+    },
+    {
+      "name": "afiliaciones"
+    }
+  ]
+}
