@@ -1,35 +1,20 @@
+import {
+  clientesHotel,
+  clientesEventos,
+  clientesIndustria,
+} from "./clientes";
+
 const grupos = [
+  { titulo: "Sector Hotelero", icon: "hotel", items: clientesHotel },
   {
-    sector: "Sector Hotelero",
-    icon: "hotel",
-    clientes: [
-      "NH Hotels",
-      "Marriott",
-      "Estelar",
-      "Hilton",
-      "Sheraton",
-      "Movich",
-      "Four Seasons",
-      "W Hotels",
-    ],
-  },
-  {
-    sector: "Sector Inmobiliario",
-    icon: "apartment",
-    clientes: ["UALo", "Hashtag 98 Hotel", "GO Living Suites"],
-  },
-  {
-    sector: "Industria y Restaurantes",
+    titulo: "Centros de eventos, clubes y restaurantes",
     icon: "restaurant",
-    clientes: [
-      "Medicox",
-      "SuperPack",
-      "Fruta Fresca",
-      "RCD Project",
-      "Casal",
-      "La Kasta",
-      "Mangiare",
-    ],
+    items: clientesEventos,
+  },
+  {
+    titulo: "Inmobiliario, industria y servicios",
+    icon: "apartment",
+    items: clientesIndustria,
   },
 ];
 
@@ -42,47 +27,51 @@ export default function ConfianzaSectores() {
             Confían en nosotros
           </span>
           <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy tracking-[-0.02em]">
-            Aliados en los sectores más exigentes
+            Las mejores experiencias del país
           </h2>
           <p className="font-[var(--font-body)] text-base text-text-secondary max-w-xl mx-auto mt-3">
-            Las mejores experiencias del país respaldan nuestro servicio.
+            Respaldamos la operación de marcas líderes en hotelería, eventos,
+            industria y más.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {grupos.map((g, i) => (
-            <div
-              key={g.sector}
-              className="scroll-reveal bg-white rounded-2xl p-7 card-elevated"
-              data-delay={String(i * 100)}
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0">
-                  <span
-                    className="material-symbols-outlined text-brand-blue text-2xl"
-                    style={{ fontVariationSettings: '"FILL" 0' }}
-                  >
-                    {g.icon}
-                  </span>
-                </div>
-                <h3 className="font-[var(--font-display)] text-lg font-bold text-brand-navy">
-                  {g.sector}
+        <div className="space-y-10">
+          {grupos.map((g, gi) => (
+            <div key={g.titulo} className="scroll-reveal" data-delay={String(gi * 100)}>
+              <div className="flex items-center gap-2.5 mb-5">
+                <span className="material-symbols-outlined text-brand-blue text-xl">
+                  {g.icon}
+                </span>
+                <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy">
+                  {g.titulo}
                 </h3>
+                <span className="flex-1 h-px bg-border ml-2" />
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                {g.clientes.map((c) => (
-                  <span
-                    key={c}
-                    className="font-[var(--font-ui)] text-sm font-medium text-text-secondary bg-surface px-3.5 py-2 rounded-full"
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-7 gap-3">
+                {g.items.map((src, i) => (
+                  <div
+                    key={i}
+                    className="aspect-square rounded-xl bg-white card-elevated flex items-center justify-center p-3 hover:-translate-y-0.5 transition-transform"
                   >
-                    {c}
-                  </span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={src}
+                      alt="Logo de cliente de Asignar"
+                      loading="lazy"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  </div>
                 ))}
               </div>
             </div>
           ))}
         </div>
+
+        <p className="font-[var(--font-ui)] text-[11px] text-text-muted/70 text-center mt-10 max-w-3xl mx-auto leading-relaxed">
+          El uso de las marcas es de carácter referencial. Los derechos de
+          propiedad industrial pertenecen a sus respectivos titulares.
+        </p>
       </div>
     </section>
   );
