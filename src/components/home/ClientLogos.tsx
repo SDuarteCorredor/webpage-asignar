@@ -13,7 +13,7 @@ export default function ClientLogos() {
   const doubled = [...clients, ...clients];
 
   return (
-    <section className="py-14 bg-white overflow-hidden">
+    <section className="py-14 bg-surface overflow-hidden">
       <p className="text-center font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-text-muted mb-8 scroll-reveal">
         Empresas que confían en nosotros
       </p>

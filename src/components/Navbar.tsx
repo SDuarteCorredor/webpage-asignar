@@ -3,30 +3,53 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
-// Login destinations for the "Ingreso" dropdown.
-// TODO: confirm final URLs with the team (empresas portal pending).
+// Login destinations (portales reales de Asignar)
 const loginOptions = [
   {
-    href: "https://postulate.asignar.cloud",
-    external: true,
+    href: "https://www.asignar.com.co/_admin/usuario.php",
     title: "Ingreso Empleados",
     subtitle: "Colaboradores en misión",
     icon: "badge",
   },
   {
-    href: "#",
-    external: false,
+    href: "https://www.asignar.com.co/_admin/",
     title: "Ingreso Empresas",
     subtitle: "Clientes y empresas aliadas",
     icon: "corporate_fare",
   },
 ];
 
+// Políticas — PDFs oficiales (asignar.com.co/build/img/)
+const POL = "https://www.asignar.com.co/build/img/";
+const policies = [
+  { label: "Responsabilidad social", file: "Politica_de_Responsabilidad_Social_Corporativa.pdf" },
+  { label: "Tratamiento de datos personales", file: "Politica_Tratamiento_Datos_Personales.pdf" },
+  { label: "Datos por videovigilancia", file: "Politica_Tratamiento_Datos_Captados_por_Sistemas_Videovigilancia.pdf" },
+  { label: "Prácticas laborales", file: "Politica_de_Practicas_Laborales.pdf" },
+  { label: "Política ambiental", file: "Politica_Ambiental.pdf" },
+  { label: "Ética corporativa", file: "Etica_Corporativa.pdf" },
+  { label: "Sostenibilidad", file: "Politica_de_Sostenibilidad.pdf" },
+  { label: "Inhabilidades por delitos sexuales", file: "Politica_de_Inhabilidades_por_Delitos_Sexuales.pdf" },
+  { label: "Derechos humanos", file: "Politica_de_Derechos_Humanos.pdf" },
+  { label: "Ética", file: "Politica_de_Etica.pdf" },
+  { label: "SAGRILAFT", file: "Manual_de_Procedimientos_Politicas_SAGRILAFT.pdf" },
+  { label: "PTEE", file: "Manual_de_Procedimientos_Politicas_PTEE.pdf" },
+];
+
+const navLinks = [
+  { href: "/soluciones", label: "Servicios" },
+  { href: "/nosotros", label: "Nosotros" },
+  { href: "/vacantes", label: "Vacantes" },
+  { href: "/contacto", label: "Contacto" },
+];
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [polOpen, setPolOpen] = useState(false);
   const loginRef = useRef<HTMLDivElement>(null);
+  const polRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -35,26 +58,25 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
   }, [mobileOpen]);
 
-  // Close login dropdown on outside click / Escape
+  // Cerrar dropdowns al hacer clic afuera / Escape
   useEffect(() => {
-    if (!loginOpen) return;
+    if (!loginOpen && !polOpen) return;
     const onClick = (e: MouseEvent) => {
-      if (loginRef.current && !loginRef.current.contains(e.target as Node)) {
-        setLoginOpen(false);
-      }
+      const t = e.target as Node;
+      if (loginRef.current && !loginRef.current.contains(t)) setLoginOpen(false);
+      if (polRef.current && !polRef.current.contains(t)) setPolOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLoginOpen(false);
+      if (e.key === "Escape") {
+        setLoginOpen(false);
+        setPolOpen(false);
+      }
     };
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
@@ -62,17 +84,7 @@ export default function Navbar() {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKey);
     };
-  }, [loginOpen]);
-
-  const navLinks = [
-    { href: "/soluciones", label: "Servicios" },
-    { href: "/nosotros", label: "Nosotros" },
-    { href: "/vacantes", label: "Vacantes" },
-    { href: "/contacto", label: "Contacto" },
-  ];
-
-  const linkProps = (external: boolean) =>
-    external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+  }, [loginOpen, polOpen]);
 
   return (
     <nav
@@ -98,7 +110,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav Links */}
-        <div className="hidden md:flex items-center gap-8 font-[var(--font-ui)] text-sm font-medium">
+        <div className="hidden md:flex items-center gap-7 font-[var(--font-ui)] text-sm font-medium">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -108,14 +120,59 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+
+          {/* Políticas dropdown */}
+          <div className="relative" ref={polRef}>
+            <button
+              onClick={() => {
+                setPolOpen((v) => !v);
+                setLoginOpen(false);
+              }}
+              aria-expanded={polOpen}
+              aria-haspopup="true"
+              className="inline-flex items-center gap-1 text-text-secondary hover:text-brand-blue transition-colors duration-200"
+            >
+              Políticas
+              <span
+                className={`material-symbols-outlined text-base transition-transform duration-200 ${
+                  polOpen ? "rotate-180" : ""
+                }`}
+              >
+                expand_more
+              </span>
+            </button>
+
+            {polOpen && (
+              <div className="absolute left-0 mt-3 w-80 bg-white rounded-2xl card-elevated p-2 max-h-[70vh] overflow-y-auto z-50 animate-[fadeIn_0.15s_ease-out]">
+                {policies.map((p) => (
+                  <a
+                    key={p.label}
+                    href={`${POL}${p.file}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setPolOpen(false)}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-text-secondary hover:bg-brand-blue/[0.05] hover:text-brand-navy transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-brand-blue text-base shrink-0">
+                      picture_as_pdf
+                    </span>
+                    {p.label}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
-          {/* Ingreso dropdown (Bancolombia-style) */}
+          {/* Ingreso dropdown */}
           <div className="relative" ref={loginRef}>
             <button
-              onClick={() => setLoginOpen((v) => !v)}
+              onClick={() => {
+                setLoginOpen((v) => !v);
+                setPolOpen(false);
+              }}
               aria-expanded={loginOpen}
               aria-haspopup="true"
               className={`inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-full border transition-all duration-200 ${
@@ -124,12 +181,7 @@ export default function Navbar() {
                   : "border-brand-blue/30 text-brand-blue hover:border-brand-blue hover:bg-brand-blue/[0.04]"
               }`}
             >
-              <span
-                className="material-symbols-outlined text-lg"
-                style={{ fontVariationSettings: '"FILL" 0' }}
-              >
-                lock_open
-              </span>
+              <span className="material-symbols-outlined text-lg">lock_open</span>
               Ingreso
               <span
                 className={`material-symbols-outlined text-lg transition-transform duration-200 ${
@@ -142,7 +194,7 @@ export default function Navbar() {
 
             {loginOpen && (
               <div
-                className="absolute right-0 mt-2 w-72 bg-white rounded-2xl card-elevated p-2 origin-top-right animate-[fadeIn_0.15s_ease-out] z-50"
+                className="absolute right-0 mt-2 w-72 bg-white rounded-2xl card-elevated p-2 animate-[fadeIn_0.15s_ease-out] z-50"
                 role="menu"
               >
                 <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-text-muted px-3 pt-2 pb-1">
@@ -152,7 +204,8 @@ export default function Navbar() {
                   <a
                     key={opt.title}
                     href={opt.href}
-                    {...linkProps(opt.external)}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     onClick={() => setLoginOpen(false)}
                     className="group flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-brand-blue/[0.05] transition-colors"
                     role="menuitem"
@@ -213,6 +266,31 @@ export default function Navbar() {
             </Link>
           ))}
 
+          {/* Políticas (mobile) */}
+          <details className="px-4 py-3 rounded-xl hover:bg-surface-gray transition-colors">
+            <summary className="text-lg font-medium text-text-primary cursor-pointer list-none flex items-center justify-between">
+              Políticas
+              <span className="material-symbols-outlined text-xl">expand_more</span>
+            </summary>
+            <div className="mt-2 flex flex-col">
+              {policies.map((p) => (
+                <a
+                  key={p.label}
+                  href={`${POL}${p.file}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 py-2 pl-2 text-sm text-text-secondary"
+                >
+                  <span className="material-symbols-outlined text-brand-blue text-base shrink-0">
+                    picture_as_pdf
+                  </span>
+                  {p.label}
+                </a>
+              ))}
+            </div>
+          </details>
+
           <hr className="my-4 border-border" />
 
           {/* Login group */}
@@ -223,7 +301,8 @@ export default function Navbar() {
             <a
               key={opt.title}
               href={opt.href}
-              {...linkProps(opt.external)}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
               className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-brand-blue/[0.05] transition-colors"
             >

@@ -81,7 +81,7 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <section className="py-16 md:py-20 bg-surface">
+    <section className="py-16 md:py-20 bg-white">
       <div
         ref={ref}
         className="max-w-[1280px] mx-auto px-4 md:px-16 grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12"

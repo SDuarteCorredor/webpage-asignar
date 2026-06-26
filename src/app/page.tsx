@@ -1,10 +1,10 @@
 import HeroSection from "@/components/home/HeroSection";
 import VacantesPreview from "@/components/home/VacantesPreview";
+import StatsSection from "@/components/home/StatsSection";
+import ClientLogos from "@/components/home/ClientLogos";
 import BeneficiosSection from "@/components/home/BeneficiosSection";
 import DOCASection from "@/components/home/DOCASection";
 import ProcesoSeleccion from "@/components/home/ProcesoSeleccion";
-import StatsSection from "@/components/home/StatsSection";
-import ClientLogos from "@/components/home/ClientLogos";
 import SGSSTSection from "@/components/home/SGSSTSection";
 import B2BSection from "@/components/home/B2BSection";
 import SectoresSection from "@/components/home/SectoresSection";
@@ -17,11 +17,11 @@ export default function HomePage() {
     <>
       <HeroSection />
       <VacantesPreview />
+      <StatsSection />
+      <ClientLogos />
       <BeneficiosSection />
       <DOCASection />
       <ProcesoSeleccion />
-      <StatsSection />
-      <ClientLogos />
       <SGSSTSection />
       <B2BSection />
       <SectoresSection />
