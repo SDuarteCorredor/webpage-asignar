@@ -65,9 +65,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
           <div className="space-y-4">
-            <h3 className="font-[var(--font-display)] text-2xl font-extrabold">
-              Asignar SAS
-            </h3>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-asignar-blanco.svg"
+              alt="Asignar Servicios Temporales"
+              className="h-9 w-auto"
+            />
             <p className="text-sm text-white/60 leading-relaxed max-w-xs">
               Más de 20 años conectando talento y empresas para construir el
               futuro laboral de Colombia.

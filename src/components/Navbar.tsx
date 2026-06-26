@@ -86,9 +86,15 @@ export default function Navbar() {
         {/* Logo */}
         <Link
           href="/"
-          className="font-[var(--font-display)] text-2xl font-extrabold text-brand-navy hover:text-brand-blue transition-colors duration-200"
+          className="flex items-center shrink-0"
+          aria-label="Asignar Servicios Temporales — Inicio"
         >
-          Asignar SAS
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-asignar.svg"
+            alt="Asignar Servicios Temporales"
+            className="h-8 md:h-9 w-auto"
+          />
         </Link>
 
         {/* Desktop Nav Links */}
