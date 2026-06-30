@@ -100,10 +100,9 @@ export default function HeroSection() {
           <div className="hidden lg:block lg:col-span-5">
             <div className="relative aspect-[4/5] w-full">
               <div
-                className="absolute inset-0 rounded-[2rem] bg-cover bg-center shadow-[0_30px_60px_-20px_rgba(0,122,254,0.35)]"
+                className="absolute inset-0 rounded-[2rem] bg-cover bg-[center_top] shadow-[0_30px_60px_-20px_rgba(0,122,254,0.35)]"
                 style={{
-                  backgroundImage:
-                    "url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=80')",
+                  backgroundImage: "url('/hero-asignar.jpg')",
                 }}
                 role="img"
                 aria-label="Equipo de trabajo conectado por Asignar SAS"
