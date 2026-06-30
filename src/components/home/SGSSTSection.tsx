@@ -63,11 +63,13 @@ export default function SGSSTSection() {
 
           {/* Right: designed panel */}
           <div className="scroll-reveal" data-delay="150">
-            <div className="bg-brand-gradient rounded-[2rem] p-8 md:p-10 text-white relative overflow-hidden">
-              <span className="material-symbols-outlined absolute -bottom-6 -right-4 text-[160px] text-white/[0.07] select-none pointer-events-none">
-                health_and_safety
-              </span>
-              <div className="relative z-10">
+            <div className="rounded-[2rem] p-8 md:p-10 text-white relative overflow-hidden min-h-[440px] flex">
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: "url('/foto-sst.jpg')" }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/95 via-brand-blue/80 to-brand-deep-blue/95" />
+              <div className="relative z-10 self-center">
                 <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mb-6">
                   <span
                     className="material-symbols-outlined text-white text-3xl"
