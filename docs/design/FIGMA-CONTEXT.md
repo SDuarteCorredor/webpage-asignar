@@ -42,6 +42,13 @@ Cover → Getting Started → 🎨 Foundations (root `6:2`) → ——— Compon
 Hero `15:2` · Vacantes `17:22` · Stats `17:218` · Logos `17:232` · Beneficios `17:255` · DOCA `18:69` · Proceso `19:77` · SGSST `20:89` · B2B `21:98` · Sectores `22:107` · Confianza `23:119` · Testimonios `24:124` · Respaldo `24:189`.
 Estado JSON completo: `docs/design/figma-state.json`.
 
+### 🎯 Dirección v2 (página `50:2`, run_id `asignar-ds-2026-07-01-2`)
+Tres conceptos de Hero para el rediseño, construidos con instancias del DS:
+- **A — Editorial Humano** `50:4`: split asimétrico, display 96px con itálica azul en "talento", foto full-bleed derecha, banda editorial de stats abajo.
+- **B — Navy Premium** `50:6`: fondo navy, display blanco con "experiencias" en itálica dorada, foto en arco con borde dorado punteado, CTAs blanco/outline, línea de confianza.
+- **C — Bento Dinámico** `50:8`: grid bento 5 celdas (headline+CTA, foto, contador navy, ticker de vacantes, CTA empresa en gradiente).
+Design Read aplicado: rediseño-overhaul, VARIANCE 8 / MOTION 6 / DENSITY 4. Correcciones vs v1: sin eyebrow, hero ≤4 elementos de texto, énfasis itálico misma familia, anti-centrado.
+
 ## 3. Pendientes conocidos
 
 - [ ] Subir imágenes reales (`public/hero-asignar.jpg`, `foto-sst.jpg`, logos de clientes) con `upload_assets` y reemplazar placeholders.

@@ -7,26 +7,131 @@
   "step": "checkpoint",
   "decisions": {
     "modes": "light-only",
-    "v1Components": ["Button", "Badge/Pill", "Icon", "Card"]
+    "v1Components": [
+      "Button",
+      "Badge/Pill",
+      "Icon",
+      "Card"
+    ]
   },
   "sourceTokens": {
-    "brand": {"blue": "#007AFE", "light-blue": "#05B8FD", "deep-blue": "#0056B3", "navy": "#001233", "gold": "#FFC000"},
-    "surface": {"surface": "#F6F8FB", "surface-gray": "#EDF1F6", "elevated": "#FFFFFF", "border": "#E2E8F0"},
-    "text": {"primary": "#0F1419", "secondary": "#3D4551", "muted": "#6B7280"},
-    "fonts": {"display": "Plus Jakarta Sans", "body": "DM Sans", "ui": "Inter"},
-    "spacing": {"section": 80, "section-mobile": 48, "container-max": 1280},
-    "radius": {"lg": 8, "xl": 12, "2xl": 16, "3xl": 32, "full": 9999},
-    "easing": {"soft": "cubic-bezier(0.32,0.72,0,1)", "spring": "cubic-bezier(0.34,1.56,0.64,1)", "out": "cubic-bezier(0.16,1,0.3,1)"},
-    "duration": {"fast": 180, "base": 240, "slow": 400}
+    "brand": {
+      "blue": "#007AFE",
+      "light-blue": "#05B8FD",
+      "deep-blue": "#0056B3",
+      "navy": "#001233",
+      "gold": "#FFC000"
+    },
+    "surface": {
+      "surface": "#F6F8FB",
+      "surface-gray": "#EDF1F6",
+      "elevated": "#FFFFFF",
+      "border": "#E2E8F0"
+    },
+    "text": {
+      "primary": "#0F1419",
+      "secondary": "#3D4551",
+      "muted": "#6B7280"
+    },
+    "fonts": {
+      "display": "Plus Jakarta Sans",
+      "body": "DM Sans",
+      "ui": "Inter"
+    },
+    "spacing": {
+      "section": 80,
+      "section-mobile": 48,
+      "container-max": 1280
+    },
+    "radius": {
+      "lg": 8,
+      "xl": 12,
+      "2xl": 16,
+      "3xl": 32,
+      "full": 9999
+    },
+    "easing": {
+      "soft": "cubic-bezier(0.32,0.72,0,1)",
+      "spring": "cubic-bezier(0.34,1.56,0.64,1)",
+      "out": "cubic-bezier(0.16,1,0.3,1)"
+    },
+    "duration": {
+      "fast": 180,
+      "base": 240,
+      "slow": 400
+    }
   },
   "entities": {
-    "collections": {"primitives":"VariableCollectionId:2:2","color":"VariableCollectionId:2:3","spacing":"VariableCollectionId:2:4","radius":"VariableCollectionId:2:5"},
-    "variables": {"note":"46 vars, primitives 2:6-2:18, semantic color 2:19-2:35, spacing/radius 3:2-3:17"},
-    "pages": {"cover":"page/cover","gettingStarted":"page/getting-started","foundations":"page/foundations","foundationsRoot":"6:2","sepComponents":"page/sep-components"},
-    "components": {"icons":"page/icons (10 comps 7:6..7:41)","badge":"componentset/badge 8:15","button":"componentset/button 10:179","card":"componentset/card 11:24","iconDefault":"7:6"},
-    "styles": {"note":"5 effect styles, 15 text styles created & tagged dsb/key"}
+    "collections": {
+      "primitives": "VariableCollectionId:2:2",
+      "color": "VariableCollectionId:2:3",
+      "spacing": "VariableCollectionId:2:4",
+      "radius": "VariableCollectionId:2:5"
+    },
+    "variables": {
+      "note": "46 vars, primitives 2:6-2:18, semantic color 2:19-2:35, spacing/radius 3:2-3:17"
+    },
+    "pages": {
+      "cover": "page/cover",
+      "gettingStarted": "page/getting-started",
+      "foundations": "page/foundations",
+      "foundationsRoot": "6:2",
+      "sepComponents": "page/sep-components"
+    },
+    "components": {
+      "icons": "page/icons (10 comps 7:6..7:41)",
+      "badge": "componentset/badge 8:15",
+      "button": "componentset/button 10:179",
+      "card": "componentset/card 11:24",
+      "iconDefault": "7:6"
+    },
+    "styles": {
+      "note": "5 effect styles, 15 text styles created & tagged dsb/key"
+    }
   },
-  "phase1Totals": {"collections":4,"variables":46,"textStyles":15,"effectStyles":5,"brokenAliases":0},
-  "homePage": {"page":"page/home 14:2","wrapper":"14:3","sectionsTotal":13,"sectionsDone":["Hero","Vacantes","Stats","Logos","Beneficios","DOCA","Proceso","SGSST","B2B","Sectores","Confianza","Testimonios","Respaldo"],"status":"COMPLETE"},
-  "completedSteps": ["phase0","phase1","phase2","phase3","home-complete"]
+  "phase1Totals": {
+    "collections": 4,
+    "variables": 46,
+    "textStyles": 15,
+    "effectStyles": 5,
+    "brokenAliases": 0
+  },
+  "homePage": {
+    "page": "page/home 14:2",
+    "wrapper": "14:3",
+    "sectionsTotal": 13,
+    "sectionsDone": [
+      "Hero",
+      "Vacantes",
+      "Stats",
+      "Logos",
+      "Beneficios",
+      "DOCA",
+      "Proceso",
+      "SGSST",
+      "B2B",
+      "Sectores",
+      "Confianza",
+      "Testimonios",
+      "Respaldo"
+    ],
+    "status": "COMPLETE"
+  },
+  "completedSteps": [
+    "phase0",
+    "phase1",
+    "phase2",
+    "phase3",
+    "home-complete"
+  ],
+  "direccionV2": {
+    "page": "50:2",
+    "runId": "asignar-ds-2026-07-01-2",
+    "concepts": {
+      "A-editorial": "50:4",
+      "B-navy": "50:6",
+      "C-bento": "50:8"
+    },
+    "status": "awaiting user direction pick"
+  }
 }
