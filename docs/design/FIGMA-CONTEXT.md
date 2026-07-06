@@ -58,7 +58,9 @@ Secciones rediseñadas en Figma y ya llevadas a React/Next (fieles al Figma apro
 - **Eliminadas**: Confianza (`ConfianzaSectores.tsx`) y Respaldo (`RespaldoStrip.tsx`).
 - **CSS**: nuevos keyframes en `globals.css` (`reel-up`/`reel-down`/`testi-rise`) con soporte `prefers-reduced-motion`.
 - **Header/Footer**: intactos por pedido del cliente.
-- **Slots de imagen pendientes** (hoy caen a degradado de marca): `public/b2b.jpg`, `public/politicas.jpg`, `public/sectores/{hotelero,restaurantes,industrial,logistica,servicios,inmobiliario}.jpg`, `public/testimonios/{carlos,laura,andres}.jpg`. Prompts GPT ya entregados al cliente.
+- **Imágenes EXTRAÍDAS de Figma** (vía `download_assets` → `rawImages`, optimizadas a JPG con `sharp`, en `public/home/`): `hero.jpg`, `ben-1..6.jpg`, `b2b.jpg`, `sst.jpg`, `sec-{hotelero,restaurantes,industrial,logistica,servicios,inmobiliario}.jpg` (~1.4MB total). Truco: el nodo con nombre "image" o la foto base viven en `rawImages[0]`; el `export` compuesto trae texto/overlay fusionado. `curl` a assets de Figma SÍ funciona en este entorno (nota vieja del §5 obsoleta).
+- **Secciones ya fieles al Figma en código**: Hero (foto full-bleed + 3 glass cards), Beneficios (6 photo-cards), Vacantes (split + 4 filas), SG-SST (foto + card "100%"), B2B, Sectores, Testimonios, Políticas. Header/Footer intactos.
+- **Pendiente menor**: imagen de Políticas (`152:54` es placeholder vacío en Figma → en código cae a degradado; el label "Operación responsable y certificada" lo hace ver intencional). Retratos reales de Testimonios (hoy iniciales, igual que Figma).
 
 ## 3. Pendientes conocidos
 
