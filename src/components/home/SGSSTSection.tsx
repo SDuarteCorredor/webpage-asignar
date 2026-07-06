@@ -61,46 +61,46 @@ export default function SGSSTSection() {
             </div>
           </div>
 
-          {/* Right: designed panel */}
+          {/* Right: real photo + compliance stat card */}
           <div className="scroll-reveal" data-delay="150">
-            <div className="rounded-[2rem] p-8 md:p-10 text-white relative overflow-hidden min-h-[440px] flex">
+            <div className="relative min-h-[440px] overflow-hidden rounded-[2rem] bg-brand-navy lg:min-h-[520px]">
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: "url('/foto-sst.jpg')" }}
+                style={{ backgroundImage: "url('/home/sst.jpg')" }}
+                role="img"
+                aria-label="Equipo de Asignar aplicando protocolos de seguridad y salud en el trabajo"
               />
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/95 via-brand-blue/80 to-brand-deep-blue/95" />
-              <div className="relative z-10 self-center">
-                <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center mb-6">
-                  <span
-                    className="material-symbols-outlined text-white text-3xl"
-                    style={{ fontVariationSettings: '"FILL" 1' }}
-                  >
-                    verified_user
-                  </span>
-                </div>
-                <p className="font-[var(--font-display)] text-2xl font-bold mb-2">
-                  Visión Zero ATEL
-                </p>
-                <p className="font-[var(--font-body)] text-sm text-white/80 leading-relaxed mb-8 max-w-sm">
-                  Trabajamos por cero accidentes y cero enfermedades laborales en
-                  cada operación que acompañamos.
-                </p>
+              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 via-transparent to-transparent" />
 
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 flex items-center gap-4">
-                  <span
-                    className="material-symbols-outlined text-brand-gold text-3xl"
-                    style={{ fontVariationSettings: '"FILL" 1' }}
-                  >
-                    shield
-                  </span>
+              {/* floating compliance card */}
+              <div className="absolute inset-x-5 bottom-5 rounded-2xl border border-white/60 bg-white/95 p-5 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.4)] backdrop-blur-md sm:inset-x-auto sm:left-6 sm:w-[330px]">
+                <div className="flex items-center gap-4">
+                  <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
+                    <svg viewBox="0 0 64 64" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
+                      <circle cx="32" cy="32" r="28" fill="none" stroke="#E2E8F0" strokeWidth="6" />
+                      <circle cx="32" cy="32" r="28" fill="none" stroke="#007AFE" strokeWidth="6" strokeLinecap="round" strokeDasharray="176" strokeDashoffset="0" />
+                    </svg>
+                    <span className="font-[var(--font-display)] text-base font-extrabold text-brand-navy">100%</span>
+                  </div>
                   <div>
-                    <p className="font-[var(--font-display)] text-base font-bold">
-                      ARL SURA
+                    <p className="font-[var(--font-display)] text-base font-bold text-brand-navy">
+                      Cumplimiento
                     </p>
-                    <p className="font-[var(--font-ui)] text-xs text-white/70">
-                      Para todos los empleados misionales
+                    <p className="font-[var(--font-body)] text-sm text-text-secondary">
+                      normativo SG-SST
+                    </p>
+                    <p className="mt-1 font-[var(--font-ui)] text-xs text-text-muted">
+                      Auditado y vigente
                     </p>
                   </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
+                  <span className="font-[var(--font-ui)] text-xs text-text-muted">
+                    Respaldado por
+                  </span>
+                  <span className="font-[var(--font-display)] text-sm font-bold text-brand-navy">
+                    ARL · Cobertura total
+                  </span>
                 </div>
               </div>
             </div>

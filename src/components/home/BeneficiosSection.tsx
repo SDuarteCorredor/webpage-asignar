@@ -1,82 +1,65 @@
+/* Inline SVG arrow — bulletproof (no icon-font dependency) */
+const ArrowRight = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M4 12h15M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 const beneficios = [
-  {
-    titulo: "Pagos quincenales",
-    sub: "Puntuales y seguros",
-    icon: "payments",
-  },
-  {
-    titulo: "Seguridad social completa",
-    sub: "EPS, Pensión, ARL y Caja",
-    icon: "health_and_safety",
-  },
-  {
-    titulo: "Prestaciones de ley",
-    sub: "Prima, cesantías y vacaciones",
-    icon: "balance",
-  },
-  {
-    titulo: "Capacitaciones",
-    sub: "Gratuitas para tu perfil",
-    icon: "school",
-  },
-  {
-    titulo: "Acompañamiento",
-    sub: "De nuestro equipo experto",
-    icon: "support_agent",
-  },
-  {
-    titulo: "Flexibilidad",
-    sub: "Opciones de horarios",
-    icon: "schedule",
-  },
+  { titulo: "Pagos quincenales", sub: "Puntuales y seguros", img: "/home/ben-1.jpg" },
+  { titulo: "Seguridad social", sub: "EPS, Pensión, ARL y Caja", img: "/home/ben-2.jpg" },
+  { titulo: "Prestaciones de ley", sub: "Prima, cesantías y vacaciones", img: "/home/ben-3.jpg" },
+  { titulo: "Capacitaciones", sub: "Gratuitas para tu perfil", img: "/home/ben-4.jpg" },
+  { titulo: "Acompañamiento", sub: "De nuestro equipo experto", img: "/home/ben-5.jpg" },
+  { titulo: "Flexibilidad", sub: "Opciones de horarios", img: "/home/ben-6.jpg" },
 ];
 
 export default function BeneficiosSection() {
   return (
-    <section className="py-20 md:py-28 bg-white">
-      <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-        <div className="text-center mb-14 scroll-reveal">
-          <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-blue mb-3 block">
+    <section className="bg-white py-20 md:py-28">
+      <div className="mx-auto max-w-[1280px] px-4 md:px-16">
+        <div className="scroll-reveal mb-14 text-center">
+          <span className="mb-3 block font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.12em] text-brand-blue">
             Para candidatos
           </span>
-          <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy tracking-[-0.02em]">
+          <h2 className="font-[var(--font-display)] text-3xl font-extrabold tracking-[-0.02em] text-brand-navy md:text-4xl">
             Lo que recibes en Asignar
           </h2>
-          <p className="font-[var(--font-body)] text-base text-text-secondary max-w-xl mx-auto mt-3">
+          <p className="mx-auto mt-3 max-w-xl font-[var(--font-body)] text-base text-text-secondary">
             Beneficios diseñados para tu bienestar y crecimiento profesional.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {beneficios.map((b, i) => (
-            <div
+            <article
               key={b.titulo}
-              className="scroll-reveal group bg-white rounded-2xl p-6 card-elevated flex items-start gap-4 hover:-translate-y-0.5"
-              data-delay={String(i * 80)}
+              className="scroll-reveal group relative h-[280px] overflow-hidden rounded-[20px] shadow-[0_6px_24px_rgba(0,18,51,0.1)]"
+              data-delay={String((i % 3) * 90)}
             >
+              {/* photo */}
               <div
-                className="w-12 h-12 rounded-2xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0 group-hover:bg-brand-blue transition-colors"
-                style={{ transitionDuration: "var(--duration-base)" }}
-              >
-                <span
-                  className="material-symbols-outlined text-brand-blue text-2xl group-hover:text-white transition-colors"
-                  style={{
-                    fontVariationSettings: '"FILL" 1',
-                    transitionDuration: "var(--duration-base)",
-                  }}
-                >
-                  {b.icon}
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                style={{ backgroundImage: `url('${b.img}')` }}
+              />
+              {/* gradient overlay */}
+              <div className="absolute inset-x-0 bottom-0 h-[65%] bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+
+              {/* text */}
+              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-6">
+                <div>
+                  <h3 className="font-[var(--font-display)] text-xl font-extrabold text-white">
+                    {b.titulo}
+                  </h3>
+                  <p className="mt-1 font-[var(--font-body)] text-[13px] text-white/80">
+                    {b.sub}
+                  </p>
+                </div>
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white shadow-[0_4px_12px_rgba(0,122,254,0.4)] transition-transform group-hover:translate-x-0.5">
+                  <ArrowRight className="h-[18px] w-[18px]" />
                 </span>
               </div>
-              <div>
-                <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy mb-1">
-                  {b.titulo}
-                </h3>
-                <p className="font-[var(--font-body)] text-sm text-text-secondary">
-                  {b.sub}
-                </p>
-              </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

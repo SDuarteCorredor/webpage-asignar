@@ -47,7 +47,7 @@ export default function B2BSection() {
             {/* photo layer — /b2b.jpg (drop image later). Transparent on 404 → gradient shows. */}
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url('/b2b.jpg')" }}
+              style={{ backgroundImage: "url('/home/b2b.jpg')" }}
             />
             {/* brand grade overlay for cohesion */}
             <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-transparent" />

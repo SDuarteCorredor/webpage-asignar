@@ -107,7 +107,7 @@ export default function SectoresSection() {
               {/* photo layer (zooms on hover) — /sectores/<slug>.jpg (drop image later) */}
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
-                style={{ backgroundImage: `url('/sectores/${slug}.jpg')` }}
+                style={{ backgroundImage: `url('/home/sec-${slug}.jpg')` }}
               />
               {/* legibility overlay — slides darker on hover */}
               <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/90 via-brand-navy/30 to-brand-navy/10 transition-opacity duration-[600ms] group-hover:from-brand-navy" />
