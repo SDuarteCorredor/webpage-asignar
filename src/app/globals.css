@@ -184,6 +184,54 @@ html {
   animation: float-y 6s var(--ease-soft) infinite;
 }
 
+/* Testimonials reel — infinite counter-rotating columns.
+   Each track holds its cells duplicated ×2; translating -50% loops seamlessly. */
+@keyframes reel-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes reel-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.reel-up {
+  animation: reel-up 30s linear infinite;
+}
+.reel-down {
+  animation: reel-down 30s linear infinite;
+}
+/* Pause the reel on hover so faces are readable */
+.reel-stage:hover .reel-up,
+.reel-stage:hover .reel-down {
+  animation-play-state: paused;
+}
+
+/* Testimonials quote — per-word rise, replays on React key change */
+@keyframes testi-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.7em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.testi-word {
+  display: inline-block;
+  opacity: 0;
+  animation: testi-rise 0.5s var(--ease-out) forwards;
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal {
     opacity: 1;
@@ -201,6 +249,14 @@ html {
     animation: none !important;
   }
   .float-card {
+    animation: none !important;
+  }
+  .reel-up,
+  .reel-down {
+    animation: none !important;
+  }
+  .testi-word {
+    opacity: 1 !important;
     animation: none !important;
   }
 }

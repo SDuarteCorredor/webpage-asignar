@@ -1,117 +1,147 @@
 import Link from "next/link";
 
+/* Inline SVG icons — bulletproof (no icon-font dependency) */
+const Check = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path
+      d="M5 12.5l4.5 4.5L19 7.5"
+      stroke="currentColor"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+const ArrowRight = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path
+      d="M4 12h15M13 5l7 7-7 7"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 const beneficios = [
-  "Personal calificado y verificado en menos de 48 horas",
-  "Gestión completa de nómina, SST y documentación legal",
-  "Cobertura nacional: 7+ sedes en las principales ciudades",
-  "Cumplimiento Ley 50 de 1990 y normativa vigente",
-  "Acompañamiento continuo con coordinador dedicado",
+  "Proceso de selección completo y verificado",
+  "Vinculación directa con Asignar como empleador",
+  "Nómina, prestaciones y seguridad social incluidas",
+  "Reemplazo garantizado en menos de 48 horas",
+  "Especialistas en hotelería, restaurantes e industria",
+  "Reporte mensual de gestión y rotación",
 ];
 
 export default function B2BSection() {
   return (
-    <section className="py-20 md:py-28 bg-brand-gradient relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-light-blue/20 rounded-full blur-[120px]" />
-      </div>
+    <section className="bg-white py-20 md:py-28">
+      <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-12 px-4 md:px-16 lg:grid-cols-2 lg:gap-16">
+        {/* LEFT — image block with floating glass stats */}
+        <div className="scroll-reveal relative order-2 lg:order-1">
+          <div
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-light-blue via-brand-blue to-brand-deep-blue shadow-[0_40px_90px_-40px_rgba(0,18,51,0.5)]"
+            role="img"
+            aria-label="Equipo de Asignar coordinando personal en operación"
+          >
+            {/* photo layer — /b2b.jpg (drop image later). Transparent on 404 → gradient shows. */}
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: "url('/b2b.jpg')" }}
+            />
+            {/* brand grade overlay for cohesion */}
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-transparent" />
 
-      <div className="max-w-[1280px] mx-auto px-4 md:px-16 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 scroll-reveal">
-            <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-gold block">
-              Para empresas
-            </span>
-            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-white leading-tight tracking-[-0.02em]">
-              ¿Necesitas personal temporal para tu operación?
-            </h2>
-            <p className="font-[var(--font-body)] text-base text-white/70 leading-relaxed max-w-lg">
-              Más de 20 años garantizando que tu operación nunca se quede sin
-              equipo. Personal calificado, cumpliendo toda la normativa laboral.
-            </p>
-
-            <ul className="space-y-3">
-              {beneficios.map((b) => (
-                <li key={b} className="flex items-start gap-3">
-                  <span
-                    className="material-symbols-outlined text-brand-gold text-lg mt-0.5 flex-shrink-0"
-                    style={{ fontVariationSettings: '"FILL" 1' }}
-                  >
-                    check_circle
-                  </span>
-                  <span className="font-[var(--font-body)] text-sm text-white/80">
-                    {b}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex flex-col sm:flex-row gap-3 pt-2">
-              <Link
-                href="/contacto"
-                className="inline-flex items-center justify-center gap-2 bg-white text-brand-blue font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:bg-surface transition-colors"
-                style={{ transitionDuration: "var(--duration-base)" }}
-              >
-                Solicitar propuesta
-                <span className="material-symbols-outlined text-base">
-                  arrow_forward
-                </span>
-              </Link>
-              <Link
-                href="/soluciones"
-                className="inline-flex items-center justify-center gap-2 border border-white/20 text-white font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full hover:bg-white/10 transition-colors"
-                style={{ transitionDuration: "var(--duration-base)" }}
-              >
-                Ver servicios
-              </Link>
+            {/* stat — experience (top right) */}
+            <div className="absolute right-4 top-4 rounded-2xl border border-white/25 bg-brand-navy/40 px-4 py-3 backdrop-blur-md">
+              <p className="font-[var(--font-display)] text-xl font-extrabold leading-none text-white">
+                +20
+              </p>
+              <p className="mt-1 font-[var(--font-ui)] text-[11px] leading-tight text-white/80">
+                Años de
+                <br />
+                experiencia
+              </p>
             </div>
           </div>
 
-          <div className="hidden lg:block scroll-reveal" data-delay="200">
-            <div className="bg-white/[0.04] backdrop-blur-sm rounded-2xl p-8 space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-brand-gold/20 flex items-center justify-center">
-                  <span
-                    className="material-symbols-outlined text-brand-gold text-2xl"
-                    style={{ fontVariationSettings: '"FILL" 1' }}
-                  >
-                    handshake
-                  </span>
-                </div>
-                <div>
-                  <p className="font-[var(--font-display)] text-lg font-bold text-white">
-                    Aliado estratégico
-                  </p>
-                  <p className="font-[var(--font-ui)] text-xs text-white/50">
-                    No somos un proveedor, somos tu equipo
-                  </p>
-                </div>
-              </div>
+          {/* stat — sedes (bottom left, overlaps) */}
+          <div className="float-card absolute -bottom-4 -left-3 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)] backdrop-blur-md md:-left-5">
+            <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-blue">
+              7+
+            </p>
+            <p className="font-[var(--font-ui)] text-xs leading-tight text-text-muted">
+              Sedes en
+              <br />
+              Colombia
+            </p>
+          </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { label: "Hotelería", icon: "hotel", pct: "35%" },
-                  { label: "Restaurantes", icon: "restaurant", pct: "25%" },
-                  { label: "Logística", icon: "local_shipping", pct: "20%" },
-                  { label: "Industria", icon: "factory", pct: "20%" },
-                ].map((sector) => (
-                  <div
-                    key={sector.label}
-                    className="bg-white/[0.04] rounded-2xl p-4"
-                  >
-                    <span className="material-symbols-outlined text-white/40 text-lg">
-                      {sector.icon}
-                    </span>
-                    <p className="font-[var(--font-ui)] text-xs text-white/50 mt-2">
-                      {sector.label}
-                    </p>
-                    <p className="font-[var(--font-display)] text-xl font-bold text-white">
-                      {sector.pct}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {/* stat — clients (bottom right, overlaps) */}
+          <div
+            className="float-card absolute -bottom-5 right-6 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)] backdrop-blur-md"
+            style={{ animationDelay: "1.6s" }}
+          >
+            <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-navy">
+              500+
+            </p>
+            <p className="font-[var(--font-ui)] text-xs leading-tight text-text-muted">
+              Empresas
+              <br />
+              cliente
+            </p>
+          </div>
+        </div>
+
+        {/* RIGHT — copy + checklist + CTAs */}
+        <div className="scroll-reveal order-1 lg:order-2" data-delay="120">
+          <span className="inline-flex items-center rounded-full bg-brand-blue/[0.08] px-3.5 py-1.5 font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.12em] text-brand-blue">
+            Para empresas
+          </span>
+
+          <h2 className="mt-5 font-[var(--font-display)] text-3xl font-extrabold leading-[1.05] tracking-[-0.02em] text-brand-navy md:text-[2.75rem]">
+            Personal calificado
+            <br />
+            cuando lo necesitas
+          </h2>
+
+          <p className="mt-4 max-w-lg font-[var(--font-body)] text-base leading-relaxed text-text-secondary">
+            Gestionamos todo el proceso de selección, vinculación y nómina para
+            que tú te concentres en tu negocio.
+          </p>
+
+          <ul className="mt-7 space-y-3">
+            {beneficios.map((b) => (
+              <li key={b} className="flex items-center gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white">
+                  <Check className="h-3.5 w-3.5" />
+                </span>
+                <span className="font-[var(--font-body)] text-[15px] text-brand-navy">
+                  {b}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4">
+            <Link
+              href="/contacto"
+              className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-blue px-8 py-4 font-[var(--font-ui)] text-sm font-semibold text-white shadow-[0_12px_30px_-10px_rgba(0,122,254,0.6)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_44px_-12px_rgba(0,122,254,0.6)] active:translate-y-0 active:scale-[0.98]"
+              style={{
+                transitionDuration: "var(--duration-base)",
+                transitionTimingFunction: "var(--ease-spring)",
+              }}
+            >
+              Solicitar propuesta
+              <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-1" />
+            </Link>
+            <Link
+              href="/soluciones"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-navy/15 bg-white px-8 py-4 font-[var(--font-ui)] text-sm font-semibold text-brand-navy transition-all hover:-translate-y-0.5 hover:border-brand-navy/30"
+              style={{ transitionDuration: "var(--duration-base)" }}
+            >
+              Conocer más
+            </Link>
           </div>
         </div>
       </div>

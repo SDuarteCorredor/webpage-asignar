@@ -49,6 +49,17 @@ Tres conceptos de Hero para el rediseño, construidos con instancias del DS:
 - **C — Bento Dinámico** `50:8`: grid bento 5 celdas (headline+CTA, foto, contador navy, ticker de vacantes, CTA empresa en gradiente).
 Design Read aplicado: rediseño-overhaul, VARIANCE 8 / MOTION 6 / DENSITY 4. Correcciones vs v1: sin eyebrow, hero ≤4 elementos de texto, énfasis itálico misma familia, anti-centrado.
 
+### 🚀 Home v2 EN CÓDIGO (rama `claude/home-v2-sections`, 2026-07-06)
+Secciones rediseñadas en Figma y ya llevadas a React/Next (fieles al Figma aprobado):
+- **B2B** (`21:98` → `B2BSection.tsx`): split, imagen izq con glass stats flotantes (+20 / 7+ / 500+), checklist 6 items con círculos azules, CTAs. Sin fondo azul ni dorado.
+- **Sectores** (`22:107` → `SectoresSection.tsx`): bento `lg:grid-cols-7` (spans 3-2-2 / 2-3-2), hover zoom 1.06, overlay slide, flecha CTA. Íconos SVG inline.
+- **Testimonios** (`24:124` → `TestimonialsSection.tsx`, client): scroll reel 3 columnas contra-rotatorias (`reel-up`/`reel-down`) + card destacada central + cita con rise por palabra (`testi-rise`) + nav prev/next/dots.
+- **Políticas y Sostenibilidad** (`24:189` → `PoliticasSostenibilidad.tsx`): reemplaza Respaldo. Split, grid de 11 PDFs REALES (`asignar.com.co/build/img/`, mismos del dropdown del Navbar) + imagen.
+- **Eliminadas**: Confianza (`ConfianzaSectores.tsx`) y Respaldo (`RespaldoStrip.tsx`).
+- **CSS**: nuevos keyframes en `globals.css` (`reel-up`/`reel-down`/`testi-rise`) con soporte `prefers-reduced-motion`.
+- **Header/Footer**: intactos por pedido del cliente.
+- **Slots de imagen pendientes** (hoy caen a degradado de marca): `public/b2b.jpg`, `public/politicas.jpg`, `public/sectores/{hotelero,restaurantes,industrial,logistica,servicios,inmobiliario}.jpg`, `public/testimonios/{carlos,laura,andres}.jpg`. Prompts GPT ya entregados al cliente.
+
 ## 3. Pendientes conocidos
 
 - [ ] Subir imágenes reales (`public/hero-asignar.jpg`, `foto-sst.jpg`, logos de clientes) con `upload_assets` y reemplazar placeholders.

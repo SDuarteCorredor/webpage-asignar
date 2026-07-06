@@ -8,9 +8,8 @@ import ProcesoSeleccion from "@/components/home/ProcesoSeleccion";
 import SGSSTSection from "@/components/home/SGSSTSection";
 import B2BSection from "@/components/home/B2BSection";
 import SectoresSection from "@/components/home/SectoresSection";
-import ConfianzaSectores from "@/components/home/ConfianzaSectores";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
-import RespaldoStrip from "@/components/home/RespaldoStrip";
+import PoliticasSostenibilidad from "@/components/home/PoliticasSostenibilidad";
 
 export default function HomePage() {
   return (
@@ -25,9 +24,8 @@ export default function HomePage() {
       <SGSSTSection />
       <B2BSection />
       <SectoresSection />
-      <ConfianzaSectores />
       <TestimonialsSection />
-      <RespaldoStrip />
+      <PoliticasSostenibilidad />
     </>
   );
 }
