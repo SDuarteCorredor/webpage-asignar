@@ -1,4 +1,10 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
+
+// Palabras que rotan en el titular del Hero
+const words = ["talento", "futuro", "equipo", "camino"];
 
 /* Inline SVG icons — bulletproof (no icon-font dependency) */
 const ArrowRight = ({ className = "" }: { className?: string }) => (
@@ -13,6 +19,16 @@ const Trophy = ({ className = "" }: { className?: string }) => (
 );
 
 export default function HeroSection() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setIndex((prev) => (prev + 1) % words.length),
+      2600
+    );
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section className="relative w-full overflow-hidden">
       {/* Background photo */}
@@ -42,8 +58,11 @@ export default function HeroSection() {
             Creemos en ti
             <br />
             y en tu{" "}
-            <span className="bg-gradient-to-r from-brand-light-blue to-brand-blue bg-clip-text text-transparent">
-              talento
+            <span
+              key={index}
+              className="word-swap bg-gradient-to-r from-brand-light-blue to-brand-blue bg-clip-text text-transparent"
+            >
+              {words[index]}
             </span>
           </h1>
 

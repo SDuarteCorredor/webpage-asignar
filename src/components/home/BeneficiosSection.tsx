@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 /* Inline SVG arrow — bulletproof (no icon-font dependency) */
 const ArrowRight = ({ className = "" }: { className?: string }) => (
@@ -39,31 +40,33 @@ export default function BeneficiosSection() {
               key={b.titulo}
               href={b.href}
               aria-label={`${b.titulo} — ver en preguntas frecuentes`}
-              className="scroll-reveal group relative block h-[280px] overflow-hidden rounded-[20px] shadow-[0_6px_24px_rgba(0,18,51,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
+              className="benefit-card scroll-reveal group block h-[280px] rounded-[20px]"
               data-delay={String((i % 3) * 90)}
             >
-              {/* photo */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
-                style={{ backgroundImage: `url('${b.img}')` }}
-              />
-              {/* gradient overlay */}
-              <div className="absolute inset-x-0 bottom-0 h-[65%] bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+              <SpotlightCard className="h-full w-full overflow-hidden rounded-[20px] shadow-[0_6px_24px_rgba(0,18,51,0.1)]">
+                {/* photo */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                  style={{ backgroundImage: `url('${b.img}')` }}
+                />
+                {/* gradient overlay */}
+                <div className="absolute inset-x-0 bottom-0 z-[5] h-[65%] bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
 
-              {/* text */}
-              <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-6">
-                <div>
-                  <h3 className="font-[var(--font-display)] text-xl font-extrabold text-white">
-                    {b.titulo}
-                  </h3>
-                  <p className="mt-1 font-[var(--font-body)] text-[13px] text-white/80">
-                    {b.sub}
-                  </p>
+                {/* text */}
+                <div className="absolute inset-x-0 bottom-0 z-20 flex items-end justify-between gap-3 p-6">
+                  <div>
+                    <h3 className="font-[var(--font-display)] text-xl font-extrabold text-white">
+                      {b.titulo}
+                    </h3>
+                    <p className="mt-1 font-[var(--font-body)] text-[13px] text-white/80">
+                      {b.sub}
+                    </p>
+                  </div>
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white shadow-[0_4px_12px_rgba(0,122,254,0.4)] transition-transform group-hover:translate-x-0.5">
+                    <ArrowRight className="h-[18px] w-[18px]" />
+                  </span>
                 </div>
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white shadow-[0_4px_12px_rgba(0,122,254,0.4)] transition-transform group-hover:translate-x-0.5">
-                  <ArrowRight className="h-[18px] w-[18px]" />
-                </span>
-              </div>
+              </SpotlightCard>
             </Link>
           ))}
         </div>
