@@ -62,6 +62,16 @@ Secciones rediseñadas en Figma y ya llevadas a React/Next (fieles al Figma apro
 - **Secciones ya fieles al Figma en código**: Hero (foto full-bleed + 3 glass cards), Beneficios (6 photo-cards), Vacantes (split + 4 filas), SG-SST (foto + card "100%"), B2B, Sectores, Testimonios, Políticas. Header/Footer intactos.
 - **Pendiente menor**: imagen de Políticas (`152:54` es placeholder vacío en Figma → en código cae a degradado; el label "Operación responsable y certificada" lo hace ver intencional). Retratos reales de Testimonios (hoy iniciales, igual que Figma).
 
+### 🧩 Servicios v1 EN FIGMA (página `📄 Servicios` `204:2`, run_id `asignar-servicios-2026-07-07`)
+Rediseño de la página `/soluciones` (nav "Servicios"). Wrapper `204:3` (1440, auto-layout vertical). Basado en patrones de UI de páginas de servicios que funcionan (NO clon del Home). 5 secciones:
+- **01 Hero** `204:4` (navy, split): badge "Para empresas", H1 56 con acento light-blue en "menos de 48 horas", subcopy, CTAs (Solicitar propuesta / Ver portafolio), línea de confianza (Ley 50 · SG-SST · ARL SURA · +20 años); derecha bloque de foto (placeholder gradiente) + 2 glass cards (`<48h`, `+500`). *Nota: el lenguaje del hero aún se parece al del Home — pendiente decidir si se le da tratamiento distinto.*
+- **02 Servicios** `204:5` (white): patrón "explorador" = lista de 4 servicios a la izquierda (activo en navy) + panel de detalle a la derecha (`212:2`: título, descripción, checklist 2×2, CTA). Servicios: Temporales / Outsourcing / Selección / Gestión SST.
+- **03 Proceso** `204:6` (surface): stepper horizontal conectado de 7 pasos (línea `Connector` + círculos numerados), último (07 Contratación) resaltado en azul.
+- **04 Cumplimiento** `204:7` (navy): copy + stats (+20 años / 7 sedes / +1.000) a la izquierda; grid 2×2 de tarjetas de respaldo (Ley 50, SG-SST, ARL SURA, Póliza) a la derecha.
+- **05 CTA** `204:8` (white): panel con gradiente de marca, headline centrado + "Solicitar propuesta".
+- Construido con frames/auto-layout + fuentes del DS (Plus Jakarta Sans / DM Sans / Inter) y colores de los tokens (directos, no bindeados aún). Fotos = placeholders de gradiente (pendiente extraer/generar imágenes reales de operación).
+- **Pendiente**: validar dirección con el cliente → llevar a React/Next (`src/app/soluciones/page.tsx`); opcional añadir banda de "Sectores que atendemos" y franja de logos; imágenes reales; posible tratamiento de hero distinto al Home.
+
 ## 3. Pendientes conocidos
 
 - [ ] Subir imágenes reales (`public/hero-asignar.jpg`, `foto-sst.jpg`, logos de clientes) con `upload_assets` y reemplazar placeholders.
