@@ -2,22 +2,22 @@ const features = [
   {
     titulo: "Inspección de Seguridad",
     desc: "Identificación y control de riesgos en el lugar de trabajo.",
-    icon: "health_and_safety",
+    icon: "search",
   },
   {
     titulo: "Programas de Capacitación",
     desc: "Formación continua en prevención de riesgos laborales.",
-    icon: "school",
+    icon: "groups",
   },
   {
     titulo: "Programas de Prevención",
-    desc: "Plan de acción para eliminar accidentes y enfermedades laborales.",
-    icon: "security",
+    desc: "Plan de acción para eliminar accidentes y enfermedades.",
+    icon: "check_circle",
   },
   {
     titulo: "Visión Zero ATEL",
-    desc: "Metodología de cero accidentes: diagnóstico, intervención y seguimiento.",
-    icon: "visibility",
+    desc: "Metodología de cero accidentes: diagnóstico e intervención.",
+    icon: "workspace_premium",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function SGSSTSection() {
               riesgo y acompañamiento en auditorías.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
               {features.map((f) => (
                 <div key={f.titulo} className="flex gap-3">
                   <div className="w-10 h-10 rounded-xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0">
@@ -61,46 +61,95 @@ export default function SGSSTSection() {
             </div>
           </div>
 
-          {/* Right: real photo + compliance stat card */}
+          {/* Right: blue-tinted image + floating cards */}
           <div className="scroll-reveal" data-delay="150">
-            <div className="relative min-h-[440px] overflow-hidden rounded-[2rem] bg-brand-navy lg:min-h-[520px]">
+            <div className="relative min-h-[460px] overflow-hidden rounded-[2rem] lg:min-h-[520px]">
+              {/* blue gradient base */}
               <div
-                className="absolute inset-0 bg-cover bg-center"
+                className="absolute inset-0"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(128deg, #007AFE 7%, #05B8FD 89%)",
+                }}
+              />
+              {/* real photo at 20% — same tint as Figma */}
+              <div
+                className="absolute inset-0 bg-cover bg-center opacity-20"
                 style={{ backgroundImage: "url('/home/sst.jpg')" }}
                 role="img"
                 aria-label="Equipo de Asignar aplicando protocolos de seguridad y salud en el trabajo"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/50 via-transparent to-transparent" />
+              {/* left fade into surface */}
+              <div className="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-surface via-surface/60 to-transparent" />
 
-              {/* floating compliance card */}
-              <div className="absolute inset-x-5 bottom-5 rounded-2xl border border-white/60 bg-white/95 p-5 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.4)] backdrop-blur-md sm:inset-x-auto sm:left-6 sm:w-[330px]">
+              {/* Visión Zero ATEL pill */}
+              <div className="absolute left-5 top-5 rounded-full bg-white/95 px-4 py-2 shadow-[0_8px_20px_-10px_rgba(0,18,51,0.35)] backdrop-blur-sm">
+                <span className="font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
+                  Visión Zero ATEL
+                </span>
+              </div>
+
+              {/* +5.000 workers card */}
+              <div className="absolute right-5 top-5 rounded-2xl bg-white/95 px-5 py-3.5 shadow-[0_10px_26px_-12px_rgba(0,18,51,0.4)] backdrop-blur-sm">
+                <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-blue">
+                  +5.000
+                </p>
+                <p className="mt-1.5 font-[var(--font-ui)] text-xs font-semibold text-brand-navy">
+                  trabajadores protegidos
+                </p>
+              </div>
+
+              {/* Compliance card */}
+              <div className="absolute inset-x-5 bottom-5 rounded-[20px] bg-white p-6 shadow-[0_20px_44px_-18px_rgba(10,26,58,0.28)] sm:inset-x-auto sm:left-6 sm:w-[336px] lg:top-1/2 lg:bottom-auto lg:-translate-y-1/2">
                 <div className="flex items-center gap-4">
-                  <div className="relative flex h-16 w-16 shrink-0 items-center justify-center">
-                    <svg viewBox="0 0 64 64" className="absolute inset-0 h-full w-full -rotate-90" aria-hidden="true">
-                      <circle cx="32" cy="32" r="28" fill="none" stroke="#E2E8F0" strokeWidth="6" />
-                      <circle cx="32" cy="32" r="28" fill="none" stroke="#007AFE" strokeWidth="6" strokeLinecap="round" strokeDasharray="176" strokeDashoffset="0" />
+                  <div className="relative flex h-20 w-20 shrink-0 items-center justify-center">
+                    <svg
+                      viewBox="0 0 80 80"
+                      className="absolute inset-0 h-full w-full -rotate-90"
+                      aria-hidden="true"
+                    >
+                      <circle cx="40" cy="40" r="34" fill="none" stroke="#E2E8F6" strokeWidth="8" />
+                      <circle
+                        cx="40"
+                        cy="40"
+                        r="34"
+                        fill="none"
+                        stroke="#007AFE"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeDasharray="214"
+                        strokeDashoffset="0"
+                      />
                     </svg>
-                    <span className="font-[var(--font-display)] text-base font-extrabold text-brand-navy">100%</span>
+                    <span className="font-[var(--font-display)] text-[17px] font-extrabold text-brand-navy">
+                      100%
+                    </span>
                   </div>
                   <div>
-                    <p className="font-[var(--font-display)] text-base font-bold text-brand-navy">
+                    <p className="font-[var(--font-display)] text-[15px] font-bold leading-snug text-brand-navy">
                       Cumplimiento
-                    </p>
-                    <p className="font-[var(--font-body)] text-sm text-text-secondary">
+                      <br />
                       normativo SG-SST
                     </p>
-                    <p className="mt-1 font-[var(--font-ui)] text-xs text-text-muted">
+                    <p className="mt-1.5 font-[var(--font-body)] text-xs text-text-muted">
                       Auditado y vigente
                     </p>
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-between border-t border-border pt-3">
-                  <span className="font-[var(--font-ui)] text-xs text-text-muted">
+
+                <div className="mt-4 border-t border-[#E2E8F6] pt-3">
+                  <p className="font-[var(--font-ui)] text-[11px] text-text-muted">
                     Respaldado por
-                  </span>
-                  <span className="font-[var(--font-display)] text-sm font-bold text-brand-navy">
-                    ARL · Cobertura total
-                  </span>
+                  </p>
+                  <div className="mt-1.5 flex items-center justify-between gap-3">
+                    {/* Placeholder del logo SURA — reemplazar por el asset real */}
+                    <span className="font-[var(--font-display)] text-[22px] font-extrabold lowercase leading-none tracking-[-0.02em] text-brand-navy">
+                      sura
+                    </span>
+                    <span className="rounded-full bg-brand-blue/10 px-3.5 py-1.5 font-[var(--font-ui)] text-[11px] font-semibold text-brand-blue">
+                      ARL · Cobertura total
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
