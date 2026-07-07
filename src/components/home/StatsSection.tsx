@@ -47,14 +47,15 @@ function StatItem({
   inView: boolean;
 }) {
   const count = useCountUp(value, 2000, inView);
+  const display = (inView ? count : 0).toLocaleString("es-CO");
 
   return (
     <div className="text-center">
-      <span className="block font-[var(--font-display)] text-4xl md:text-5xl lg:text-6xl font-extrabold text-brand-navy tracking-[-0.02em]">
-        {inView ? count : 0}
+      <span className="block font-[var(--font-display)] text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-[-0.02em]">
+        {display}
         {suffix}
       </span>
-      <span className="block font-[var(--font-ui)] text-sm text-text-muted mt-2">
+      <span className="block font-[var(--font-ui)] text-sm text-white/70 mt-2">
         {label}
       </span>
     </div>
@@ -81,13 +82,22 @@ export default function StatsSection() {
   }, []);
 
   return (
-    <section className="py-16 md:py-20 bg-white">
+    <section className="py-16 md:py-20 bg-brand-blue">
       <div
         ref={ref}
-        className="max-w-[1280px] mx-auto px-4 md:px-16 grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12"
+        className="max-w-[1280px] mx-auto px-4 md:px-16 grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-0"
       >
-        {stats.map((stat) => (
-          <StatItem key={stat.label} {...stat} inView={inView} />
+        {stats.map((stat, i) => (
+          <div
+            key={stat.label}
+            className={
+              i > 0
+                ? "lg:border-l border-white/15 lg:px-4"
+                : "lg:px-4"
+            }
+          >
+            <StatItem {...stat} inView={inView} />
+          </div>
         ))}
       </div>
     </section>
