@@ -53,6 +53,13 @@ body {
   border-radius: 4px;
 }
 
+/* Tarjetas de Beneficios (fotos): anillo de foco blanco, sin el azul global */
+.benefit-card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+  border-radius: 22px;
+}
+
 /* Crisp hairline-lifted cards: definition without a heavy/generic 1px border */
 .card-elevated {
   box-shadow: 0 0 0 1px rgba(0, 18, 51, 0.04), 0 1px 3px rgba(0, 18, 51, 0.06),
@@ -184,6 +191,44 @@ html {
   animation: float-y 6s var(--ease-soft) infinite;
 }
 
+/* Spotlight / glow que sigue al cursor (azul Asignar). Las variables
+   --glow-x / --glow-y las actualiza useGlowPointer en coordenadas de viewport;
+   con background-attachment: fixed solo se ilumina la tarjeta bajo el cursor. */
+.spotlight-sheen,
+.spotlight-border {
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.spotlight-card:hover .spotlight-sheen,
+.spotlight-card:hover .spotlight-border {
+  opacity: 1;
+}
+.spotlight-sheen {
+  background: radial-gradient(
+    300px 300px at var(--glow-x, -300px) var(--glow-y, -300px),
+    hsl(210 100% 62% / 0.32),
+    transparent 60%
+  );
+  background-attachment: fixed;
+  mix-blend-mode: screen;
+}
+.spotlight-border {
+  border: 2px solid transparent;
+  background: radial-gradient(
+      280px 280px at var(--glow-x, -300px) var(--glow-y, -300px),
+      hsl(205 100% 62% / 1),
+      hsl(198 98% 55% / 0.45) 45%,
+      transparent 68%
+    )
+    border-box;
+  background-attachment: fixed;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
 /* Testimonials reel — infinite counter-rotating columns.
    Each track holds its cells duplicated ×2; translating -50% loops seamlessly. */
 @keyframes reel-up {
@@ -258,5 +303,9 @@ html {
   .testi-word {
     opacity: 1 !important;
     animation: none !important;
+  }
+  .spotlight-sheen,
+  .spotlight-border {
+    transition: none !important;
   }
 }
