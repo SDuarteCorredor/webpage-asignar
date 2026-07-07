@@ -41,26 +41,17 @@ const testimonios = [
   },
 ];
 
-/* Reel columns — glass cells scattered with candidate initials.
+/* Reel columns — plain glass cells (sin iniciales).
    Each column is rendered twice inside its track for a seamless loop. */
 const columnas = [
-  { dir: "reel-down", cells: ["", "CM", "", "MR", "", "JP"] },
-  { dir: "reel-up", cells: ["DL", "", "AG", "", "ST", ""] },
-  { dir: "reel-down", cells: ["", "LR", "", "VC", "", "NR"] },
+  { dir: "reel-down", count: 6 },
+  { dir: "reel-up", count: 6 },
+  { dir: "reel-down", count: 6 },
 ];
 
-function ReelCell({ label }: { label: string }) {
-  if (!label) {
-    return (
-      <div className="h-[104px] w-[104px] shrink-0 rounded-2xl border border-border bg-gradient-to-br from-surface to-white shadow-sm" />
-    );
-  }
+function ReelCell() {
   return (
-    <div className="flex h-[104px] w-[104px] shrink-0 items-center justify-center rounded-2xl border border-brand-blue/10 bg-white shadow-sm">
-      <span className="font-[var(--font-display)] text-lg font-extrabold text-brand-blue/25">
-        {label}
-      </span>
-    </div>
+    <div className="h-[104px] w-[104px] shrink-0 rounded-2xl border border-border bg-gradient-to-br from-surface to-white shadow-sm" />
   );
 }
 
@@ -94,8 +85,8 @@ export default function TestimonialsSection() {
             {columnas.map((col, ci) => (
               <div key={ci} className="h-full overflow-hidden">
                 <div className={`flex flex-col gap-3 ${col.dir}`}>
-                  {[...col.cells, ...col.cells].map((c, i) => (
-                    <ReelCell key={i} label={c} />
+                  {Array.from({ length: col.count * 2 }).map((_, i) => (
+                    <ReelCell key={i} />
                   ))}
                 </div>
               </div>
