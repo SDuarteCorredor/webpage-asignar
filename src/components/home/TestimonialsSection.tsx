@@ -107,14 +107,11 @@ export default function TestimonialsSection() {
             className="absolute left-1/2 top-1/2 z-30 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-brand-blue to-brand-deep-blue shadow-[0_24px_50px_-12px_rgba(0,122,254,0.5)] ring-4 ring-surface"
             aria-hidden="true"
           >
-            {/* photo layer — /testimonios/<slug>.jpg (drop image later). Transparent on 404 → gradient + initials. */}
+            {/* photo layer — /testimonios/<slug>.jpg */}
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url('/testimonios/${t.slug}.jpg')` }}
             />
-            <span className="relative font-[var(--font-display)] text-4xl font-extrabold text-white/60 mix-blend-overlay">
-              {t.iniciales}
-            </span>
           </div>
         </div>
 
