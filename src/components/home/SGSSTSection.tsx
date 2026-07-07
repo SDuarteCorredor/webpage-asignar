@@ -142,10 +142,14 @@ export default function SGSSTSection() {
                     Respaldado por
                   </p>
                   <div className="mt-1.5 flex items-center justify-between gap-3">
-                    {/* Placeholder del logo SURA — reemplazar por el asset real */}
-                    <span className="font-[var(--font-display)] text-[22px] font-extrabold lowercase leading-none tracking-[-0.02em] text-brand-navy">
-                      sura
-                    </span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/clientes-brand/sura.png"
+                      alt="SURA"
+                      width={88}
+                      height={29}
+                      className="h-[29px] w-auto"
+                    />
                     <span className="rounded-full bg-brand-blue/10 px-3.5 py-1.5 font-[var(--font-ui)] text-[11px] font-semibold text-brand-blue">
                       ARL · Cobertura total
                     </span>
