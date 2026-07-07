@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /* Inline SVG arrow — bulletproof (no icon-font dependency) */
 const ArrowRight = ({ className = "" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -5,13 +7,14 @@ const ArrowRight = ({ className = "" }: { className?: string }) => (
   </svg>
 );
 
+// Cada tarjeta enlaza a la categoría relacionada del FAQ (vía hash #slug).
 const beneficios = [
-  { titulo: "Pagos quincenales", sub: "Puntuales y seguros", img: "/home/ben-1.jpg" },
-  { titulo: "Seguridad social", sub: "EPS, Pensión, ARL y Caja", img: "/home/ben-2.jpg" },
-  { titulo: "Prestaciones de ley", sub: "Prima, cesantías y vacaciones", img: "/home/ben-3.jpg" },
-  { titulo: "Capacitaciones", sub: "Gratuitas para tu perfil", img: "/home/ben-4.jpg" },
-  { titulo: "Acompañamiento", sub: "De nuestro equipo experto", img: "/home/ben-5.jpg" },
-  { titulo: "Flexibilidad", sub: "Opciones de horarios", img: "/home/ben-6.jpg" },
+  { titulo: "Pagos quincenales", sub: "Puntuales y seguros", img: "/home/ben-1.jpg", href: "/faq#nomina" },
+  { titulo: "Seguridad social", sub: "EPS, Pensión, ARL y Caja", img: "/home/ben-2.jpg", href: "/faq#seguridad-social" },
+  { titulo: "Prestaciones de ley", sub: "Prima, cesantías y vacaciones", img: "/home/ben-3.jpg", href: "/faq#nomina" },
+  { titulo: "Capacitaciones", sub: "Gratuitas para tu perfil", img: "/home/ben-4.jpg", href: "/faq#sst" },
+  { titulo: "Acompañamiento", sub: "De nuestro equipo experto", img: "/home/ben-5.jpg", href: "/faq#vinculacion" },
+  { titulo: "Flexibilidad", sub: "Opciones de horarios", img: "/home/ben-6.jpg", href: "/faq#marcacion" },
 ];
 
 export default function BeneficiosSection() {
@@ -32,9 +35,11 @@ export default function BeneficiosSection() {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {beneficios.map((b, i) => (
-            <article
+            <Link
               key={b.titulo}
-              className="scroll-reveal group relative h-[280px] overflow-hidden rounded-[20px] shadow-[0_6px_24px_rgba(0,18,51,0.1)]"
+              href={b.href}
+              aria-label={`${b.titulo} — ver en preguntas frecuentes`}
+              className="scroll-reveal group relative block h-[280px] overflow-hidden rounded-[20px] shadow-[0_6px_24px_rgba(0,18,51,0.1)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue"
               data-delay={String((i % 3) * 90)}
             >
               {/* photo */}
@@ -59,7 +64,7 @@ export default function BeneficiosSection() {
                   <ArrowRight className="h-[18px] w-[18px]" />
                 </span>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
