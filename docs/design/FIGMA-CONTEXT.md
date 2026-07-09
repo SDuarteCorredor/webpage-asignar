@@ -62,6 +62,19 @@ Secciones rediseñadas en Figma y ya llevadas a React/Next (fieles al Figma apro
 - **Secciones ya fieles al Figma en código**: Hero (foto full-bleed + 3 glass cards), Beneficios (6 photo-cards), Vacantes (split + 4 filas), SG-SST (foto + card "100%"), B2B, Sectores, Testimonios, Políticas. Header/Footer intactos.
 - **Pendiente menor**: imagen de Políticas (`152:54` es placeholder vacío en Figma → en código cae a degradado; el label "Operación responsable y certificada" lo hace ver intencional). Retratos reales de Testimonios (hoy iniciales, igual que Figma).
 
+### 🧩 Servicios v1 EN FIGMA (página `📄 Servicios` `204:2`, run_id `asignar-servicios-2026-07-07`)
+Rediseño de la página `/soluciones` (nav "Servicios"). Wrapper `204:3` (1440, auto-layout vertical). Basado en patrones de UI de páginas de servicios que funcionan (NO clon del Home). 5 secciones:
+- **01 Hero** `204:4` (CLARO, split — distinto al Home): fondo surface, izquierda badge "Para empresas" + H1 54 navy con acento azul en "menos de 48 horas" + subcopy + CTAs (Solicitar propuesta / Ver portafolio) + chips de respaldo (Ley 50/1990 · SG-SST · ARL SURA). Derecha: tarjeta blanca elevada **"Solicita tu propuesta"** (`225:2`) = mini-formulario (Empresa / Sector select / ¿Qué necesitas? + botón "Enviar solicitud" + nota Ley 1581). Patrón copy+lead-form, orientado a conversión.
+- **02 Servicios** `204:5` (white): patrón "explorador" = lista de 4 servicios a la izquierda (activo en navy) + panel de detalle a la derecha (`212:2`: título, descripción, checklist 2×2, CTA). Servicios: Temporales / Outsourcing / Selección / Gestión SST.
+- **03 Proceso** `204:6` (surface): stepper horizontal conectado de 7 pasos (línea `Connector` + círculos numerados), último (07 Contratación) resaltado en azul.
+- **04 Cumplimiento** `204:7` (navy): copy + stats (+20 años / 7 sedes / +1.000) a la izquierda; grid 2×2 de tarjetas de respaldo (Ley 50, SG-SST, ARL SURA, Póliza) a la derecha.
+- **05 CTA** `204:8` (white): panel con gradiente de marca, headline centrado + "Solicitar propuesta".
+- Construido con frames/auto-layout + fuentes del DS (Plus Jakarta Sans / DM Sans / Inter) y colores de los tokens (directos, no bindeados aún). Fotos = placeholders de gradiente (pendiente extraer/generar imágenes reales de operación).
+- **Pendiente**: validar dirección con el cliente → llevar a React/Next (`src/app/soluciones/page.tsx`); opcional añadir banda de "Sectores que atendemos" y franja de logos; imágenes reales; posible tratamiento de hero distinto al Home.
+
+### ⛔ Gold eliminado del DS (2026-07-08)
+Decisión del cliente: fuera el gold de la marca web (nada de amarillo/dorado, y menos como texto sobre fondo oscuro). Eliminado en Figma: variante **Style=Gold** del Badge (`8:12`), variables **`brand/gold`** (`2:10`) y **`color/accent/gold`** (`2:32`), y sus **swatches** en Foundations (`6:10`, `6:92`). En código: quitado `--color-brand-gold` de `globals.css` y reemplazados los usos (`text-brand-gold` → `text-brand-light-blue` en eyebrows de soluciones/FAQ/nosotros/postulate). Acento sobre oscuro = `brand-light-blue`; acento general = `brand-blue`.
+
 ## 3. Pendientes conocidos
 
 - [ ] Subir imágenes reales (`public/hero-asignar.jpg`, `foto-sst.jpg`, logos de clientes) con `upload_assets` y reemplazar placeholders.

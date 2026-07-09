@@ -183,7 +183,7 @@ export default function FaqClient() {
       {/* Hero */}
       <section className="bg-brand-gradient py-16 md:py-20">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-gold mb-3 block">
+          <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-light-blue mb-3 block">
             Trabajador misional
           </span>
           <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-white leading-tight">

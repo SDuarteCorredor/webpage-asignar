@@ -207,7 +207,7 @@ export default function PostulatePage() {
                   "Hoja de vida adjunta (PDF)",
                 ].map((item) => (
                   <div key={item} className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-brand-gold text-sm">
+                    <span className="material-symbols-outlined text-brand-light-blue text-sm">
                       arrow_right
                     </span>
                     <span className="font-[var(--font-body)] text-sm text-white/80">

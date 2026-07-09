@@ -169,7 +169,7 @@ export default function NosotrosPage() {
       <section className="py-16 md:py-20 bg-brand-gradient">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
           <div className="text-center mb-12">
-            <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-gold mb-2 block">
+            <span className="font-[var(--font-ui)] text-xs font-bold uppercase tracking-widest text-brand-light-blue mb-2 block">
               Propuesta de Valor
             </span>
             <h2 className="font-[var(--font-display)] text-3xl font-bold text-white mb-3">
