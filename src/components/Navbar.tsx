@@ -44,6 +44,23 @@ const navLinks = [
   { href: "/contacto", label: "Contacto" },
 ];
 
+/* Inline SVG icons — bulletproof (no icon-font dependency) */
+const IconMenu = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+const IconClose = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+  </svg>
+);
+const IconChevron = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -88,6 +105,7 @@ export default function Navbar() {
   }, [loginOpen, polOpen]);
 
   return (
+    <>
     <nav
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         scrolled
@@ -134,13 +152,11 @@ export default function Navbar() {
               className="inline-flex items-center gap-1 text-text-secondary hover:text-brand-blue transition-colors duration-200"
             >
               Políticas
-              <span
-                className={`material-symbols-outlined text-base transition-transform duration-200 ${
+              <IconChevron
+                className={`h-4 w-4 transition-transform duration-200 ${
                   polOpen ? "rotate-180" : ""
                 }`}
-              >
-                expand_more
-              </span>
+              />
             </button>
 
             {polOpen && (
@@ -184,13 +200,11 @@ export default function Navbar() {
             >
               <span className="material-symbols-outlined text-lg">lock_open</span>
               Ingreso
-              <span
-                className={`material-symbols-outlined text-lg transition-transform duration-200 ${
+              <IconChevron
+                className={`h-4 w-4 transition-transform duration-200 ${
                   loginOpen ? "rotate-180" : ""
                 }`}
-              >
-                expand_more
-              </span>
+              />
             </button>
 
             {loginOpen && (
@@ -243,19 +257,23 @@ export default function Navbar() {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-brand-navy p-2"
-          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden flex h-11 w-11 items-center justify-center rounded-xl text-brand-navy hover:bg-surface-gray transition-colors -mr-2"
+          onClick={() => setMobileOpen((v) => !v)}
           aria-label={mobileOpen ? "Cerrar menú" : "Abrir menú"}
+          aria-expanded={mobileOpen}
         >
-          <span className="material-symbols-outlined text-[28px]">
-            {mobileOpen ? "close" : "menu"}
-          </span>
+          {mobileOpen ? (
+            <IconClose className="h-6 w-6" />
+          ) : (
+            <IconMenu className="h-6 w-6" />
+          )}
         </button>
       </div>
+    </nav>
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden fixed inset-0 top-20 bg-white z-40 px-4 py-6 flex flex-col gap-2 overflow-y-auto animate-[fadeIn_0.2s_ease-out]">
+        <div className="md:hidden fixed left-0 right-0 top-20 bottom-0 bg-white z-40 px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col gap-1.5 overflow-y-auto overscroll-contain animate-[fadeIn_0.2s_ease-out]">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -268,10 +286,10 @@ export default function Navbar() {
           ))}
 
           {/* Políticas (mobile) */}
-          <details className="px-4 py-3 rounded-xl hover:bg-surface-gray transition-colors">
+          <details className="group px-4 py-3 rounded-xl hover:bg-surface-gray transition-colors">
             <summary className="text-lg font-medium text-text-primary cursor-pointer list-none flex items-center justify-between">
               Políticas
-              <span className="material-symbols-outlined text-xl">expand_more</span>
+              <IconChevron className="h-5 w-5 transition-transform duration-200 group-open:rotate-180" />
             </summary>
             <div className="mt-2 flex flex-col">
               {policies.map((p) => (
@@ -332,6 +350,6 @@ export default function Navbar() {
           </Link>
         </div>
       )}
-    </nav>
+    </>
   );
 }

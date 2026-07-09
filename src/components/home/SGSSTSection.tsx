@@ -27,20 +27,20 @@ export default function SGSSTSection() {
       <div className="max-w-[1280px] mx-auto px-4 md:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left: copy + features */}
-          <div className="scroll-reveal">
+          <div className="scroll-reveal text-center lg:text-left">
             <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-blue mb-3 block">
               Bienestar y cumplimiento
             </span>
             <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-extrabold text-brand-navy tracking-[-0.02em] mb-4">
               Seguridad y Salud en el Trabajo
             </h2>
-            <p className="font-[var(--font-body)] text-base text-text-secondary leading-relaxed mb-8 max-w-lg">
+            <p className="font-[var(--font-body)] text-base text-text-secondary leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
               Diseño, implementación y seguimiento del SG-SST conforme a la
               normatividad vigente: capacitaciones, inspecciones, matrices de
               riesgo y acompañamiento en auditorías.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 text-left">
               {features.map((f) => (
                 <div key={f.titulo} className="flex gap-3">
                   <div className="w-10 h-10 rounded-xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0">

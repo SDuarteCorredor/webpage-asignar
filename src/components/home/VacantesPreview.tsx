@@ -43,11 +43,11 @@ export default function VacantesPreview() {
       <div className="mx-auto max-w-[1280px] px-4 md:px-16">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,400px)_1fr] lg:gap-16">
           {/* Left — heading */}
-          <div className="scroll-reveal lg:sticky lg:top-28">
+          <div className="scroll-reveal text-center lg:sticky lg:top-28 lg:text-left">
             <h2 className="font-[var(--font-display)] text-3xl font-extrabold leading-[1.1] tracking-[-0.02em] text-brand-navy md:text-4xl">
               Tu próxima oportunidad está aquí
             </h2>
-            <p className="mt-4 max-w-sm font-[var(--font-body)] text-base leading-relaxed text-text-secondary">
+            <p className="mt-4 max-w-sm mx-auto font-[var(--font-body)] text-base leading-relaxed text-text-secondary lg:mx-0">
               Vacantes activas en hotelería, restaurantes, logística e industria.
               Postúlate en minutos.
             </p>
