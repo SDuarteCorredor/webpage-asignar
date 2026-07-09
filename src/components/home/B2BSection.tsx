@@ -94,7 +94,7 @@ export default function B2BSection() {
         </div>
 
         {/* RIGHT — copy + checklist + CTAs */}
-        <div className="scroll-reveal order-1 lg:order-2" data-delay="120">
+        <div className="scroll-reveal order-1 text-center lg:order-2 lg:text-left" data-delay="120">
           <span className="inline-flex items-center rounded-full bg-brand-blue/[0.08] px-3.5 py-1.5 font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.12em] text-brand-blue">
             Para empresas
           </span>
@@ -105,14 +105,14 @@ export default function B2BSection() {
             cuando lo necesitas
           </h2>
 
-          <p className="mt-4 max-w-lg font-[var(--font-body)] text-base leading-relaxed text-text-secondary">
+          <p className="mt-4 max-w-lg mx-auto font-[var(--font-body)] text-base leading-relaxed text-text-secondary lg:mx-0">
             Gestionamos todo el proceso de selección, vinculación y nómina para
             que tú te concentres en tu negocio.
           </p>
 
           <ul className="mt-7 space-y-3">
             {beneficios.map((b) => (
-              <li key={b} className="flex items-center gap-3">
+              <li key={b} className="flex items-center justify-center gap-3 lg:justify-start">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white">
                   <Check className="h-3.5 w-3.5" />
                 </span>
@@ -123,7 +123,7 @@ export default function B2BSection() {
             ))}
           </ul>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4">
+          <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:gap-4 lg:items-start">
             <Link
               href="/contacto"
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-blue px-8 py-4 font-[var(--font-ui)] text-sm font-semibold text-white shadow-[0_12px_30px_-10px_rgba(0,122,254,0.6)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_44px_-12px_rgba(0,122,254,0.6)] active:translate-y-0 active:scale-[0.98]"

@@ -46,6 +46,24 @@ body {
   color: white;
 }
 
+/* Tipografía sin palabras huérfanas:
+   - Titulares: balance de líneas (reparte el texto en líneas parejas).
+   - Párrafos/listas: evita que quede una sola palabra en la última línea. */
+h1,
+h2,
+h3,
+h4,
+h5,
+blockquote {
+  text-wrap: balance;
+}
+p,
+li,
+figcaption,
+summary {
+  text-wrap: pretty;
+}
+
 /* Accessible focus ring — visible for keyboard users, hidden on mouse click */
 :where(a, button, input, select, textarea, summary, [tabindex], [role="button"]):focus-visible {
   outline: 2px solid var(--color-brand-blue);

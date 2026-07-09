@@ -41,7 +41,7 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/70 via-transparent to-brand-navy/20" />
 
       <div className="relative mx-auto flex min-h-[600px] max-w-[1280px] flex-col justify-center px-5 py-24 md:min-h-[680px] md:px-16 lg:min-h-[760px]">
-        <div className="max-w-2xl">
+        <div className="flex max-w-2xl flex-col items-center text-center md:items-start md:text-left">
           {/* badge */}
           <div className="rise mb-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-brand-navy/40 px-4 py-2 backdrop-blur-md" style={{ animationDelay: "0s" }}>
             <span className="h-2 w-2 rounded-full bg-green-400" />

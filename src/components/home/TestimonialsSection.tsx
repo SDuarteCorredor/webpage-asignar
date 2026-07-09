@@ -107,7 +107,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* RIGHT — quote + author + nav */}
-        <div className="scroll-reveal">
+        <div className="scroll-reveal text-center lg:text-left">
           <h2 className="font-[var(--font-display)] text-3xl font-extrabold tracking-[-0.02em] text-brand-navy md:text-4xl">
             Lo que dicen de nosotros
           </h2>
@@ -123,7 +123,7 @@ export default function TestimonialsSection() {
           {/* rotating quote — per-word rise, remounts on index change */}
           <blockquote
             key={index}
-            className="mt-1 max-w-xl font-[var(--font-body)] text-xl font-medium leading-relaxed tracking-[-0.01em] text-brand-navy md:text-2xl"
+            className="mt-1 max-w-xl mx-auto font-[var(--font-body)] text-xl font-medium leading-relaxed tracking-[-0.01em] text-brand-navy md:text-2xl lg:mx-0"
           >
             {words.map((w, i) => (
               <Fragment key={i}>
@@ -147,7 +147,7 @@ export default function TestimonialsSection() {
           </div>
 
           {/* nav */}
-          <div className="mt-9 flex items-center gap-3">
+          <div className="mt-9 flex items-center justify-center gap-3 lg:justify-start">
             <button
               onClick={prev}
               aria-label="Testimonio anterior"
