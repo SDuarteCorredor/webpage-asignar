@@ -273,12 +273,12 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden fixed left-0 right-0 top-20 bottom-0 bg-white z-40 px-4 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col gap-1.5 overflow-y-auto overscroll-contain animate-[fadeIn_0.2s_ease-out]">
+        <div className="md:hidden fixed left-0 right-0 top-20 bottom-0 bg-white z-40 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-0.5 overflow-y-auto overscroll-contain animate-[fadeIn_0.2s_ease-out]">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-lg font-medium text-text-primary py-3 px-4 rounded-xl hover:bg-surface-gray transition-colors"
+              className="text-base font-medium text-text-primary py-2.5 px-4 rounded-xl hover:bg-surface-gray transition-colors"
               onClick={() => setMobileOpen(false)}
             >
               {link.label}
@@ -286,8 +286,8 @@ export default function Navbar() {
           ))}
 
           {/* Políticas (mobile) */}
-          <details className="group px-4 py-3 rounded-xl hover:bg-surface-gray transition-colors">
-            <summary className="text-lg font-medium text-text-primary cursor-pointer list-none flex items-center justify-between">
+          <details className="group px-4 py-2.5 rounded-xl hover:bg-surface-gray transition-colors">
+            <summary className="text-base font-medium text-text-primary cursor-pointer list-none flex items-center justify-between">
               Políticas
               <IconChevron className="h-5 w-5 transition-transform duration-200 group-open:rotate-180" />
             </summary>
@@ -299,7 +299,7 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 py-2 pl-2 text-sm text-text-secondary"
+                  className="flex items-center gap-2 py-1.5 pl-2 text-sm text-text-secondary"
                 >
                   <span className="material-symbols-outlined text-brand-blue text-base shrink-0">
                     picture_as_pdf
@@ -310,10 +310,10 @@ export default function Navbar() {
             </div>
           </details>
 
-          <hr className="my-4 border-border" />
+          <hr className="my-2.5 border-border" />
 
           {/* Login group */}
-          <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-text-muted px-4 mb-1">
+          <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-text-muted px-4 mb-0.5">
             Ingreso a la plataforma
           </p>
           {loginOptions.map((opt) => (
@@ -323,15 +323,15 @@ export default function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-brand-blue/[0.05] transition-colors"
+              className="flex items-center gap-3 py-2.5 px-4 rounded-xl hover:bg-brand-blue/[0.05] transition-colors"
             >
-              <div className="w-10 h-10 rounded-xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-brand-blue text-xl">
+              <div className="w-9 h-9 rounded-xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0">
+                <span className="material-symbols-outlined text-brand-blue text-lg">
                   {opt.icon}
                 </span>
               </div>
               <div>
-                <p className="font-[var(--font-ui)] text-base font-semibold text-brand-navy">
+                <p className="font-[var(--font-ui)] text-sm font-semibold text-brand-navy">
                   {opt.title}
                 </p>
                 <p className="font-[var(--font-ui)] text-xs text-text-muted">
@@ -343,7 +343,7 @@ export default function Navbar() {
 
           <Link
             href="/contacto"
-            className="mt-4 text-center text-base font-medium bg-brand-blue text-white py-3 rounded-full hover:bg-brand-deep-blue transition-colors shadow-[0_4px_14px_0_rgba(0,122,254,0.3)]"
+            className="mt-auto shrink-0 text-center text-base font-medium bg-brand-blue text-white py-3 rounded-full hover:bg-brand-deep-blue transition-colors shadow-[0_4px_14px_0_rgba(0,122,254,0.3)]"
             onClick={() => setMobileOpen(false)}
           >
             Cotizar
