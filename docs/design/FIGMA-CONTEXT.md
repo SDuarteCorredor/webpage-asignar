@@ -33,7 +33,7 @@ Todo lo creado está etiquetado con `setSharedPluginData('dsb', 'key', …)` y `
 | Button | `10:179` | 36 variantes (Primary/Secondary/Ghost/Gradient × S/M/L × Default/Hover/Disabled). Props: `Label#10:0`, `Show Icon#10:37`, `Icon#10:74` (INSTANCE_SWAP) |
 | Badge | `8:15` | Brand/Soft/Neutral/Gold. Props: Label (TEXT), Show dot (BOOLEAN) |
 | Card | `11:24` | Elevated/Bordered. Props: Title, Body, CTA |
-| Icons | página `7:2` | arrow-right `7:6`, check `7:9`, chevron-right `7:12`, close `7:16`, menu `7:21`, mail `7:25`, phone `7:28`, star `7:31`, briefcase `7:35`, users `7:41` |
+| Icons | página `7:2` | arrow-right `7:6`, check `7:9`, chevron-right `7:12`, close `7:16`, menu `7:21`, mail `7:25`, phone `7:28`, star `7:31`, briefcase `7:35`, users `7:41`, award `95:2`, document `114:7`, search `114:11`, clipboard `114:17`, chat `114:22`, clipboard-check `114:27`, user-check `114:32`, link `114:36`, **shield-check `339:4`**, **map-pin `339:8`**, **building `339:12`**, **monitor `339:16`** |
 | Navbar | `324:2` | Layout/Navbar — 1440×80, white bg, bottom border. Logo + 6 nav links (Inter Medium 14) + Ingreso (outline pill) + Cotizar (solid blue pill). Fiel al código `Navbar.tsx`. |
 | Footer | `325:2` | Layout/Footer — 1440×auto, bg #12151B. CTA row + divider + 4 columnas (Brand/Candidatos/Empresas/Sedes) + divider + Contact row (teléfono/email/sede) + divider + Bottom bar (copyright + legal). Fiel al código `Footer.tsx`. |
 
@@ -80,6 +80,9 @@ Rediseño de la página `/soluciones` (nav "Servicios"). Wrapper `204:3` (1440, 
 - Construido con frames/auto-layout + fuentes del DS. Fotos = placeholders de gradiente (pendiente imágenes reales).
 - **Estado**: diseño completo con CTA marquee actualizado, pendiente aprobación del cliente → llevar a React/Next (`src/app/soluciones/page.tsx`). Reutilizar componente ProcesoSeleccion del Home (mismos estilos).
 
+### 🔧 Iconos como componentes (2026-07-10, run_id `asignar-ds-2026-07-10`)
+Nuevos icon components en página Icons (`7:2`): **shield-check** `339:4`, **map-pin** `339:8`, **building** `339:12`, **monitor** `339:16`. Usados en las tarjetas ¿Por qué Asignar? de Servicios (reemplazan ellipses placeholder). Además, limpieza de íconos crudos (texto `✓` y `→`) en AMBAS páginas: Servicios (4 checks en checklist + 4 checks en Cumplimiento + 1 arrow en CTA) y Home (6 checks en B2B + 6 arrows en action-btn + 1 arrow en CTA + 6 arrows en sector cards) — todos reemplazados por instancias de `Icon/check` o `Icon/arrow-right`. **Regla**: todo ícono debe ser componente en la página Icons y usarse como instancia.
+
 ### ⛔ Gold eliminado del DS (2026-07-08)
 Decisión del cliente: fuera el gold de la marca web (nada de amarillo/dorado, y menos como texto sobre fondo oscuro). Eliminado en Figma: variante **Style=Gold** del Badge (`8:12`), variables **`brand/gold`** (`2:10`) y **`color/accent/gold`** (`2:32`), y sus **swatches** en Foundations (`6:10`, `6:92`). En código: quitado `--color-brand-gold` de `globals.css` y reemplazados los usos (`text-brand-gold` → `text-brand-light-blue` en eyebrows de soluciones/FAQ/nosotros/postulate). Acento sobre oscuro = `brand-light-blue`; acento general = `brand-blue`.
 
@@ -87,7 +90,8 @@ Decisión del cliente: fuera el gold de la marca web (nada de amarillo/dorado, y
 
 - [ ] Subir imágenes reales (`public/hero-asignar.jpg`, `foto-sst.jpg`, logos de clientes) con `upload_assets` y reemplazar placeholders.
 - [ ] **REDISEÑO Home v2** (prioridad): v1 es traducción fiel del código = plana. Aplicar dirección de `DESIGN.md → Dirección de evolución` usando los skills de `.agents/skills/`.
-- [ ] Íconos Material Symbols exactos (hotel, handshake, payments…) al set de Icons.
+- [x] Íconos como componentes: shield-check, map-pin, building, monitor creados; raw text icons (`✓`/`→`) reemplazados con instancias en Home y Servicios.
+- [ ] Íconos Material Symbols adicionales (hotel, handshake, payments…) al set de Icons si se necesitan.
 - [ ] Explorar librerías de comunidad: `get_libraries(fileKey)` lista UI kits añadibles (motion, hero patterns).
 - [ ] Páginas restantes (Vacantes, Soluciones, Nosotros, Contacto…) — construir DESPUÉS de validar la dirección v2 en el Home.
 - [ ] Code Connect al final (mapear Button/Badge/Card de Figma ↔ componentes React cuando existan como componentes reutilizables en código).
