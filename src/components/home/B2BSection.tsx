@@ -110,9 +110,9 @@ export default function B2BSection() {
             que tú te concentres en tu negocio.
           </p>
 
-          <ul className="mt-7 space-y-3">
+          <ul className="mt-7 inline-flex flex-col space-y-3 text-left">
             {beneficios.map((b) => (
-              <li key={b} className="flex items-center justify-center gap-3 lg:justify-start">
+              <li key={b} className="flex items-center gap-2">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white">
                   <Check className="h-3.5 w-3.5" />
                 </span>
