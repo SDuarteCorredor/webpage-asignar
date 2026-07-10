@@ -83,18 +83,18 @@ export default function SGSSTSection() {
               <div className="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-surface via-surface/60 to-transparent" />
 
               {/* Visión Zero ATEL pill */}
-              <div className="absolute left-5 top-5 rounded-full bg-white/95 px-4 py-2 shadow-[0_8px_20px_-10px_rgba(0,18,51,0.35)] backdrop-blur-sm">
-                <span className="font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
+              <div className="absolute left-3 top-3 sm:left-5 sm:top-5 rounded-full bg-white/95 px-3 py-1.5 sm:px-4 sm:py-2 shadow-[0_8px_20px_-10px_rgba(0,18,51,0.35)] backdrop-blur-sm">
+                <span className="font-[var(--font-ui)] text-[11px] sm:text-[13px] font-semibold text-brand-navy">
                   Visión Zero ATEL
                 </span>
               </div>
 
               {/* +5.000 workers card */}
-              <div className="absolute right-5 top-5 rounded-2xl bg-white/95 px-5 py-3.5 shadow-[0_10px_26px_-12px_rgba(0,18,51,0.4)] backdrop-blur-sm">
-                <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-blue">
+              <div className="absolute right-3 top-3 sm:right-5 sm:top-5 rounded-xl sm:rounded-2xl bg-white/95 px-3 py-2 sm:px-5 sm:py-3.5 shadow-[0_10px_26px_-12px_rgba(0,18,51,0.4)] backdrop-blur-sm">
+                <p className="font-[var(--font-display)] text-lg sm:text-2xl font-extrabold leading-none text-brand-blue">
                   +5.000
                 </p>
-                <p className="mt-1.5 font-[var(--font-ui)] text-xs font-semibold text-brand-navy">
+                <p className="mt-1 sm:mt-1.5 font-[var(--font-ui)] text-[10px] sm:text-xs font-semibold text-brand-navy">
                   trabajadores protegidos
                 </p>
               </div>
