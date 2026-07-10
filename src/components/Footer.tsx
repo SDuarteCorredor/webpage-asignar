@@ -135,8 +135,8 @@ export default function Footer() {
     <footer className="bg-[#12151B] text-white">
       <div className="mx-auto max-w-[1280px] px-4 md:px-8">
         {/* CTA — empresas */}
-        <div className="flex flex-col items-center gap-6 py-14 text-center md:flex-row md:items-center md:justify-between md:text-left md:py-16">
-          <h2 className="max-w-2xl font-[var(--font-display)] text-3xl font-extrabold leading-[1.1] tracking-[-0.02em] md:text-[40px]">
+        <div className="flex flex-col items-start gap-5 py-12 md:flex-row md:items-center md:justify-between md:py-16">
+          <h2 className="max-w-2xl font-[var(--font-display)] text-2xl font-extrabold leading-[1.1] tracking-[-0.02em] sm:text-3xl md:text-[40px]">
             ¿Listo para escalar tu operación con el mejor talento humano?
           </h2>
           <Link
@@ -151,9 +151,9 @@ export default function Footer() {
         <div className="h-px bg-white/10" />
 
         {/* Columns */}
-        <div className="grid grid-cols-1 gap-10 py-14 text-center sm:grid-cols-2 sm:text-left lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 py-14 lg:grid-cols-4 lg:gap-x-10">
           {/* Brand */}
-          <div className="flex flex-col items-center sm:items-start">
+          <div className="col-span-2 flex flex-col items-start lg:col-span-1">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/logo-asignar-blanco.svg"
@@ -207,32 +207,30 @@ export default function Footer() {
           </div>
 
           {/* Sedes */}
-          <div>
+          <div className="col-span-2 lg:col-span-1">
             <ColTitle>Cobertura nacional</ColTitle>
-            <ul className="inline-flex flex-col space-y-2.5 text-left">
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 lg:flex lg:flex-col lg:gap-y-2.5">
               {sedes.map((s) => (
                 <li key={s.ciudad}>
                   <a
                     href={maps(s.q)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-start gap-2"
+                    className="group flex items-start gap-1.5 lg:gap-2"
                   >
-                    <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-light-blue/70" />
+                    <PinIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-light-blue/70 lg:h-4 lg:w-4" />
                     <span>
-                      <span className="font-[var(--font-body)] text-sm font-medium text-white/80 transition-colors group-hover:text-white">
+                      <span className="font-[var(--font-body)] text-[13px] font-medium text-white/80 transition-colors group-hover:text-white lg:text-sm">
                         {s.ciudad}
                         {s.nota && (
-                          <span className="ml-1.5 rounded bg-brand-blue/20 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand-light-blue">
+                          <span className="ml-1 rounded bg-brand-blue/20 px-1 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-brand-light-blue lg:ml-1.5 lg:px-1.5 lg:text-[10px]">
                             {s.nota}
                           </span>
                         )}
                       </span>
-                      {s.dir && (
-                        <span className="block font-[var(--font-body)] text-xs text-white/40">
-                          {s.dir}
-                        </span>
-                      )}
+                      <span className="hidden font-[var(--font-body)] text-xs text-white/40 lg:block">
+                        {s.dir}
+                      </span>
                     </span>
                   </a>
                 </li>
@@ -244,16 +242,16 @@ export default function Footer() {
         <div className="h-px bg-white/10" />
 
         {/* Contact row */}
-        <div className="grid grid-cols-1 gap-6 py-10 sm:grid-cols-3">
-          <a href="tel:+576043220310" className="group flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue">
-              <PhoneIcon className="h-5 w-5" />
+        <div className="flex flex-col gap-5 py-10 sm:flex-row sm:gap-8">
+          <a href="tel:+576043220310" className="group flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue sm:h-12 sm:w-12">
+              <PhoneIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </span>
-            <span className="text-center sm:text-left">
-              <span className="block font-[var(--font-ui)] text-sm font-semibold text-white">
+            <span>
+              <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-white sm:text-sm">
                 Línea nacional
               </span>
-              <span className="font-[var(--font-body)] text-sm text-white/55">
+              <span className="font-[var(--font-body)] text-[13px] text-white/55 sm:text-sm">
                 (57) 604 322 0310
               </span>
             </span>
@@ -261,16 +259,16 @@ export default function Footer() {
 
           <a
             href="mailto:marketingdigital@asignar.com.co"
-            className="group flex flex-col items-center gap-2 sm:flex-row sm:gap-4"
+            className="group flex items-center gap-3"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue">
-              <MailIcon className="h-5 w-5" />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue sm:h-12 sm:w-12">
+              <MailIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </span>
-            <span className="text-center sm:text-left">
-              <span className="block font-[var(--font-ui)] text-sm font-semibold text-white">
+            <span>
+              <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-white sm:text-sm">
                 Escríbenos
               </span>
-              <span className="font-[var(--font-body)] text-[13px] sm:text-sm text-white/55 break-all sm:break-normal">
+              <span className="font-[var(--font-body)] text-[13px] text-white/55 break-all sm:text-sm sm:break-normal">
                 marketingdigital@asignar.com.co
               </span>
             </span>
@@ -280,16 +278,16 @@ export default function Footer() {
             href={maps(PRINCIPAL)}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col items-center gap-2 sm:flex-row sm:gap-4"
+            className="group flex items-center gap-3"
           >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue">
-              <PinIcon className="h-5 w-5" />
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue sm:h-12 sm:w-12">
+              <PinIcon className="h-4 w-4 sm:h-5 sm:w-5" />
             </span>
-            <span className="text-center sm:text-left">
-              <span className="block font-[var(--font-ui)] text-sm font-semibold text-white">
+            <span>
+              <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-white sm:text-sm">
                 Sede principal
               </span>
-              <span className="font-[var(--font-body)] text-sm text-white/55">
+              <span className="font-[var(--font-body)] text-[13px] text-white/55 sm:text-sm">
                 Cra. 48 #10-45, El Poblado, Medellín
               </span>
             </span>
@@ -299,9 +297,9 @@ export default function Footer() {
         <div className="h-px bg-white/10" />
 
         {/* Bottom bar */}
-        <div className="flex flex-col items-center gap-4 py-6 text-center md:flex-row md:items-center md:justify-between md:text-left">
+        <div className="flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-1">
-            <p className="font-[var(--font-body)] text-xs text-white/45">
+            <p className="font-[var(--font-body)] text-[11px] text-white/45 sm:text-xs">
               © {new Date().getFullYear()} ASIGNAR SAS · Empresa de Servicios
               Temporales (Ley 50 de 1990) · Todos los derechos reservados.
             </p>
@@ -309,12 +307,12 @@ export default function Footer() {
               href="https://www.conexionoutsourcing.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-[var(--font-body)] text-xs text-white/45 transition-colors hover:text-brand-light-blue"
+              className="font-[var(--font-body)] text-[11px] text-white/45 transition-colors hover:text-brand-light-blue sm:text-xs"
             >
               Conozca nuestra empresa filial: Conexión Outsourcing S.A.S.
             </a>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 md:justify-end">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:justify-end">
             {legal.map((l) => (
               <a
                 key={l.label}
