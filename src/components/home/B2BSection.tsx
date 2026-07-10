@@ -65,27 +65,26 @@ export default function B2BSection() {
             </div>
           </div>
 
-          {/* stat — sedes (bottom left, overlaps) */}
-          <div className="float-card absolute -bottom-4 -left-3 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)] backdrop-blur-md md:-left-5">
-            <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-blue">
+          {/* stat — sedes (bottom left) — inside image on mobile, overlapping on md+ */}
+          <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-2xl border border-white/25 bg-brand-navy/40 px-3 py-2 backdrop-blur-md md:float-card md:-bottom-4 md:-left-5 md:gap-3 md:border-white/70 md:bg-white/85 md:px-4 md:py-3 md:shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)]">
+            <p className="font-[var(--font-display)] text-lg md:text-2xl font-extrabold leading-none text-white md:text-brand-blue">
               7+
             </p>
-            <p className="font-[var(--font-ui)] text-xs leading-tight text-text-muted">
+            <p className="font-[var(--font-ui)] text-[11px] md:text-xs leading-tight text-white/80 md:text-text-muted">
               Sedes en
               <br />
               Colombia
             </p>
           </div>
 
-          {/* stat — clients (bottom right, overlaps) */}
-          <div
-            className="float-card absolute -bottom-5 right-6 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)] backdrop-blur-md"
+          {/* stat — clients (bottom right) — inside image on mobile, overlapping on md+ */}
+          <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-2xl border border-white/25 bg-brand-navy/40 px-3 py-2 backdrop-blur-md md:float-card md:-bottom-5 md:right-6 md:gap-3 md:border-white/70 md:bg-white/85 md:px-4 md:py-3 md:shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)]"
             style={{ animationDelay: "1.6s" }}
           >
-            <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-navy">
+            <p className="font-[var(--font-display)] text-lg md:text-2xl font-extrabold leading-none text-white md:text-brand-navy">
               500+
             </p>
-            <p className="font-[var(--font-ui)] text-xs leading-tight text-text-muted">
+            <p className="font-[var(--font-ui)] text-[11px] md:text-xs leading-tight text-white/80 md:text-text-muted">
               Empresas
               <br />
               cliente
