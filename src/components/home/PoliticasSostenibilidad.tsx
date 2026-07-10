@@ -22,7 +22,6 @@ const policies = [
   { label: "PTEE", file: "Manual_de_Procedimientos_Politicas_PTEE.pdf" },
 ];
 
-// Dos filas centradas: la primera con 6, la segunda con 5.
 const rows = [policies.slice(0, 6), policies.slice(6)];
 
 function PolicyChip({ label, file }: { label: string; file: string }) {
@@ -31,12 +30,12 @@ function PolicyChip({ label, file }: { label: string; file: string }) {
       href={`${POL}${file}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-white px-3.5 py-2 transition-colors hover:border-brand-blue hover:bg-brand-blue/[0.05]"
+      className="group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-white px-3 py-1.5 sm:px-3.5 sm:py-2 sm:gap-2 transition-colors hover:border-brand-blue hover:bg-brand-blue/[0.05]"
     >
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-blue/[0.08] text-brand-blue transition-colors group-hover:bg-brand-blue group-hover:text-white">
-        <DocIcon className="h-3.5 w-3.5" />
+      <span className="flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full bg-brand-blue/[0.08] text-brand-blue transition-colors group-hover:bg-brand-blue group-hover:text-white">
+        <DocIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
       </span>
-      <span className="whitespace-nowrap font-[var(--font-body)] text-[13px] font-medium text-brand-navy">
+      <span className="whitespace-nowrap font-[var(--font-body)] text-[11px] sm:text-[13px] font-medium text-brand-navy">
         {label}
       </span>
     </a>
@@ -56,17 +55,25 @@ export default function PoliticasSostenibilidad() {
           cómo operamos con responsabilidad.
         </p>
 
-        <div className="scroll-reveal mt-10 flex flex-col items-center gap-3">
-          {rows.map((row, i) => (
-            <div
-              key={i}
-              className="flex flex-wrap justify-center gap-3 lg:flex-nowrap"
-            >
-              {row.map((p) => (
-                <PolicyChip key={p.label} label={p.label} file={p.file} />
-              ))}
-            </div>
-          ))}
+        <div className="scroll-reveal mt-10 flex flex-wrap justify-center gap-2 sm:gap-3 sm:flex-col sm:items-center">
+          {/* Mobile: all chips wrap naturally in 2-3 per row. sm+: two explicit rows */}
+          <div className="contents sm:hidden">
+            {policies.map((p) => (
+              <PolicyChip key={p.label} label={p.label} file={p.file} />
+            ))}
+          </div>
+          <div className="hidden sm:contents">
+            {rows.map((row, i) => (
+              <div
+                key={i}
+                className="flex flex-wrap justify-center gap-3 lg:flex-nowrap"
+              >
+                {row.map((p) => (
+                  <PolicyChip key={p.label} label={p.label} file={p.file} />
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
 
         <p className="mt-9 font-[var(--font-body)] text-xs text-text-muted/70">
