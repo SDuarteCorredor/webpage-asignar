@@ -40,9 +40,9 @@ export default function SGSSTSection() {
               riesgo y acompañamiento en auditorías.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6 text-left">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-x-6 sm:gap-y-6 text-left">
               {features.map((f) => (
-                <div key={f.titulo} className="flex gap-3">
+                <div key={f.titulo} className="flex flex-col items-center text-center gap-2 rounded-2xl bg-surface-gray/60 p-4 sm:flex-row sm:text-left sm:items-start sm:bg-transparent sm:p-0 sm:rounded-none sm:gap-3">
                   <div className="w-10 h-10 rounded-xl bg-brand-blue/[0.08] flex items-center justify-center shrink-0">
                     <span className="material-symbols-outlined text-brand-blue text-xl">
                       {f.icon}
