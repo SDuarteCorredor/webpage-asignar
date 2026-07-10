@@ -34,9 +34,15 @@ Todo lo creado está etiquetado con `setSharedPluginData('dsb', 'key', …)` y `
 | Badge | `8:15` | Brand/Soft/Neutral/Gold. Props: Label (TEXT), Show dot (BOOLEAN) |
 | Card | `11:24` | Elevated/Bordered. Props: Title, Body, CTA |
 | Icons | página `7:2` | arrow-right `7:6`, check `7:9`, chevron-right `7:12`, close `7:16`, menu `7:21`, mail `7:25`, phone `7:28`, star `7:31`, briefcase `7:35`, users `7:41` |
+| Navbar | `324:2` | Layout/Navbar — 1440×80, white bg, bottom border. Logo + 6 nav links (Inter Medium 14) + Ingreso (outline pill) + Cotizar (solid blue pill). Fiel al código `Navbar.tsx`. |
+| Footer | `325:2` | Layout/Footer — 1440×auto, bg #12151B. CTA row + divider + 4 columnas (Brand/Candidatos/Empresas/Sedes) + divider + Contact row (teléfono/email/sede) + divider + Bottom bar (copyright + legal). Fiel al código `Footer.tsx`. |
 
 ### Páginas del archivo
-Cover → Getting Started → 🎨 Foundations (root `6:2`) → ——— Components ——— → 🔘 Button (`9:2`) → 🏷️ Badge → ✦ Icons (`7:2`) → 🃏 Card → 📄 Home (`14:2`)
+Cover → Getting Started → 🎨 Foundations (root `6:2`) → ——— Components ——— → 🔘 Button (`9:2`) → 🏷️ Badge → ✦ Icons (`7:2`) → 🃏 Card → 🧱 Layout (`322:2`) → 📄 Home (`14:2`) → 📄 Servicios (`204:2`)
+
+### Composiciones full-page (Navbar + contenido + Footer)
+- **Servicios — Full Page** `327:2` (en página 📄 Servicios): instancia Navbar + clone wrapper Servicios + instancia Footer.
+- **Home — Full Page** `328:92` (en página 📄 Home): instancia Navbar + clone wrapper Home + instancia Footer.
 
 ### Home v1 (wrapper `14:3`) — 13 secciones construidas
 Hero `15:2` · Vacantes `17:22` · Stats `17:218` · Logos `17:232` · Beneficios `17:255` · DOCA `18:69` · Proceso `19:77` · SGSST `20:89` · B2B `21:98` · Sectores `22:107` · Confianza `23:119` · Testimonios `24:124` · Respaldo `24:189`.
