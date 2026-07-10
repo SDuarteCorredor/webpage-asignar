@@ -34,9 +34,15 @@ Todo lo creado está etiquetado con `setSharedPluginData('dsb', 'key', …)` y `
 | Badge | `8:15` | Brand/Soft/Neutral/Gold. Props: Label (TEXT), Show dot (BOOLEAN) |
 | Card | `11:24` | Elevated/Bordered. Props: Title, Body, CTA |
 | Icons | página `7:2` | arrow-right `7:6`, check `7:9`, chevron-right `7:12`, close `7:16`, menu `7:21`, mail `7:25`, phone `7:28`, star `7:31`, briefcase `7:35`, users `7:41` |
+| Navbar | `324:2` | Layout/Navbar — 1440×80, white bg, bottom border. Logo + 6 nav links (Inter Medium 14) + Ingreso (outline pill) + Cotizar (solid blue pill). Fiel al código `Navbar.tsx`. |
+| Footer | `325:2` | Layout/Footer — 1440×auto, bg #12151B. CTA row + divider + 4 columnas (Brand/Candidatos/Empresas/Sedes) + divider + Contact row (teléfono/email/sede) + divider + Bottom bar (copyright + legal). Fiel al código `Footer.tsx`. |
 
 ### Páginas del archivo
-Cover → Getting Started → 🎨 Foundations (root `6:2`) → ——— Components ——— → 🔘 Button (`9:2`) → 🏷️ Badge → ✦ Icons (`7:2`) → 🃏 Card → 📄 Home (`14:2`)
+Cover → Getting Started → 🎨 Foundations (root `6:2`) → ——— Components ——— → 🔘 Button (`9:2`) → 🏷️ Badge → ✦ Icons (`7:2`) → 🃏 Card → 🧱 Layout (`322:2`) → 📄 Home (`14:2`) → 📄 Servicios (`204:2`)
+
+### Composiciones full-page (Navbar + contenido + Footer)
+- **Servicios — Full Page** `327:2` (en página 📄 Servicios): instancia Navbar + clone wrapper Servicios + instancia Footer.
+- **Home — Full Page** `328:92` (en página 📄 Home): instancia Navbar + clone wrapper Home + instancia Footer.
 
 ### Home v1 (wrapper `14:3`) — 13 secciones construidas
 Hero `15:2` · Vacantes `17:22` · Stats `17:218` · Logos `17:232` · Beneficios `17:255` · DOCA `18:69` · Proceso `19:77` · SGSST `20:89` · B2B `21:98` · Sectores `22:107` · Confianza `23:119` · Testimonios `24:124` · Respaldo `24:189`.
@@ -62,15 +68,17 @@ Secciones rediseñadas en Figma y ya llevadas a React/Next (fieles al Figma apro
 - **Secciones ya fieles al Figma en código**: Hero (foto full-bleed + 3 glass cards), Beneficios (6 photo-cards), Vacantes (split + 4 filas), SG-SST (foto + card "100%"), B2B, Sectores, Testimonios, Políticas. Header/Footer intactos.
 - **Pendiente menor**: imagen de Políticas (`152:54` es placeholder vacío en Figma → en código cae a degradado; el label "Operación responsable y certificada" lo hace ver intencional). Retratos reales de Testimonios (hoy iniciales, igual que Figma).
 
-### 🧩 Servicios v1 EN FIGMA (página `📄 Servicios` `204:2`, run_id `asignar-servicios-2026-07-07`)
-Rediseño de la página `/soluciones` (nav "Servicios"). Wrapper `204:3` (1440, auto-layout vertical). Basado en patrones de UI de páginas de servicios que funcionan (NO clon del Home). 5 secciones:
-- **01 Hero** `204:4` (CLARO, split — distinto al Home): fondo surface, izquierda badge "Para empresas" + H1 54 navy con acento azul en "menos de 48 horas" + subcopy + CTAs (Solicitar propuesta / Ver portafolio) + chips de respaldo (Ley 50/1990 · SG-SST · ARL SURA). Derecha: tarjeta blanca elevada **"Solicita tu propuesta"** (`225:2`) = mini-formulario (Empresa / Sector select / ¿Qué necesitas? + botón "Enviar solicitud" + nota Ley 1581). Patrón copy+lead-form, orientado a conversión.
-- **02 Servicios** `204:5` (white): patrón "explorador" = lista de 4 servicios a la izquierda (activo en navy) + panel de detalle a la derecha (`212:2`: título, descripción, checklist 2×2, CTA). Servicios: Temporales / Outsourcing / Selección / Gestión SST.
-- **03 Proceso** `204:6` (surface): stepper horizontal conectado de 7 pasos (línea `Connector` + círculos numerados), último (07 Contratación) resaltado en azul.
-- **04 Cumplimiento** `204:7` (navy): copy + stats (+20 años / 7 sedes / +1.000) a la izquierda; grid 2×2 de tarjetas de respaldo (Ley 50, SG-SST, ARL SURA, Póliza) a la derecha.
+### 🧩 Servicios v2 EN FIGMA (página `📄 Servicios` `204:2`, run_id `asignar-servicios-2026-07-07` + `asignar-ds-2026-07-10`)
+Rediseño de la página `/soluciones` (nav "Servicios"). Wrapper `204:3` (1440, auto-layout vertical). 7 secciones (2 nuevas vs v1):
+- **01 Hero** `204:4` (surface): split — izquierda badge "Para empresas" + H1 54 navy con acento azul en "menos de 48 horas" + subcopy + CTAs (Solicitar propuesta / Ver portafolio) + chips de respaldo (Ley 50/1990 · SG-SST · ARL SURA) + **Awards badge** `318:270` ("Business Management Awards 2023"). Derecha: tarjeta blanca elevada **"Solicita tu propuesta"** (`225:2`) = mini-formulario.
+- **02 Servicios** `204:5` (white): patrón "explorador" = lista de 4 servicios a la izquierda (activo en navy) + panel de detalle a la derecha (`212:2`: título, descripción, checklist 2×2, CTA). Servicios: Temporales / Outsourcing / Selección / Gestión SST. Énfasis en Personal eventual + Personal temporal fijo (sub-páginas futuras).
+- **02b ¿Por qué Asignar?** `317:2` (white, NUEVA): 4 differentiator cards en grid 2×2 — Cumplimos la normatividad legal, Cobertura a nivel nacional, Especialistas en sector HORECA, Software propio. Cada card con ícono circular azul + título + descripción.
+- **03 Proceso** `204:6` (surface): stepper horizontal 7 pasos — 01 Reclutamiento/Hojas de vida, 02 Antecedentes/Consulta y verificación, 03 Pruebas/Psicotécnicas, 04 Entrevistas/Grupal o individual, 05 Informe final/Selección de candidatos, 06 Envío/Candidatos presentados, 07 Vinculación/Listo para trabajar. Último paso resaltado en azul.
+- **04 Cumplimiento** `204:7` (**surface**, cambiado de navy → sin fondos oscuros): copy + stats (+20 años / 7 sedes / **+5.000 colaboradores en misión**) a la izquierda con textos navy/brand-blue; grid 2×2 de tarjetas blancas con borde y sombra (Ley 50, SG-SST, ARL SURA, Póliza) a la derecha.
+- **04b Clientes por sector** `318:2` (white, NUEVA): 6 bloques con placeholders exactos para logos — Hotelero (35), Centros de eventos (7), Clubes (5), Restaurantes (8), Inmobiliario (3), Industria (6) = 64 total. Cada bloque con badge de sector + grid de rectángulos placeholder.
 - **05 CTA** `204:8` (white): panel con gradiente de marca, headline centrado + "Solicitar propuesta".
-- Construido con frames/auto-layout + fuentes del DS (Plus Jakarta Sans / DM Sans / Inter) y colores de los tokens (directos, no bindeados aún). Fotos = placeholders de gradiente (pendiente extraer/generar imágenes reales de operación).
-- **Pendiente**: validar dirección con el cliente → llevar a React/Next (`src/app/soluciones/page.tsx`); opcional añadir banda de "Sectores que atendemos" y franja de logos; imágenes reales; posible tratamiento de hero distinto al Home.
+- Construido con frames/auto-layout + fuentes del DS. Fotos = placeholders de gradiente (pendiente imágenes reales).
+- **Estado**: diseño completo, pendiente aprobación del cliente → llevar a React/Next (`src/app/soluciones/page.tsx`). Reutilizar componente ProcesoSeleccion del Home (mismos estilos).
 
 ### ⛔ Gold eliminado del DS (2026-07-08)
 Decisión del cliente: fuera el gold de la marca web (nada de amarillo/dorado, y menos como texto sobre fondo oscuro). Eliminado en Figma: variante **Style=Gold** del Badge (`8:12`), variables **`brand/gold`** (`2:10`) y **`color/accent/gold`** (`2:32`), y sus **swatches** en Foundations (`6:10`, `6:92`). En código: quitado `--color-brand-gold` de `globals.css` y reemplazados los usos (`text-brand-gold` → `text-brand-light-blue` en eyebrows de soluciones/FAQ/nosotros/postulate). Acento sobre oscuro = `brand-light-blue`; acento general = `brand-blue`.
@@ -91,7 +99,7 @@ Dos cuentas trabajan este proyecto (personal + empresa). Reglas para no pisarse:
 1. **Git es la memoria compartida.** Todo cambio de contexto (este archivo, DESIGN.md, PRODUCT.md, figma-state.json) se commitea y pushea. Al iniciar sesión: `git pull` y leer este archivo antes de tocar Figma.
 2. **Figma es estado vivo compartido.** Antes de crear, verifica existencia (claves `dsb`). Nunca dupliques colecciones/estilos/componentes. Nunca borres por nombre — solo por clave `dsb` + run_id propio.
 3. **Cada sesión nueva usa un run_id nuevo** (`asignar-ds-YYYY-MM-DD[-n]`) para sus nodos, y registra aquí qué creó (IDs importantes) al terminar.
-4. **Convención de ramas**: trabajo de diseño/frontend en ramas `claude/*`. Esta sesión: `claude/figma-setup-design-02m1ct`.
+4. **Convención de ramas**: trabajo de diseño/frontend en ramas `claude/*`.
 5. **Skills**: viven en `.agents/skills/` (versionados). Cualquier agente los tiene al clonar. Flujo de diseño: leer PRODUCT.md + DESIGN.md → skill pertinente (`impeccable` para dirección/critique, `design-taste-frontend` para landings, `figma-implement-design` para Figma→código, `web-design-guidelines` + `baseline-ui` para auditar, `emil-design-eng` + `review-animations` + `animation-vocabulary` para motion).
 6. **División sugerida**: la cuenta que trabaje FIGMA actualiza este archivo; la que trabaje CÓDIGO actualiza DESIGN.md si cambia tokens. Si ambas van a tocar lo mismo, coordinar por commits pequeños y frecuentes.
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export const metadata: Metadata = {
   title: "Soluciones Empresariales",
@@ -188,27 +189,8 @@ export default function SolucionesPage() {
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-[800px] mx-auto px-4 md:px-16 text-center">
-          <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy mb-4">
-            ¿Listo para optimizar tu operación?
-          </h2>
-          <p className="font-[var(--font-body)] text-base text-text-secondary mb-8 max-w-lg mx-auto">
-            Cuéntanos sobre tu empresa y te diseñamos una propuesta a la medida.
-            Sin compromisos.
-          </p>
-          <Link
-            href="/contacto"
-            className="inline-flex items-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-sm font-semibold px-10 py-4 rounded-full shadow-[0_4px_14px_0_rgba(0,122,254,0.39)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200"
-          >
-            Solicitar propuesta
-            <span className="material-symbols-outlined text-base">
-              arrow_forward
-            </span>
-          </Link>
-        </div>
-      </section>
+      {/* CTA Final — marquee de sectores */}
+      <CTAWithVerticalMarquee />
     </>
   );
 }
