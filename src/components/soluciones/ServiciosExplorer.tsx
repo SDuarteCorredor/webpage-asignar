@@ -3,77 +3,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-interface Servicio {
-  num: string;
-  titulo: string;
-  shortDesc: string;
-  descripcion: string;
-  checks: string[];
+function ArrowRight({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M4 12h15M13 5l7 7-7 7"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
-
-const servicios: Servicio[] = [
-  {
-    num: "01",
-    titulo: "Servicios Temporales",
-    shortDesc: "Personal calificado para picos, reemplazos y proyectos.",
-    descripcion:
-      "Suministro de personal temporal calificado para cubrir picos de demanda, reemplazos y proyectos específicos, con cumplimiento total de la Ley 50 de 1990.",
-    checks: [
-      "Personal operativo y administrativo",
-      "Cobertura en menos de 48 horas",
-      "Gestión completa de nómina y prestaciones",
-      "Póliza de cumplimiento vigente",
-    ],
-  },
-  {
-    num: "02",
-    titulo: "Outsourcing de Procesos",
-    shortDesc: "Tercerizamos áreas operativas completas.",
-    descripcion:
-      "Tercerización integral de áreas operativas. Nos encargamos de todo para que tu equipo se concentre en lo estratégico.",
-    checks: [
-      "Gestión de áreas completas",
-      "Supervisión permanente en sitio",
-      "Indicadores y reportes mensuales",
-      "Flexibilidad para escalar",
-    ],
-  },
-  {
-    num: "03",
-    titulo: "Selección de Personal",
-    shortDesc: "Headhunting y evaluación para vacantes directas.",
-    descripcion:
-      "Proceso riguroso de selección para posiciones directas en tu empresa. Encontramos el talento que se ajusta a tu cultura organizacional.",
-    checks: [
-      "Headhunting especializado",
-      "Evaluación por competencias",
-      "Verificación de antecedentes",
-      "Garantía de permanencia",
-    ],
-  },
-  {
-    num: "04",
-    titulo: "Gestión de SST",
-    shortDesc: "Sistema de seguridad y salud en el trabajo.",
-    descripcion:
-      "Sistema de Gestión de Seguridad y Salud en el Trabajo. Cumplimiento normativo y cultura de prevención para tu personal en misión.",
-    checks: [
-      "Diseño e implementación del SG-SST",
-      "Capacitaciones continuas",
-      "Inspecciones periódicas en sitio",
-      "Acompañamiento en auditorías",
-    ],
-  },
-];
 
 function CheckIcon({ className }: { className?: string }) {
   return (
-    <svg
-      className={className}
-      viewBox="0 0 16 16"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg className={className} viewBox="0 0 16 16" fill="none">
       <path
         d="M3.5 8.5L6.5 11.5L12.5 4.5"
         stroke="currentColor"
@@ -82,6 +33,239 @@ function CheckIcon({ className }: { className?: string }) {
         strokeLinejoin="round"
       />
     </svg>
+  );
+}
+
+interface SubTipo {
+  nombre: string;
+  descripcion: string;
+  checks: string[];
+}
+
+interface Servicio {
+  num: string;
+  titulo: string;
+  shortDesc: string;
+  subtipos: SubTipo[];
+}
+
+const servicios: Servicio[] = [
+  {
+    num: "01",
+    titulo: "Servicios Temporales",
+    shortDesc: "Personal calificado para picos, reemplazos y proyectos.",
+    subtipos: [
+      {
+        nombre: "Personal eventual",
+        descripcion:
+          "Suministro ágil de personal para cubrir picos de demanda, eventos, temporadas y reemplazos puntuales con cumplimiento total de la Ley 50 de 1990.",
+        checks: [
+          "Cobertura en menos de 48 horas",
+          "Eventos, temporadas y picos",
+          "Gestión completa de nómina",
+          "Sin compromisos a largo plazo",
+        ],
+      },
+      {
+        nombre: "Personal temporal fijo",
+        descripcion:
+          "Personal en misión de tiempo completo para operaciones continuas. Tu equipo, nuestra gestión administrativa y de riesgo laboral.",
+        checks: [
+          "Misión a tiempo completo",
+          "Continuidad operativa garantizada",
+          "Prestaciones y seguridad social",
+          "Póliza de cumplimiento vigente",
+        ],
+      },
+    ],
+  },
+  {
+    num: "02",
+    titulo: "Outsourcing de Procesos",
+    shortDesc: "Tercerizamos áreas operativas completas.",
+    subtipos: [
+      {
+        nombre: "Outsourcing operativo",
+        descripcion:
+          "Gestión integral de áreas como limpieza, cocina, servicio y producción. Nos encargamos del personal y la supervisión en sitio.",
+        checks: [
+          "Limpieza y mantenimiento",
+          "Cocina y servicio de alimentos",
+          "Supervisión permanente en sitio",
+          "Indicadores y reportes mensuales",
+        ],
+      },
+      {
+        nombre: "Outsourcing administrativo",
+        descripcion:
+          "Tercerización de back-office, recepción, atención al cliente y soporte administrativo con personal capacitado y evaluado.",
+        checks: [
+          "Recepción y atención al cliente",
+          "Soporte administrativo",
+          "Personal capacitado y evaluado",
+          "Flexibilidad para escalar",
+        ],
+      },
+    ],
+  },
+  {
+    num: "03",
+    titulo: "Selección de Personal",
+    shortDesc: "Headhunting y evaluación para vacantes directas.",
+    subtipos: [
+      {
+        nombre: "Headhunting ejecutivo",
+        descripcion:
+          "Búsqueda especializada de perfiles directivos y de alta gerencia que se ajustan a tu cultura organizacional.",
+        checks: [
+          "Perfiles directivos y especializados",
+          "Evaluación por competencias",
+          "Verificación de antecedentes",
+          "Garantía de permanencia",
+        ],
+      },
+      {
+        nombre: "Selección operativa",
+        descripcion:
+          "Reclutamiento de alto volumen para cubrir vacantes operativas rápidamente, con el mismo rigor de evaluación y verificación.",
+        checks: [
+          "Reclutamiento de alto volumen",
+          "Procesos de selección ágiles",
+          "Pruebas psicotécnicas incluidas",
+          "Entrevistas grupales e individuales",
+        ],
+      },
+    ],
+  },
+  {
+    num: "04",
+    titulo: "Gestión de SST",
+    shortDesc: "Sistema de seguridad y salud en el trabajo.",
+    subtipos: [
+      {
+        nombre: "Implementación SG-SST",
+        descripcion:
+          "Diseño y puesta en marcha del Sistema de Gestión de Seguridad y Salud en el Trabajo. Cumplimiento normativo desde el día uno.",
+        checks: [
+          "Diseño del SG-SST a medida",
+          "Capacitaciones iniciales",
+          "Documentación y protocolos",
+          "Cumplimiento Resolución 0312",
+        ],
+      },
+      {
+        nombre: "Seguimiento y auditoría",
+        descripcion:
+          "Inspecciones periódicas, capacitaciones continuas y acompañamiento en auditorías para mantener la cultura de prevención.",
+        checks: [
+          "Inspecciones periódicas en sitio",
+          "Capacitaciones continuas",
+          "Acompañamiento en auditorías",
+          "Gestión de incidentes y reportes",
+        ],
+      },
+    ],
+  },
+];
+
+function ServiceDetailCarousel({ subtipos }: { subtipos: SubTipo[] }) {
+  const [slide, setSlide] = useState(0);
+  const autoplayRef = useRef<ReturnType<typeof setInterval>>(null);
+
+  const resetAutoplay = useCallback(() => {
+    if (autoplayRef.current) clearInterval(autoplayRef.current);
+    if (subtipos.length > 1) {
+      autoplayRef.current = setInterval(() => {
+        setSlide((prev) => (prev + 1) % subtipos.length);
+      }, 6000);
+    }
+  }, [subtipos.length]);
+
+  useEffect(() => {
+    resetAutoplay();
+    return () => {
+      if (autoplayRef.current) clearInterval(autoplayRef.current);
+    };
+  }, [resetAutoplay]);
+
+  const goToSlide = (idx: number) => {
+    setSlide(idx);
+    resetAutoplay();
+  };
+
+  return (
+    <>
+      {/* Sub-type pills */}
+      {subtipos.length > 1 && (
+        <div className="flex gap-2">
+          {subtipos.map((sub, idx) => (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              className={`px-4 py-[7px] rounded-full font-[var(--font-ui)] text-[13px] font-semibold transition-all duration-300 ${
+                idx === slide
+                  ? "bg-white/[0.12] text-white"
+                  : "text-white/40 hover:text-white/60"
+              }`}
+            >
+              {sub.nombre}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Sliding content */}
+      <div className="overflow-hidden">
+        <div
+          className="flex"
+          style={{
+            transform: `translateX(-${slide * 100}%)`,
+            transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        >
+          {subtipos.map((sub, idx) => (
+            <div key={idx} className="min-w-full pr-1">
+              <p className="font-[var(--font-body)] text-base text-[#A0A6B3] leading-relaxed">
+                {sub.descripcion}
+              </p>
+
+              <div className="h-px bg-[#2A2D35] my-5" />
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5">
+                {sub.checks.map((check) => (
+                  <div key={check} className="flex items-center gap-2.5">
+                    <div className="w-[22px] h-[22px] rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                      <CheckIcon className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-[var(--font-body)] text-[14.5px] font-medium text-[#E6E8EC] leading-snug">
+                      {check}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Carousel dots */}
+      {subtipos.length > 1 && (
+        <div className="flex gap-1.5 pt-1">
+          {subtipos.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => goToSlide(idx)}
+              aria-label={`Ir a tipo ${idx + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                idx === slide
+                  ? "w-6 bg-brand-blue"
+                  : "w-1.5 bg-white/20 hover:bg-white/30"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 
@@ -188,7 +372,7 @@ export default function ServiciosExplorer() {
             ref={panelRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="relative flex-1 rounded-3xl p-8 md:p-10 flex flex-col gap-6 border border-white/[0.06] overflow-hidden"
+            className="relative flex-1 rounded-3xl p-8 md:p-10 flex flex-col gap-5 border border-white/[0.06] overflow-hidden"
             style={{
               background:
                 "radial-gradient(ellipse 60% 50% at 45% 70%, rgba(255,255,255,0.04), transparent 60%), #1E1E24",
@@ -204,40 +388,26 @@ export default function ServiciosExplorer() {
               className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300"
             />
 
+            {/* Service header (fixed) */}
             <div>
               <p className="font-[var(--font-ui)] text-xs font-semibold tracking-[1px] text-[#828894] mb-2.5">
                 SERVICIO {s.num}
               </p>
-              <h3 className="font-[var(--font-display)] text-2xl md:text-[30px] font-extrabold text-white tracking-[-0.6px] mb-3">
+              <h3 className="font-[var(--font-display)] text-2xl md:text-[30px] font-extrabold text-white tracking-[-0.6px]">
                 {s.titulo}
               </h3>
-              <p className="font-[var(--font-body)] text-base text-[#A0A6B3] leading-relaxed">
-                {s.descripcion}
-              </p>
             </div>
 
-            <div className="h-px bg-[#2A2D35]" />
+            {/* Carousel (remounts on service change for instant switch) */}
+            <ServiceDetailCarousel key={active} subtipos={s.subtipos} />
 
-            {/* Checklist 2×2 */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5">
-              {s.checks.map((check) => (
-                <div key={check} className="flex items-center gap-2.5">
-                  <div className="w-[22px] h-[22px] rounded-full bg-white/10 flex items-center justify-center shrink-0">
-                    <CheckIcon className="w-4 h-4 text-white" />
-                  </div>
-                  <span className="font-[var(--font-body)] text-[14.5px] font-medium text-[#E6E8EC] leading-snug">
-                    {check}
-                  </span>
-                </div>
-              ))}
-            </div>
-
+            {/* CTA (fixed) */}
             <Link
               href="/contacto"
               className="inline-flex items-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold px-7 py-3.5 rounded-full shadow-[0_4px_16px_rgba(0,122,254,0.3)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200 self-start"
             >
               Solicitar este servicio
-              <span className="text-sm">→</span>
+              <ArrowRight className="w-[18px] h-[18px]" />
             </Link>
           </div>
         </div>

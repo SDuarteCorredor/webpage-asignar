@@ -264,9 +264,20 @@ export default function VacantesPage() {
                     className="w-full inline-flex items-center justify-center gap-1 font-[var(--font-ui)] text-sm font-semibold text-brand-blue border border-brand-blue/30 py-2.5 rounded-full hover:bg-brand-blue hover:text-white transition-all duration-200"
                   >
                     Aplicar
-                    <span className="material-symbols-outlined text-base">
-                      arrow_forward
-                    </span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="w-4 h-4"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M4 12h15M13 5l7 7-7 7"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </a>
                 </div>
               ))}

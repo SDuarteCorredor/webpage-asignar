@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import ServiciosExplorer from "@/components/soluciones/ServiciosExplorer";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 export const metadata: Metadata = {
   title: "Soluciones Empresariales",
@@ -15,24 +16,28 @@ const diferenciadores = [
     descripcion:
       "Asignar cumple con todos los lineamientos de ley para personal temporal eventual y tiempo completo.",
     icon: "verified_user",
+    img: "/home/b2b.jpg",
   },
   {
     titulo: "Cobertura a nivel nacional",
     descripcion:
       "Nuestras sedes: Medellín, Rionegro, Bogotá, Cali, Barranquilla, Santa Marta, Cartagena, Pereira, Manizales.",
     icon: "location_on",
+    img: "/home/sst.jpg",
   },
   {
     titulo: "Especialistas en sector HORECA",
     descripcion:
       "Hoteles de alto perfil, clubes, cadenas de restaurantes y centros de convenciones.",
     icon: "apartment",
+    img: "/home/sec-hotelero.jpg",
   },
   {
     titulo: "Software propio",
     descripcion:
       "QR en dispositivos electrónicos para agilizar nómina y requisiciones en tiempo real.",
     icon: "desktop_windows",
+    img: "/home/sec-servicios.jpg",
   },
 ];
 
@@ -73,6 +78,25 @@ const sectoresClientes = [
   { nombre: "Sector Inmobiliario", cantidad: 3 },
   { nombre: "Industria, Producción, Retail y Servicios", cantidad: 6 },
 ];
+
+function ArrowRight({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M4 12h15M13 5l7 7-7 7"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 export default function SolucionesPage() {
   return (
@@ -180,13 +204,14 @@ export default function SolucionesPage() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold py-[15px] rounded-full shadow-[0_8px_20px_-6px_rgba(0,122,254,0.35)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200"
+                className="w-full inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold py-[15px] rounded-full shadow-[0_8px_20px_-6px_rgba(0,122,254,0.35)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200"
               >
-                Enviar solicitud →
+                <span>Enviar solicitud</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </form>
             <p className="font-[var(--font-body)] text-xs text-text-muted text-center mt-4">
-              🔒 Tus datos están protegidos (Ley 1581 de 2012).
+              Tus datos están protegidos (Ley 1581 de 2012).
             </p>
           </div>
         </div>
@@ -195,7 +220,7 @@ export default function SolucionesPage() {
       {/* 02 Servicios Explorer */}
       <ServiciosExplorer />
 
-      {/* 02b ¿Por qué Asignar? */}
+      {/* 02b ¿Por qué Asignar? — photo cards */}
       <section className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] bg-white">
         <div className="max-w-[var(--container-max)] mx-auto px-4 md:px-16">
           <div className="mb-10">
@@ -211,22 +236,39 @@ export default function SolucionesPage() {
             {diferenciadores.map((d) => (
               <div
                 key={d.titulo}
-                className="bg-surface-gray rounded-2xl p-8"
+                className="group h-[280px] rounded-[20px]"
               >
-                <div className="w-12 h-12 rounded-full bg-brand-blue/10 flex items-center justify-center mb-5">
-                  <span
-                    className="material-symbols-outlined text-brand-blue text-2xl"
-                    style={{ fontVariationSettings: '"FILL" 1' }}
-                  >
-                    {d.icon}
-                  </span>
-                </div>
-                <h3 className="font-[var(--font-display)] text-lg font-bold text-brand-navy mb-2">
-                  {d.titulo}
-                </h3>
-                <p className="font-[var(--font-body)] text-sm text-text-secondary leading-relaxed">
-                  {d.descripcion}
-                </p>
+                <SpotlightCard className="h-full w-full overflow-hidden rounded-[20px] shadow-[0_6px_24px_rgba(0,18,51,0.1)]">
+                  {/* photo */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.06]"
+                    style={{ backgroundImage: `url('${d.img}')` }}
+                  />
+                  {/* gradient overlay */}
+                  <div className="absolute inset-x-0 bottom-0 z-[5] h-[75%] bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+
+                  {/* icon badge */}
+                  <div className="absolute top-5 left-5 z-20 w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm">
+                    <span
+                      className="material-symbols-outlined text-brand-blue text-xl"
+                      style={{
+                        fontVariationSettings: '"FILL" 1, "wght" 600',
+                      }}
+                    >
+                      {d.icon}
+                    </span>
+                  </div>
+
+                  {/* text */}
+                  <div className="absolute inset-x-0 bottom-0 z-20 p-6">
+                    <h3 className="font-[var(--font-display)] text-xl font-extrabold text-white">
+                      {d.titulo}
+                    </h3>
+                    <p className="mt-1.5 font-[var(--font-body)] text-[13px] text-white/80 leading-relaxed">
+                      {d.descripcion}
+                    </p>
+                  </div>
+                </SpotlightCard>
               </div>
             ))}
           </div>
