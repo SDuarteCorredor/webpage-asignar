@@ -1,7 +1,7 @@
 # FIGMA-CONTEXT.md — Estado y protocolo del design system
 
 > **Léeme primero** si eres una sesión de Claude Code trabajando diseño en este proyecto.
-> Última actualización: 2026-07-01 (sesión: setup inicial + Home v1).
+> Última actualización: 2026-07-11 (sesión: Servicios v2 implementado en código).
 
 ## 1. El archivo de Figma
 
@@ -78,7 +78,7 @@ Rediseño de la página `/soluciones` (nav "Servicios"). Wrapper `204:3` (1440, 
 - **04b Clientes por sector** `318:2` (white, NUEVA): 6 bloques con placeholders exactos para logos — Hotelero (35), Centros de eventos (7), Clubes (5), Restaurantes (8), Inmobiliario (3), Industria (6) = 64 total. Cada bloque con badge de sector + grid de rectángulos placeholder.
 - **05 CTA Marquee** `336:176` (surface, REDISEÑADO 2026-07-10): split — izquierda H2 "¿Listo para optimizar tu operación?" + subcopy + dual CTAs (Solicitar propuesta azul pill + Ver servicios outline pill). Derecha: marquee vertical de sectores (Hotelería, Restaurantes, Logística, Industria, Centros de Eventos, Inmobiliario) en Plus Jakarta Sans ExtraLight 64px con opacidades graduadas (0.15→1.0→0.35) simulando scroll. Reemplaza el panel centrado con gradiente (`327:354` eliminado). Corresponde al componente `cta-with-text-marquee.tsx` en código.
 - Construido con frames/auto-layout + fuentes del DS. Fotos = placeholders de gradiente (pendiente imágenes reales).
-- **Estado**: diseño completo con CTA marquee actualizado, pendiente aprobación del cliente → llevar a React/Next (`src/app/soluciones/page.tsx`). Reutilizar componente ProcesoSeleccion del Home (mismos estilos).
+- **Estado**: ✅ diseño implementado en código (commit `1f92d9f`, rama `claude/home-stats-styling-msdlw0`, PR #31). Página `src/app/soluciones/page.tsx` reescrita con las 7 secciones. Componente interactivo `src/components/soluciones/ServiciosExplorer.tsx` creado (tab selector + dark tilt card panel `#1E1E24` con efecto 3D y glare). Reutiliza `<CTAWithVerticalMarquee />` para sección CTA. Reutiliza `<ProcesoSeleccion />` del Home (mismos estilos). Deploy en Vercel OK.
 
 ### 🔧 Iconos como componentes (2026-07-10, run_id `asignar-ds-2026-07-10`)
 Nuevos icon components en página Icons (`7:2`): **shield-check** `339:4`, **map-pin** `339:8`, **building** `339:12`, **monitor** `339:16`. Usados en las tarjetas ¿Por qué Asignar? de Servicios (reemplazan ellipses placeholder). Además, limpieza de íconos crudos (texto `✓` y `→`) en AMBAS páginas: Servicios (4 checks en checklist + 4 checks en Cumplimiento + 1 arrow en CTA) y Home (6 checks en B2B + 6 arrows en action-btn + 1 arrow en CTA + 6 arrows en sector cards) — todos reemplazados por instancias de `Icon/check` o `Icon/arrow-right`. **Regla**: todo ícono debe ser componente en la página Icons y usarse como instancia.
@@ -93,7 +93,8 @@ Decisión del cliente: fuera el gold de la marca web (nada de amarillo/dorado, y
 - [x] Íconos como componentes: shield-check, map-pin, building, monitor creados; raw text icons (`✓`/`→`) reemplazados con instancias en Home y Servicios.
 - [ ] Íconos Material Symbols adicionales (hotel, handshake, payments…) al set de Icons si se necesitan.
 - [ ] Explorar librerías de comunidad: `get_libraries(fileKey)` lista UI kits añadibles (motion, hero patterns).
-- [ ] Páginas restantes (Vacantes, Soluciones, Nosotros, Contacto…) — construir DESPUÉS de validar la dirección v2 en el Home.
+- [x] Servicios v2 (`/soluciones`): implementado en código — 7 secciones, ServiciosExplorer interactivo con dark tilt card, deploy OK (PR #31).
+- [ ] Páginas restantes (Vacantes, Nosotros, Contacto…) — construir DESPUÉS de validar la dirección v2 en el Home.
 - [ ] Code Connect al final (mapear Button/Badge/Card de Figma ↔ componentes React cuando existan como componentes reutilizables en código).
 
 ## 4. Protocolo entre sesiones/cuentas de Claude Code
