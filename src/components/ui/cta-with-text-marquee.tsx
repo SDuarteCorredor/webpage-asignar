@@ -111,9 +111,20 @@ export default function CTAWithVerticalMarquee() {
                 className="group relative inline-flex items-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full shadow-[0_4px_14px_0_rgba(0,122,254,0.39)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
               >
                 <span className="relative z-10">Solicitar propuesta</span>
-                <span className="material-symbols-outlined text-base relative z-10">
-                  arrow_forward
-                </span>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="w-[18px] h-[18px] relative z-10"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M4 12h15M13 5l7 7-7 7"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
               </Link>
               <Link
