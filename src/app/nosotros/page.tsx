@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import StatsBar from "@/components/nosotros/StatsBar";
+import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export const metadata: Metadata = {
   title: "Nosotros — Asignar SAS",
@@ -94,7 +95,6 @@ const social = [
   },
 ];
 
-const sectors = ["Hotelería", "Restaurantes", "Logística", "Industria", "Centros de Eventos", "Inmobiliario"];
 
 export default function NosotrosPage() {
   return (
@@ -336,50 +336,7 @@ export default function NosotrosPage() {
       </section>
 
       {/* 07 — CTA */}
-      <section className="py-16 md:py-24 bg-surface-gray border-t border-border">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-            <div className="flex-1 max-w-xl">
-              <h2 className="font-[var(--font-display)] text-3xl md:text-4xl lg:text-[48px] font-bold text-brand-navy leading-[1.15] tracking-[-0.02em] mb-5">
-                ¿Listo para optimizar tu operación?
-              </h2>
-              <p className="font-[var(--font-body)] text-lg text-text-secondary leading-relaxed mb-8">
-                Cuéntanos sobre tu empresa y te diseñamos una propuesta a la medida. Sin compromisos. Personal calificado y listo cuando lo necesites.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/soluciones"
-                  className="group inline-flex items-center gap-2 rounded-full bg-brand-blue px-6 py-3 font-[var(--font-ui)] text-sm font-semibold text-white transition-all hover:bg-brand-deep-blue hover:-translate-y-0.5"
-                >
-                  Solicitar propuesta
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-                <Link
-                  href="/soluciones"
-                  className="group inline-flex items-center gap-2 rounded-full border border-border bg-white px-6 py-3 font-[var(--font-ui)] text-sm font-semibold text-brand-navy transition-all hover:border-brand-blue hover:-translate-y-0.5"
-                >
-                  Ver servicios
-                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              </div>
-            </div>
-            <div className="flex-1 flex flex-col gap-2 overflow-hidden max-h-[400px]" aria-hidden="true">
-              {sectors.map((s, i) => (
-                <span
-                  key={s}
-                  className="font-[var(--font-display)] font-extrabold leading-none tracking-[-0.02em]"
-                  style={{
-                    fontSize: `clamp(36px, 4vw, 48px)`,
-                    color: `rgba(0, 18, 51, ${0.15 + i * 0.12})`,
-                  }}
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <CTAWithVerticalMarquee />
     </>
   );
 }
