@@ -242,7 +242,7 @@ export default function Footer() {
         <div className="h-px bg-white/10" />
 
         {/* Contact row */}
-        <div className="flex flex-col gap-5 py-10 sm:flex-row sm:gap-8">
+        <div className="flex flex-col gap-5 py-10 sm:flex-row sm:items-center sm:justify-between">
           <a href="tel:+576043220310" className="group flex items-center gap-3">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 text-brand-light-blue transition-colors group-hover:border-brand-blue sm:h-12 sm:w-12">
               <PhoneIcon className="h-4 w-4 sm:h-5 sm:w-5" />
