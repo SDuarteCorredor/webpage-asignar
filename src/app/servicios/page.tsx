@@ -71,12 +71,52 @@ const cumplimientoCards = [
 ];
 
 const sectoresClientes = [
-  { nombre: "Sector Hotelero", cantidad: 35 },
-  { nombre: "Centros de eventos", cantidad: 7 },
-  { nombre: "Clubes", cantidad: 5 },
-  { nombre: "Restaurantes", cantidad: 8 },
-  { nombre: "Sector Inmobiliario", cantidad: 3 },
-  { nombre: "Industria, Producción, Retail y Servicios", cantidad: 6 },
+  {
+    nombre: "Sector Hotelero",
+    logos: [
+      "/clientes-brand/logo-22.webp", "/clientes-brand/logo-14.webp",
+      "/clientes-brand/logo-27.webp", "/clientes-brand/logo-07.webp",
+      "/clientes-brand/logo-20.webp", "/clientes-brand/logo-06.webp",
+      "/clientes-brand/logo-17.webp", "/clientes-brand/logo-13.webp",
+      "/clientes-brand/logo-31.webp", "/clientes-brand/logo-30.webp",
+      "/clientes-brand/logo-00.webp", "/clientes-brand/logo-03.webp",
+      "/clientes-brand/logo-04.webp", "/clientes-brand/logo-01.webp",
+      "/clientes-brand/logo-25.webp", "/clientes-brand/logo-18.webp",
+      "/clientes-brand/logo-19.webp", "/clientes-brand/logo-12.webp",
+      "/clientes-brand/logo-21.webp", "/clientes-brand/logo-16.webp",
+      "/clientes-brand/logo-09.webp", "/clientes-brand/logo-08.webp",
+      "/clientes-brand/logo-15.webp", "/clientes-brand/logo-26.webp",
+      "/clientes-brand/logo-29.webp", "/clientes-brand/logo-34.webp",
+      "/clientes-brand/logo-23.webp", "/clientes-brand/logo-05.webp",
+      "/clientes-brand/logo-28.webp", "/clientes-brand/logo-32.webp",
+      "/clientes-brand/logo-24.webp", "/clientes-brand/logo-11.webp",
+      "/clientes-brand/logo-10.webp",
+    ],
+  },
+  {
+    nombre: "Centros de eventos y clubes",
+    logos: [
+      "/clientes-brand/logo-36.webp", "/clientes-brand/logo-42.webp",
+      "/clientes-brand/logo-43.webp", "/clientes-brand/logo-53.webp",
+      "/clientes-brand/logo-45.webp", "/clientes-brand/logo-38.webp",
+      "/clientes-brand/logo-40.webp", "/clientes-brand/logo-37.webp",
+      "/clientes-brand/logo-39.webp", "/clientes-brand/logo-46.webp",
+      "/clientes-brand/logo-44.webp", "/clientes-brand/logo-47.webp",
+      "/clientes-brand/logo-49.webp", "/clientes-brand/logo-48.webp",
+      "/clientes-brand/logo-50.webp", "/clientes-brand/logo-35.webp",
+      "/clientes-brand/logo-51.webp",
+    ],
+  },
+  {
+    nombre: "Industria, Producción, Retail y Servicios",
+    logos: [
+      "/clientes-brand/logo-62.webp", "/clientes-brand/logo-58.webp",
+      "/clientes-brand/logo-57.webp", "/clientes-brand/logo-60.webp",
+      "/clientes-brand/logo-61.webp", "/clientes-brand/logo-54.webp",
+      "/clientes-brand/logo-55.webp", "/clientes-brand/logo-56.webp",
+      "/clientes-brand/logo-59.webp",
+    ],
+  },
 ];
 
 function ArrowRight({ className = "" }: { className?: string }) {
@@ -326,30 +366,29 @@ export default function SolucionesPage() {
             </h2>
           </div>
 
-          <div className="space-y-10">
+          <div className="space-y-12">
             {sectoresClientes.map((sector) => (
               <div key={sector.nombre}>
-                <div className="bg-surface-gray rounded-lg px-5 py-3 mb-4 inline-block">
+                <div className="bg-surface-gray rounded-lg px-5 py-3 mb-6 inline-block">
                   <span className="font-[var(--font-ui)] text-sm font-semibold text-brand-navy">
                     {sector.nombre}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-3 justify-center">
-                  {Array.from({ length: Math.min(sector.cantidad, 7) }).map(
-                    (_, i) => (
-                      <div
-                        key={i}
-                        className="w-[72px] h-[72px] rounded-full bg-surface-gray border border-border"
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {sector.logos.map((src, i) => (
+                    <div
+                      key={i}
+                      className="shrink-0 w-[100px] h-[100px] md:w-[120px] md:h-[120px]"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt="Cliente Asignar"
+                        loading="lazy"
+                        className="w-full h-full object-contain rounded-full"
                       />
-                    )
-                  )}
-                  {sector.cantidad > 7 && (
-                    <div className="w-[72px] h-[72px] rounded-full bg-brand-blue/5 border border-brand-blue/20 flex items-center justify-center">
-                      <span className="font-[var(--font-ui)] text-xs font-bold text-brand-blue">
-                        +{sector.cantidad - 7}
-                      </span>
                     </div>
-                  )}
+                  ))}
                 </div>
               </div>
             ))}
