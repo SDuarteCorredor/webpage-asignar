@@ -3,6 +3,7 @@ import Link from "next/link";
 import ServiciosExplorer from "@/components/soluciones/ServiciosExplorer";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { clientesHotel, clientesEventos, clientesIndustria } from "@/components/home/clientes";
 
 export const metadata: Metadata = {
   title: "Servicios Empresariales",
@@ -71,12 +72,9 @@ const cumplimientoCards = [
 ];
 
 const sectoresClientes = [
-  { nombre: "Sector Hotelero", cantidad: 35 },
-  { nombre: "Centros de eventos", cantidad: 7 },
-  { nombre: "Clubes", cantidad: 5 },
-  { nombre: "Restaurantes", cantidad: 8 },
-  { nombre: "Sector Inmobiliario", cantidad: 3 },
-  { nombre: "Industria, Producción, Retail y Servicios", cantidad: 6 },
+  { nombre: "Sector Hotelero", logos: clientesHotel },
+  { nombre: "Centros de eventos y clubes", logos: clientesEventos },
+  { nombre: "Industria, Producción, Retail y Servicios", logos: clientesIndustria },
 ];
 
 function ArrowRight({ className = "" }: { className?: string }) {
@@ -335,21 +333,20 @@ export default function SolucionesPage() {
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center">
-                  {Array.from({ length: Math.min(sector.cantidad, 7) }).map(
-                    (_, i) => (
-                      <div
-                        key={i}
-                        className="w-[72px] h-[72px] rounded-full bg-surface-gray border border-border"
+                  {sector.logos.map((src, i) => (
+                    <div
+                      key={i}
+                      className="w-[72px] h-[72px] rounded-full bg-white border border-border overflow-hidden flex items-center justify-center p-2"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={src}
+                        alt="Cliente Asignar"
+                        loading="lazy"
+                        className="max-h-full max-w-full object-contain"
                       />
-                    )
-                  )}
-                  {sector.cantidad > 7 && (
-                    <div className="w-[72px] h-[72px] rounded-full bg-brand-blue/5 border border-brand-blue/20 flex items-center justify-center">
-                      <span className="font-[var(--font-ui)] text-xs font-bold text-brand-blue">
-                        +{sector.cantidad - 7}
-                      </span>
                     </div>
-                  )}
+                  ))}
                 </div>
               </div>
             ))}
