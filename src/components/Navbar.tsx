@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // Login destinations (portales reales de Asignar)
 const loginOptions = [
@@ -37,7 +38,7 @@ const policies = [
 ];
 
 const navLinks = [
-  { href: "/soluciones", label: "Servicios" },
+  { href: "/servicios", label: "Servicios" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/vacantes", label: "Vacantes" },
   { href: "/faq", label: "FAQ" },
@@ -62,6 +63,7 @@ const IconChevron = ({ className = "" }: { className?: string }) => (
 );
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -130,15 +132,25 @@ export default function Navbar() {
 
         {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center gap-7 font-[var(--font-ui)] text-sm font-medium">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-text-secondary hover:text-brand-blue transition-colors duration-200"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative py-1 transition-colors duration-200 ${
+                  isActive
+                    ? "text-brand-blue"
+                    : "text-text-secondary hover:text-brand-blue"
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-brand-blue rounded-full" />
+                )}
+              </Link>
+            );
+          })}
 
           {/* Políticas dropdown */}
           <div className="relative" ref={polRef}>
@@ -285,16 +297,23 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="md:hidden fixed left-0 right-0 top-20 bottom-0 bg-white z-40 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex flex-col gap-0.5 overflow-y-auto overscroll-contain animate-[fadeIn_0.2s_ease-out]">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-base font-medium text-text-primary py-2.5 px-4 rounded-xl hover:bg-surface-gray transition-colors"
-              onClick={() => setMobileOpen(false)}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-base font-medium py-2.5 px-4 rounded-xl transition-colors ${
+                  isActive
+                    ? "text-brand-blue bg-brand-blue/[0.06]"
+                    : "text-text-primary hover:bg-surface-gray"
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
 
           {/* Políticas (mobile) */}
           <details className="group px-4 py-2.5 rounded-xl hover:bg-surface-gray transition-colors">

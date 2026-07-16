@@ -5,7 +5,7 @@ import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 export const metadata: Metadata = {
-  title: "Soluciones Empresariales",
+  title: "Servicios Empresariales",
   description:
     "Servicios temporales, outsourcing y selección de personal para hotelería, restaurantes, logística e industria en Colombia.",
 };

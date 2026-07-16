@@ -135,7 +135,7 @@ export default function B2BSection() {
               <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
-              href="/soluciones"
+              href="/servicios"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-brand-navy/15 bg-white px-8 py-4 font-[var(--font-ui)] text-sm font-semibold text-brand-navy transition-all hover:-translate-y-0.5 hover:border-brand-navy/30"
               style={{ transitionDuration: "var(--duration-base)" }}
             >
