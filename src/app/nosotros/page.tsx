@@ -130,8 +130,8 @@ export default function NosotrosPage() {
             <div className="flex-1 w-full max-w-lg">
               <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-gradient-to-br from-brand-blue/10 to-brand-deep-blue/20">
                 <Image
-                  src="/hero-asignar.jpg"
-                  alt="Equipo Asignar en acción — trabajadores comprometidos"
+                  src="/images/nosotros/hero-nosotros.webp"
+                  alt="Colaboradora Asignar organizando toallas en hotel — servicio hotelero profesional"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -151,8 +151,8 @@ export default function NosotrosPage() {
               <div className="relative aspect-[3/4] rounded-2xl overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-b from-brand-navy/30 via-brand-navy/50 to-brand-navy/90 z-10" />
                 <Image
-                  src="/foto-sst.jpg"
-                  alt="Los inicios de Asignar en Medellín"
+                  src="/images/nosotros/origin-medellin.webp"
+                  alt="Panorámica de Medellín al atardecer — ciudad donde nació Asignar"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 40vw"
