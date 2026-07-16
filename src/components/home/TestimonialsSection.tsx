@@ -41,26 +41,17 @@ const testimonios = [
   },
 ];
 
-/* Reel columns — glass cells scattered with candidate initials.
+/* Reel columns — plain glass cells (sin iniciales).
    Each column is rendered twice inside its track for a seamless loop. */
 const columnas = [
-  { dir: "reel-down", cells: ["", "CM", "", "MR", "", "JP"] },
-  { dir: "reel-up", cells: ["DL", "", "AG", "", "ST", ""] },
-  { dir: "reel-down", cells: ["", "LR", "", "VC", "", "NR"] },
+  { dir: "reel-down", count: 6 },
+  { dir: "reel-up", count: 6 },
+  { dir: "reel-down", count: 6 },
 ];
 
-function ReelCell({ label }: { label: string }) {
-  if (!label) {
-    return (
-      <div className="h-[104px] w-[104px] shrink-0 rounded-2xl border border-border bg-gradient-to-br from-surface to-white shadow-sm" />
-    );
-  }
+function ReelCell() {
   return (
-    <div className="flex h-[104px] w-[104px] shrink-0 items-center justify-center rounded-2xl border border-brand-blue/10 bg-white shadow-sm">
-      <span className="font-[var(--font-display)] text-lg font-extrabold text-brand-blue/25">
-        {label}
-      </span>
-    </div>
+    <div className="h-[104px] w-[104px] shrink-0 rounded-2xl border border-border bg-gradient-to-br from-surface to-white shadow-sm" />
   );
 }
 
@@ -94,8 +85,8 @@ export default function TestimonialsSection() {
             {columnas.map((col, ci) => (
               <div key={ci} className="h-full overflow-hidden">
                 <div className={`flex flex-col gap-3 ${col.dir}`}>
-                  {[...col.cells, ...col.cells].map((c, i) => (
-                    <ReelCell key={i} label={c} />
+                  {Array.from({ length: col.count * 2 }).map((_, i) => (
+                    <ReelCell key={i} />
                   ))}
                 </div>
               </div>
@@ -107,19 +98,16 @@ export default function TestimonialsSection() {
             className="absolute left-1/2 top-1/2 z-30 flex h-32 w-32 -translate-x-1/2 -translate-y-1/2 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-brand-blue to-brand-deep-blue shadow-[0_24px_50px_-12px_rgba(0,122,254,0.5)] ring-4 ring-surface"
             aria-hidden="true"
           >
-            {/* photo layer — /testimonios/<slug>.jpg (drop image later). Transparent on 404 → gradient + initials. */}
+            {/* photo layer — /testimonios/<slug>.jpg */}
             <div
               className="absolute inset-0 bg-cover bg-center"
               style={{ backgroundImage: `url('/testimonios/${t.slug}.jpg')` }}
             />
-            <span className="relative font-[var(--font-display)] text-4xl font-extrabold text-white/60 mix-blend-overlay">
-              {t.iniciales}
-            </span>
           </div>
         </div>
 
         {/* RIGHT — quote + author + nav */}
-        <div className="scroll-reveal">
+        <div className="scroll-reveal text-center lg:text-left">
           <h2 className="font-[var(--font-display)] text-3xl font-extrabold tracking-[-0.02em] text-brand-navy md:text-4xl">
             Lo que dicen de nosotros
           </h2>
@@ -135,7 +123,7 @@ export default function TestimonialsSection() {
           {/* rotating quote — per-word rise, remounts on index change */}
           <blockquote
             key={index}
-            className="mt-1 max-w-xl font-[var(--font-body)] text-xl font-medium leading-relaxed tracking-[-0.01em] text-brand-navy md:text-2xl"
+            className="mt-1 max-w-xl mx-auto font-[var(--font-body)] text-xl font-medium leading-relaxed tracking-[-0.01em] text-brand-navy md:text-2xl lg:mx-0"
           >
             {words.map((w, i) => (
               <Fragment key={i}>
@@ -159,7 +147,7 @@ export default function TestimonialsSection() {
           </div>
 
           {/* nav */}
-          <div className="mt-9 flex items-center gap-3">
+          <div className="mt-9 flex items-center justify-center gap-3 lg:justify-start">
             <button
               onClick={prev}
               aria-label="Testimonio anterior"

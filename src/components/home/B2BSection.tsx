@@ -47,7 +47,7 @@ export default function B2BSection() {
             {/* photo layer — /b2b.jpg (drop image later). Transparent on 404 → gradient shows. */}
             <div
               className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url('/b2b.jpg')" }}
+              style={{ backgroundImage: "url('/home/b2b.jpg')" }}
             />
             {/* brand grade overlay for cohesion */}
             <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-transparent" />
@@ -65,27 +65,26 @@ export default function B2BSection() {
             </div>
           </div>
 
-          {/* stat — sedes (bottom left, overlaps) */}
-          <div className="float-card absolute -bottom-4 -left-3 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)] backdrop-blur-md md:-left-5">
-            <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-blue">
+          {/* stat — sedes (bottom left) — inside image on mobile, overlapping on md+ */}
+          <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-2xl border border-white/25 bg-brand-navy/40 px-3 py-2 backdrop-blur-md md:float-card md:-bottom-4 md:-left-5 md:gap-3 md:border-white/70 md:bg-white/85 md:px-4 md:py-3 md:shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)]">
+            <p className="font-[var(--font-display)] text-lg md:text-2xl font-extrabold leading-none text-white md:text-brand-blue">
               7+
             </p>
-            <p className="font-[var(--font-ui)] text-xs leading-tight text-text-muted">
+            <p className="font-[var(--font-ui)] text-[11px] md:text-xs leading-tight text-white/80 md:text-text-muted">
               Sedes en
               <br />
               Colombia
             </p>
           </div>
 
-          {/* stat — clients (bottom right, overlaps) */}
-          <div
-            className="float-card absolute -bottom-5 right-6 flex items-center gap-3 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)] backdrop-blur-md"
+          {/* stat — clients (bottom right) — inside image on mobile, overlapping on md+ */}
+          <div className="absolute bottom-3 right-3 flex items-center gap-2 rounded-2xl border border-white/25 bg-brand-navy/40 px-3 py-2 backdrop-blur-md md:float-card md:-bottom-5 md:right-6 md:gap-3 md:border-white/70 md:bg-white/85 md:px-4 md:py-3 md:shadow-[0_20px_44px_-18px_rgba(0,18,51,0.35)]"
             style={{ animationDelay: "1.6s" }}
           >
-            <p className="font-[var(--font-display)] text-2xl font-extrabold leading-none text-brand-navy">
+            <p className="font-[var(--font-display)] text-lg md:text-2xl font-extrabold leading-none text-white md:text-brand-navy">
               500+
             </p>
-            <p className="font-[var(--font-ui)] text-xs leading-tight text-text-muted">
+            <p className="font-[var(--font-ui)] text-[11px] md:text-xs leading-tight text-white/80 md:text-text-muted">
               Empresas
               <br />
               cliente
@@ -94,7 +93,7 @@ export default function B2BSection() {
         </div>
 
         {/* RIGHT — copy + checklist + CTAs */}
-        <div className="scroll-reveal order-1 lg:order-2" data-delay="120">
+        <div className="scroll-reveal order-1 text-center lg:order-2 lg:text-left" data-delay="120">
           <span className="inline-flex items-center rounded-full bg-brand-blue/[0.08] px-3.5 py-1.5 font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.12em] text-brand-blue">
             Para empresas
           </span>
@@ -105,14 +104,14 @@ export default function B2BSection() {
             cuando lo necesitas
           </h2>
 
-          <p className="mt-4 max-w-lg font-[var(--font-body)] text-base leading-relaxed text-text-secondary">
+          <p className="mt-4 max-w-lg mx-auto font-[var(--font-body)] text-base leading-relaxed text-text-secondary lg:mx-0">
             Gestionamos todo el proceso de selección, vinculación y nómina para
             que tú te concentres en tu negocio.
           </p>
 
-          <ul className="mt-7 space-y-3">
+          <ul className="mt-7 inline-flex flex-col space-y-3 text-left">
             {beneficios.map((b) => (
-              <li key={b} className="flex items-center gap-3">
+              <li key={b} className="flex items-center gap-2">
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand-blue text-white">
                   <Check className="h-3.5 w-3.5" />
                 </span>
@@ -123,7 +122,7 @@ export default function B2BSection() {
             ))}
           </ul>
 
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:gap-4">
+          <div className="mt-9 flex flex-col items-center gap-3 sm:flex-row sm:gap-4 lg:items-start">
             <Link
               href="/contacto"
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-brand-blue px-8 py-4 font-[var(--font-ui)] text-sm font-semibold text-white shadow-[0_12px_30px_-10px_rgba(0,122,254,0.6)] transition-all hover:-translate-y-0.5 hover:shadow-[0_18px_44px_-12px_rgba(0,122,254,0.6)] active:translate-y-0 active:scale-[0.98]"

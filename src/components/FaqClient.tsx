@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 
 type Faq = { cat: string; q: string; a: string };
@@ -129,10 +129,41 @@ const categorias = [
   "SST",
 ];
 
+// Permite enlazar a una categoría desde otras páginas: /faq#nomina
+const slugToCat: Record<string, string> = {
+  vinculacion: "Vinculación",
+  nomina: "Nómina y pagos",
+  "seguridad-social": "Seguridad Social",
+  terminaciones: "Terminaciones",
+  marcacion: "Marcación",
+  sst: "SST",
+};
+
 export default function FaqClient() {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState("Todas");
   const [openId, setOpenId] = useState<number | null>(null);
+  const contenidoRef = useRef<HTMLElement>(null);
+
+  // Si llegamos con un hash (#nomina, #sst…), preselecciona la categoría
+  // y baja hasta el listado.
+  useEffect(() => {
+    const aplicarHash = () => {
+      const slug = window.location.hash.replace("#", "");
+      const categoria = slugToCat[slug];
+      if (!categoria) return;
+      setCat(categoria);
+      requestAnimationFrame(() =>
+        contenidoRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        })
+      );
+    };
+    aplicarHash();
+    window.addEventListener("hashchange", aplicarHash);
+    return () => window.removeEventListener("hashchange", aplicarHash);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -152,7 +183,7 @@ export default function FaqClient() {
       {/* Hero */}
       <section className="bg-brand-gradient py-16 md:py-20">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-gold mb-3 block">
+          <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-light-blue mb-3 block">
             Trabajador misional
           </span>
           <h1 className="font-[var(--font-display)] text-4xl md:text-5xl font-bold text-white leading-tight">
@@ -166,7 +197,10 @@ export default function FaqClient() {
       </section>
 
       {/* Contenido */}
-      <section className="py-12 md:py-16 bg-surface min-h-[60vh]">
+      <section
+        ref={contenidoRef}
+        className="scroll-mt-24 py-12 md:py-16 bg-surface min-h-[60vh]"
+      >
         <div className="max-w-[860px] mx-auto px-4 md:px-6">
           {/* Buscador */}
           <div className="relative mb-5">

@@ -13,7 +13,7 @@ const pilares = [
     descripcion:
       "Creamos puentes entre el talento y las empresas. Cada persona merece crecer.",
     icon: "trending_up",
-    color: "bg-brand-light-blue",
+    color: "bg-brand-blue",
   },
   {
     letra: "C",
@@ -21,7 +21,7 @@ const pilares = [
     descripcion:
       "Procesos rigurosos de selección. Perfiles que cumplen los más altos estándares.",
     icon: "verified",
-    color: "bg-brand-deep-blue",
+    color: "bg-brand-blue",
   },
   {
     letra: "A",
@@ -29,7 +29,7 @@ const pilares = [
     descripcion:
       "Contigo en cada paso. Desde la selección hasta la gestión continua.",
     icon: "handshake",
-    color: "bg-brand-gradient",
+    color: "bg-brand-blue",
   },
 ];
 

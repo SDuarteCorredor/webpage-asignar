@@ -5,7 +5,6 @@
   --color-brand-light-blue: #05B8FD;
   --color-brand-deep-blue: #0056B3;
   --color-brand-navy: #001233;
-  --color-brand-gold: #FFC000;
 
   --color-surface: #F6F8FB;
   --color-surface-gray: #EDF1F6;
@@ -22,6 +21,9 @@
   --spacing-section: 80px;
   --spacing-section-mobile: 48px;
   --container-max: 1280px;
+
+  --animate-marquee-vertical: marquee-vertical var(--duration, 30s) linear infinite;
+  --animate-fade-in-up: fade-in-up 0.6s var(--ease-out, ease-out) both;
 }
 
 :root {
@@ -46,11 +48,36 @@ body {
   color: white;
 }
 
+/* Tipografía sin palabras huérfanas:
+   - Titulares: balance de líneas (reparte el texto en líneas parejas).
+   - Párrafos/listas: evita que quede una sola palabra en la última línea. */
+h1,
+h2,
+h3,
+h4,
+h5,
+blockquote {
+  text-wrap: balance;
+}
+p,
+li,
+figcaption,
+summary {
+  text-wrap: pretty;
+}
+
 /* Accessible focus ring — visible for keyboard users, hidden on mouse click */
 :where(a, button, input, select, textarea, summary, [tabindex], [role="button"]):focus-visible {
   outline: 2px solid var(--color-brand-blue);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Tarjetas de Beneficios (fotos): anillo de foco blanco, sin el azul global */
+.benefit-card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 3px;
+  border-radius: 22px;
 }
 
 /* Crisp hairline-lifted cards: definition without a heavy/generic 1px border */
@@ -142,6 +169,26 @@ body {
   }
 }
 
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -182,6 +229,44 @@ html {
 }
 .float-card {
   animation: float-y 6s var(--ease-soft) infinite;
+}
+
+/* Spotlight / glow que sigue al cursor (azul Asignar). Las variables
+   --glow-x / --glow-y las actualiza useGlowPointer en coordenadas de viewport;
+   con background-attachment: fixed solo se ilumina la tarjeta bajo el cursor. */
+.spotlight-sheen,
+.spotlight-border {
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+.spotlight-card:hover .spotlight-sheen,
+.spotlight-card:hover .spotlight-border {
+  opacity: 1;
+}
+.spotlight-sheen {
+  background: radial-gradient(
+    300px 300px at var(--glow-x, -300px) var(--glow-y, -300px),
+    hsl(210 100% 62% / 0.32),
+    transparent 60%
+  );
+  background-attachment: fixed;
+  mix-blend-mode: screen;
+}
+.spotlight-border {
+  border: 2px solid transparent;
+  background: radial-gradient(
+      280px 280px at var(--glow-x, -300px) var(--glow-y, -300px),
+      hsl(205 100% 62% / 1),
+      hsl(198 98% 55% / 0.45) 45%,
+      transparent 68%
+    )
+    border-box;
+  background-attachment: fixed;
+  -webkit-mask:
+    linear-gradient(#000 0 0) padding-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
 }
 
 /* Testimonials reel — infinite counter-rotating columns.
@@ -258,5 +343,9 @@ html {
   .testi-word {
     opacity: 1 !important;
     animation: none !important;
+  }
+  .spotlight-sheen,
+  .spotlight-border {
+    transition: none !important;
   }
 }

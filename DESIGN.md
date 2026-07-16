@@ -11,7 +11,8 @@
 | `brand-light-blue` | `#05B8FD` | Acentos secundarios, gradientes |
 | `brand-deep-blue` | `#0056B3` | Hover de primario, extremo de gradiente |
 | `brand-navy` | `#001233` | Titulares, footer, fondos de peso |
-| `brand-gold` | `#FFC000` | Acento premium/estrella — usar con moderación |
+
+> ⛔ **Gold eliminado del sistema** (decisión 2026-07-08). Ya no existe `brand-gold`/`--color-brand-gold` ni la variante Gold del Badge. El acento sobre fondos oscuros es `brand-light-blue`; el acento general es `brand-blue`. No usar amarillo/dorado en la marca web.
 
 ### Superficies y tinta
 | Token | Valor |

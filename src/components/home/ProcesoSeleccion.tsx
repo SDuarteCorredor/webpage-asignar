@@ -29,11 +29,12 @@ export default function ProcesoSeleccion() {
           {/* Connecting line (desktop) */}
           <div className="hidden lg:block absolute top-[26px] left-[7%] right-[7%] h-0.5 bg-gradient-to-r from-brand-blue/20 via-brand-blue to-brand-blue/20" />
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-6 relative">
+          {/* Mobile/tablet: 2 centered rows (4 + 3). Desktop: single row of 7. */}
+          <div className="flex flex-wrap justify-center gap-6 lg:grid lg:grid-cols-7 relative">
             {pasos.map((paso, i) => (
               <div
                 key={paso.n}
-                className="scroll-reveal flex flex-col items-center text-center group"
+                className="scroll-reveal flex flex-col items-center text-center group w-[calc(25%-18px)] sm:w-auto sm:flex-1 lg:flex-none"
                 data-delay={String(i * 80)}
               >
                 <div
@@ -47,7 +48,7 @@ export default function ProcesoSeleccion() {
                     {paso.icon}
                   </span>
                 </div>
-                <p className="font-[var(--font-ui)] text-sm font-semibold text-brand-navy leading-snug">
+                <p className="font-[var(--font-ui)] text-xs sm:text-sm font-semibold text-brand-navy leading-snug">
                   {paso.label}
                 </p>
               </div>

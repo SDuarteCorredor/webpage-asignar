@@ -1,143 +1,95 @@
 import Link from "next/link";
 
+/* Inline SVG icons — bulletproof (no icon-font dependency) */
+type IconProps = { className?: string };
+const Briefcase = ({ className = "" }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M3 8h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8zM8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const Users = ({ className = "" }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M16 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM22 20v-2a4 4 0 0 0-3-3.87M16 4.13a4 4 0 0 1 0 7.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const Star = ({ className = "" }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8L12 16.9 6.7 19.6l1-5.8L3.5 9.7l5.9-.9L12 3z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const Box = ({ className = "" }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M21 8l-9-5-9 5v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+const ArrowRight = ({ className = "" }: IconProps) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M4 12h15M13 5l7 7-7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 const vacantes = [
-  {
-    id: 1,
-    cargo: "Mesero/a de Servicio",
-    ciudad: "Medellín",
-    sector: "Hotelería",
-    icon: "room_service",
-    tipo: "Temporal",
-  },
-  {
-    id: 2,
-    cargo: "Auxiliar de Cocina",
-    ciudad: "Bogotá",
-    sector: "Restaurantes",
-    icon: "restaurant",
-    tipo: "Temporal",
-  },
-  {
-    id: 3,
-    cargo: "Recepcionista Hotel",
-    ciudad: "Cartagena",
-    sector: "Hotelería",
-    icon: "concierge",
-    tipo: "Temporal",
-  },
-  {
-    id: 4,
-    cargo: "Auxiliar de Bodega",
-    ciudad: "Cali",
-    sector: "Logística",
-    icon: "warehouse",
-    tipo: "Temporal",
-  },
-  {
-    id: 5,
-    cargo: "Camarero/a de Pisos",
-    ciudad: "Barranquilla",
-    sector: "Hotelería",
-    icon: "bed",
-    tipo: "Temporal",
-  },
-  {
-    id: 6,
-    cargo: "Auxiliar de Servicios Generales",
-    ciudad: "Medellín",
-    sector: "Servicios",
-    icon: "cleaning_services",
-    tipo: "Temporal",
-  },
+  { cargo: "Mesero/a de Servicio", ciudad: "Medellín", sector: "Hotelería", Icon: Briefcase },
+  { cargo: "Auxiliar de Cocina", ciudad: "Bogotá", sector: "Restaurantes", Icon: Users },
+  { cargo: "Recepcionista Hotel", ciudad: "Cartagena", sector: "Hotelería", Icon: Star },
+  { cargo: "Auxiliar de Bodega", ciudad: "Cali", sector: "Logística", Icon: Box },
 ];
+
+const APLICAR_URL = "https://postulate.asignar.cloud";
 
 export default function VacantesPreview() {
   return (
-    <section className="py-20 md:py-28 bg-surface">
-      <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4 scroll-reveal">
-          <div>
-            <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-blue mb-3 block">
-              Oportunidades Activas
-            </span>
-            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy tracking-[-0.02em]">
-              Vacantes disponibles
+    <section className="bg-surface py-20 md:py-28">
+      <div className="mx-auto max-w-[1280px] px-4 md:px-16">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,400px)_1fr] lg:gap-16">
+          {/* Left — heading */}
+          <div className="scroll-reveal text-center lg:sticky lg:top-28 lg:text-left">
+            <h2 className="font-[var(--font-display)] text-3xl font-extrabold leading-[1.1] tracking-[-0.02em] text-brand-navy md:text-4xl">
+              Tu próxima oportunidad está aquí
             </h2>
-            <p className="font-[var(--font-body)] text-base text-text-secondary mt-2 max-w-lg">
-              Encuentra la oportunidad que se ajusta a tu perfil.
+            <p className="mt-4 max-w-sm mx-auto font-[var(--font-body)] text-base leading-relaxed text-text-secondary lg:mx-0">
+              Vacantes activas en hotelería, restaurantes, logística e industria.
+              Postúlate en minutos.
             </p>
+            <Link
+              href="/vacantes"
+              className="group mt-6 inline-flex items-center gap-1.5 font-[var(--font-ui)] text-sm font-semibold text-brand-blue transition-colors hover:text-brand-deep-blue"
+            >
+              Ver todas las vacantes
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
-          <Link
-            href="/vacantes"
-            className="inline-flex items-center gap-1 font-[var(--font-ui)] text-sm font-semibold text-brand-blue hover:text-brand-deep-blue transition-colors group"
-          >
-            Ver todas las vacantes
-            <span
-              className="material-symbols-outlined text-base group-hover:translate-x-1 transition-transform"
-              style={{ transitionTimingFunction: "var(--ease-spring)" }}
-            >
-              arrow_forward
-            </span>
-          </Link>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {vacantes.map((v, i) => (
-            <div
-              key={v.id}
-              className="scroll-reveal group bg-white rounded-2xl p-5 card-elevated hover:-translate-y-0.5"
-              data-delay={String(i * 80)}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div
-                  className="w-10 h-10 rounded-xl bg-brand-blue/[0.08] flex items-center justify-center group-hover:bg-brand-blue transition-colors"
-                  style={{ transitionDuration: "var(--duration-base)" }}
-                >
-                  <span
-                    className="material-symbols-outlined text-brand-blue group-hover:text-white transition-colors"
-                    style={{
-                      fontVariationSettings: '"FILL" 0',
-                      transitionDuration: "var(--duration-base)",
-                    }}
-                  >
-                    {v.icon}
-                  </span>
-                </div>
-                <span className="font-[var(--font-ui)] text-[11px] font-medium text-brand-blue bg-brand-blue/[0.06] px-2.5 py-1 rounded-full">
-                  {v.tipo}
-                </span>
-              </div>
-              <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy mb-1.5">
-                {v.cargo}
-              </h3>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="flex items-center gap-1 font-[var(--font-ui)] text-xs text-text-muted">
-                  <span className="material-symbols-outlined text-sm">
-                    location_on
-                  </span>
-                  {v.ciudad}
-                </span>
-                <span className="flex items-center gap-1 font-[var(--font-ui)] text-xs text-text-muted">
-                  <span className="material-symbols-outlined text-sm">
-                    category
-                  </span>
-                  {v.sector}
-                </span>
-              </div>
-              <a
-                href="https://postulate.asignar.cloud"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-1 font-[var(--font-ui)] text-sm font-semibold text-brand-blue bg-brand-blue/[0.06] py-2.5 rounded-full hover:bg-brand-blue hover:text-white transition-all"
-                style={{ transitionDuration: "var(--duration-base)" }}
+          {/* Right — job list */}
+          <div className="scroll-reveal space-y-3" data-delay="120">
+            {vacantes.map(({ cargo, ciudad, sector, Icon }) => (
+              <div
+                key={cargo}
+                className="group flex items-center gap-4 rounded-2xl bg-white p-4 card-elevated"
               >
-                Aplicar
-                <span className="material-symbols-outlined text-base">
-                  arrow_forward
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/[0.08] text-brand-blue transition-colors group-hover:bg-brand-blue group-hover:text-white">
+                  <Icon className="h-5 w-5" />
                 </span>
-              </a>
-            </div>
-          ))}
+                <div className="min-w-0 flex-1">
+                  <p className="font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                    {cargo}
+                  </p>
+                  <p className="font-[var(--font-ui)] text-[13px] text-text-muted">
+                    {ciudad} · {sector}
+                  </p>
+                </div>
+                <a
+                  href={APLICAR_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-blue/[0.06] px-5 py-2.5 font-[var(--font-ui)] text-sm font-semibold text-brand-blue transition-all hover:bg-brand-blue hover:text-white"
+                >
+                  Aplicar
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
