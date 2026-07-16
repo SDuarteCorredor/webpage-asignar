@@ -69,7 +69,7 @@ export default function ClientLogos() {
   const track = [...half, ...half];
 
   return (
-    <section className="py-14 md:py-20 bg-surface overflow-hidden">
+    <section className="py-14 md:py-20 bg-white overflow-hidden">
       <p className="text-center font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.12em] text-text-muted mb-10">
         Empresas que confian en nosotros
       </p>
