@@ -132,7 +132,7 @@ function ColTitle({ children }: { children: React.ReactNode }) {
 
 export default function Footer() {
   return (
-    <footer className="bg-[#12151B] text-white">
+    <footer className="bg-brand-navy text-white">
       <div className="mx-auto max-w-[1280px] px-4 md:px-8">
         {/* CTA — empresas */}
         <div className="flex flex-col items-start gap-5 py-12 md:flex-row md:items-center md:justify-between md:py-16">
@@ -141,7 +141,7 @@ export default function Footer() {
           </h2>
           <Link
             href="/soluciones"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 font-[var(--font-ui)] text-sm font-semibold text-[#12151B] transition-transform hover:-translate-y-0.5"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 font-[var(--font-ui)] text-sm font-semibold text-brand-navy transition-transform hover:-translate-y-0.5"
           >
             Solicita una cotización
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

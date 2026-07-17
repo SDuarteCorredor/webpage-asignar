@@ -229,7 +229,7 @@ function ServiceDetailCarousel({ subtipos }: { subtipos: SubTipo[] }) {
                 {sub.descripcion}
               </p>
 
-              <div className="h-px bg-[#2A2D35] my-5" />
+              <div className="h-px bg-white/[0.08] my-5" />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5">
                 {sub.checks.map((check) => (
@@ -336,7 +336,7 @@ export default function ServiciosExplorer() {
                 onClick={() => setActive(i)}
                 className={`flex gap-3.5 items-center text-left px-5 py-[18px] rounded-2xl transition-all duration-300 ${
                   i === active
-                    ? "bg-[#1E1E24] text-white"
+                    ? "bg-brand-navy text-white"
                     : "bg-white border border-border hover:border-brand-blue/30"
                 }`}
               >
@@ -375,7 +375,7 @@ export default function ServiciosExplorer() {
             className="relative flex-1 rounded-3xl p-8 md:p-10 flex flex-col gap-5 border border-white/[0.06] overflow-hidden"
             style={{
               background:
-                "radial-gradient(ellipse 60% 50% at 45% 70%, rgba(255,255,255,0.04), transparent 60%), #1E1E24",
+                "radial-gradient(ellipse 60% 50% at 45% 70%, rgba(255,255,255,0.04), transparent 60%), #001233",
               boxShadow:
                 "0 2px 8px rgba(0,0,0,0.08), 0 8px 32px rgba(0,0,0,0.25)",
               transition: "transform 0.15s ease-out",
