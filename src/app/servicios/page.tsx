@@ -72,49 +72,72 @@ const cumplimientoCards = [
 
 const sectoresClientes = [
   {
+    // 34 logos → en desktop (8/fila) la última fila queda con 2, sin huérfano
     nombre: "Sector Hotelero",
     logos: [
-      "/clientes-brand/logo-22.webp", "/clientes-brand/logo-14.webp",
-      "/clientes-brand/logo-27.webp", "/clientes-brand/logo-07.webp",
-      "/clientes-brand/logo-20.webp", "/clientes-brand/logo-06.webp",
-      "/clientes-brand/logo-17.webp", "/clientes-brand/logo-13.webp",
-      "/clientes-brand/logo-31.webp", "/clientes-brand/logo-30.webp",
-      "/clientes-brand/logo-00.webp", "/clientes-brand/logo-03.webp",
-      "/clientes-brand/logo-04.webp", "/clientes-brand/logo-01.webp",
-      "/clientes-brand/logo-25.webp", "/clientes-brand/logo-18.webp",
-      "/clientes-brand/logo-19.webp", "/clientes-brand/logo-12.webp",
-      "/clientes-brand/logo-21.webp", "/clientes-brand/logo-16.webp",
-      "/clientes-brand/logo-09.webp", "/clientes-brand/logo-08.webp",
-      "/clientes-brand/logo-15.webp", "/clientes-brand/logo-26.webp",
-      "/clientes-brand/logo-29.webp", "/clientes-brand/logo-34.webp",
-      "/clientes-brand/logo-23.webp", "/clientes-brand/logo-05.webp",
-      "/clientes-brand/logo-28.webp", "/clientes-brand/logo-32.webp",
-      "/clientes-brand/logo-24.webp", "/clientes-brand/logo-11.webp",
-      "/clientes-brand/logo-10.webp",
+      "/clientes-brand/logo-00.webp", "/clientes-brand/logo-01.webp",
+      "/clientes-brand/logo-03.webp", "/clientes-brand/logo-04.webp",
+      "/clientes-brand/logo-05.webp", "/clientes-brand/logo-06.webp",
+      "/clientes-brand/logo-07.webp", "/clientes-brand/logo-08.webp",
+      "/clientes-brand/logo-09.webp", "/clientes-brand/logo-10.webp",
+      "/clientes-brand/logo-11.webp", "/clientes-brand/logo-12.webp",
+      "/clientes-brand/logo-13.webp", "/clientes-brand/logo-14.webp",
+      "/clientes-brand/logo-15.webp", "/clientes-brand/logo-16.webp",
+      "/clientes-brand/logo-17.webp", "/clientes-brand/logo-18.webp",
+      "/clientes-brand/logo-19.webp", "/clientes-brand/logo-20.webp",
+      "/clientes-brand/logo-21.webp", "/clientes-brand/logo-22.webp",
+      "/clientes-brand/logo-23.webp", "/clientes-brand/logo-24.webp",
+      "/clientes-brand/logo-25.webp", "/clientes-brand/logo-26.webp",
+      "/clientes-brand/logo-27.webp", "/clientes-brand/logo-28.webp",
+      "/clientes-brand/logo-29.webp", "/clientes-brand/logo-30.webp",
+      "/clientes-brand/logo-31.webp", "/clientes-brand/logo-32.webp",
+      "/clientes-brand/logo-33.webp", "/clientes-brand/logo-34.webp",
     ],
   },
   {
-    nombre: "Centros de eventos y clubes",
+    // 7 logos → una sola fila
+    nombre: "Centros de eventos",
     logos: [
-      "/clientes-brand/logo-36.webp", "/clientes-brand/logo-42.webp",
-      "/clientes-brand/logo-43.webp", "/clientes-brand/logo-53.webp",
-      "/clientes-brand/logo-45.webp", "/clientes-brand/logo-38.webp",
-      "/clientes-brand/logo-40.webp", "/clientes-brand/logo-37.webp",
-      "/clientes-brand/logo-39.webp", "/clientes-brand/logo-46.webp",
-      "/clientes-brand/logo-44.webp", "/clientes-brand/logo-47.webp",
-      "/clientes-brand/logo-49.webp", "/clientes-brand/logo-48.webp",
-      "/clientes-brand/logo-50.webp", "/clientes-brand/logo-35.webp",
-      "/clientes-brand/logo-51.webp",
+      "/clientes-brand/logo-35.webp", "/clientes-brand/logo-36.webp",
+      "/clientes-brand/logo-37.webp", "/clientes-brand/logo-38.webp",
+      "/clientes-brand/logo-39.webp", "/clientes-brand/logo-40.webp",
+      "/clientes-brand/logo-41.webp",
     ],
   },
   {
+    // 5 logos → una sola fila
+    nombre: "Clubes",
+    logos: [
+      "/clientes-brand/logo-42.webp", "/clientes-brand/logo-43.webp",
+      "/clientes-brand/logo-44.webp", "/clientes-brand/logo-45.webp",
+      "/clientes-brand/logo-46.webp",
+    ],
+  },
+  {
+    // 7 logos → una sola fila
+    nombre: "Restaurantes",
+    logos: [
+      "/clientes-brand/logo-47.webp", "/clientes-brand/logo-48.webp",
+      "/clientes-brand/logo-49.webp", "/clientes-brand/logo-50.webp",
+      "/clientes-brand/logo-51.webp", "/clientes-brand/logo-52.webp",
+      "/clientes-brand/logo-53.webp",
+    ],
+  },
+  {
+    // 3 logos → una sola fila
+    nombre: "Sector Inmobiliario",
+    logos: [
+      "/clientes-brand/logo-54.webp", "/clientes-brand/logo-55.webp",
+      "/clientes-brand/logo-56.webp",
+    ],
+  },
+  {
+    // 6 logos → una sola fila
     nombre: "Industria, Producción, Retail y Servicios",
     logos: [
-      "/clientes-brand/logo-62.webp", "/clientes-brand/logo-58.webp",
-      "/clientes-brand/logo-57.webp", "/clientes-brand/logo-60.webp",
-      "/clientes-brand/logo-61.webp", "/clientes-brand/logo-54.webp",
-      "/clientes-brand/logo-55.webp", "/clientes-brand/logo-56.webp",
-      "/clientes-brand/logo-59.webp",
+      "/clientes-brand/logo-57.webp", "/clientes-brand/logo-58.webp",
+      "/clientes-brand/logo-59.webp", "/clientes-brand/logo-60.webp",
+      "/clientes-brand/logo-61.webp", "/clientes-brand/logo-62.webp",
     ],
   },
 ];
