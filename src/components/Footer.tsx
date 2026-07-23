@@ -34,7 +34,7 @@ const PRINCIPAL = "Cra. 48 #10-45, El Poblado, Medellín";
 
 const candidatos = [
   { label: "Ver ofertas laborales", href: "/vacantes" },
-  { label: "Postúlate", href: "/postulate" },
+  { label: "Postúlate", href: "/vacantes" },
   { label: "Ingreso empleados", href: "https://www.asignar.com.co/_admin/usuario.php" },
   { label: "Descarga tu colilla de pago", href: "https://www.asignar.com.co/_admin/usuario.php" },
   { label: "Envía tu hoja de vida", href: "mailto:marketingdigital@asignar.com.co" },

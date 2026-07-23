@@ -334,15 +334,15 @@ export default function FaqClient() {
     <>
       {/* ---------- Hero (claro) ---------- */}
       <section className="bg-surface py-14 md:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-16">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-16 text-center">
           <span className="inline-block font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[1px] text-brand-blue bg-brand-blue/[0.09] rounded-full px-3 py-1.5 mb-5">
             Atención al usuario
           </span>
-          <h1 className="font-[var(--font-display)] text-[32px] md:text-[44px] font-extrabold text-brand-navy leading-[1.06] tracking-[-0.8px] max-w-3xl">
+          <h1 className="font-[var(--font-display)] text-[32px] md:text-[44px] font-extrabold text-brand-navy leading-[1.06] tracking-[-0.8px] max-w-3xl mx-auto">
             Radica y haz seguimiento a tu{" "}
             <span className="text-brand-blue">SQR</span>
           </h1>
-          <p className="font-[var(--font-body)] text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mt-4">
+          <p className="font-[var(--font-body)] text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mx-auto mt-4">
             Solicitudes, quejas, reclamos, sugerencias y felicitaciones.
           </p>
           <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white border border-border px-4 py-2">

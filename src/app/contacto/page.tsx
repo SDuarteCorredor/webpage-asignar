@@ -108,14 +108,14 @@ export default function ContactoPage() {
     <>
       {/* ---------- Hero ---------- */}
       <section className="bg-surface py-14 md:py-[72px]">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-16">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-16 text-center">
           <span className="inline-block font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[1px] text-brand-blue bg-brand-blue/[0.09] rounded-full px-3 py-1.5 mb-5">
             Contacto
           </span>
-          <h1 className="font-[var(--font-display)] text-[32px] md:text-[44px] font-extrabold text-brand-navy leading-[1.06] tracking-[-0.8px] max-w-3xl">
+          <h1 className="font-[var(--font-display)] text-[32px] md:text-[44px] font-extrabold text-brand-navy leading-[1.06] tracking-[-0.8px] max-w-3xl mx-auto">
             ¿En qué te podemos ayudar?
           </h1>
-          <p className="font-[var(--font-body)] text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mt-4">
+          <p className="font-[var(--font-body)] text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mx-auto mt-4">
             Cuéntanos si tu empresa necesita personal o si estás buscando
             empleo, y te llevamos por el camino correcto.
           </p>
@@ -335,24 +335,6 @@ export default function ContactoPage() {
                   <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
                 </Link>
 
-                <Link
-                  href="/postulate"
-                  className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined">description</span>
-                  </span>
-                  <span className="flex-1">
-                    <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                      Cómo postularte
-                    </span>
-                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                      Documentos y pasos
-                    </span>
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
-                </Link>
-
                 <a
                   href={`mailto:${COMERCIAL}?subject=${encodeURIComponent(
                     "Hoja de vida — Postulación"
@@ -394,16 +376,25 @@ export default function ContactoPage() {
                     open_in_new
                   </span>
                 </a>
-              </div>
 
-              <p className="font-[var(--font-body)] text-[12.5px] text-text-muted mt-5">
-                ¿Ya trabajas con nosotros y tienes una queja o reclamo? Radícalo
-                en{" "}
-                <Link href="/faq" className="text-brand-blue font-semibold">
-                  nuestra sección de SQR
+                <Link
+                  href="/faq"
+                  className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                    <span className="material-symbols-outlined">edit_note</span>
+                  </span>
+                  <span className="flex-1">
+                    <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                      Radicar SQR
+                    </span>
+                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                      Solicitud, queja o reclamo
+                    </span>
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
                 </Link>
-                .
-              </p>
+              </div>
             </div>
           )}
         </div>
@@ -413,7 +404,7 @@ export default function ContactoPage() {
       <section className="py-10 md:py-12 bg-white border-y border-border">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <a href={`tel:${TEL}`} className="group flex items-center gap-3">
+            <a href={`tel:${TEL}`} className="group flex items-center justify-center gap-3 text-left">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
                 <span className="material-symbols-outlined">call</span>
               </span>
@@ -426,7 +417,7 @@ export default function ContactoPage() {
                 </span>
               </span>
             </a>
-            <a href={`mailto:${COMERCIAL}`} className="group flex items-center gap-3">
+            <a href={`mailto:${COMERCIAL}`} className="group flex items-center justify-center gap-3 text-left">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
                 <span className="material-symbols-outlined">mail</span>
               </span>
@@ -439,7 +430,7 @@ export default function ContactoPage() {
                 </span>
               </span>
             </a>
-            <a href={`mailto:${SQR_EMAIL}`} className="group flex items-center gap-3">
+            <a href={`mailto:${SQR_EMAIL}`} className="group flex items-center justify-center gap-3 text-left">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
                 <span className="material-symbols-outlined">shield</span>
               </span>

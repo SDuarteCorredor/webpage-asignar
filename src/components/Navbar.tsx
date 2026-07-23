@@ -38,9 +38,9 @@ const policies = [
 ];
 
 const navLinks = [
+  { href: "/vacantes", label: "Vacantes" },
   { href: "/servicios", label: "Servicios" },
   { href: "/nosotros", label: "Nosotros" },
-  { href: "/vacantes", label: "Vacantes" },
   { href: "/faq", label: "SQR" },
   { href: "/contacto", label: "Contacto" },
 ];
