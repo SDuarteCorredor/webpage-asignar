@@ -41,7 +41,7 @@ const navLinks = [
   { href: "/servicios", label: "Servicios" },
   { href: "/nosotros", label: "Nosotros" },
   { href: "/vacantes", label: "Vacantes" },
-  { href: "/faq", label: "FAQ" },
+  { href: "/faq", label: "SQR" },
   { href: "/contacto", label: "Contacto" },
 ];
 
