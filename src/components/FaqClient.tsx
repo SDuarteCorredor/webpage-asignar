@@ -343,11 +343,16 @@ export default function FaqClient() {
             <span className="text-brand-blue">SQR</span>
           </h1>
           <p className="font-[var(--font-body)] text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl mt-4">
-            Solicitudes, quejas, reclamos, sugerencias y felicitaciones. Te
-            respondemos en un máximo de{" "}
-            <strong className="text-brand-navy">15 días hábiles</strong>, de
-            forma confidencial.
+            Solicitudes, quejas, reclamos, sugerencias y felicitaciones.
           </p>
+          <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-white border border-border px-4 py-2">
+            <span className="material-symbols-outlined text-brand-blue text-[18px]">
+              schedule
+            </span>
+            <span className="font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
+              Respondemos en máximo 15 días hábiles · de forma confidencial
+            </span>
+          </div>
         </div>
       </section>
 
