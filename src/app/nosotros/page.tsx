@@ -240,10 +240,17 @@ export default function NosotrosPage() {
               href={maps(sedes[0].q)}
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative md:w-5/12 aspect-[4/3] md:aspect-auto md:min-h-[400px] rounded-2xl overflow-hidden"
+              className="group relative md:w-5/12 aspect-[4/3] md:aspect-auto md:min-h-[400px] rounded-2xl overflow-hidden bg-brand-navy"
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-brand-blue/20 via-brand-navy/60 to-brand-navy/95 z-10 transition-opacity group-hover:opacity-90" />
-              <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/30 to-brand-deep-blue/50" />
+              {/* Foto de Medellín */}
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{ backgroundImage: "url('/images/nosotros/medellin-sede.webp')" }}
+              />
+              {/* Tinte navy #000826 al 40% */}
+              <div className="absolute inset-0 z-10" style={{ backgroundColor: "rgba(0,8,38,0.4)" }} />
+              {/* Gradiente lineal para legibilidad del texto */}
+              <div className="absolute inset-0 z-10 bg-gradient-to-t from-brand-navy/85 via-brand-navy/25 to-transparent" />
               <div className="absolute bottom-8 left-8 right-8 z-20">
                 <span className="inline-flex items-center rounded-full bg-brand-blue px-3.5 py-1 font-[var(--font-ui)] text-[11px] font-semibold text-white uppercase tracking-wider mb-3">
                   Sede principal
