@@ -144,7 +144,7 @@ function FLink({ href, children }: { href: string; children: React.ReactNode }) 
 
 function ColTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="mb-4 font-[var(--font-ui)] text-sm font-bold text-brand-navy">
+    <h4 className="mb-4 font-[var(--font-ui)] text-[13px] font-bold uppercase tracking-[0.08em] text-brand-navy">
       {children}
     </h4>
   );
@@ -152,200 +152,218 @@ function ColTitle({ children }: { children: React.ReactNode }) {
 
 export default function Footer() {
   return (
-    <footer className="bg-surface">
-      <div className="mx-auto max-w-[1280px] px-4 md:px-8 py-14 md:py-16">
-        {/* ---------- CTA — tarjeta de marca ---------- */}
-        <div className="relative overflow-hidden rounded-3xl bg-brand-gradient px-7 py-9 md:px-12 md:py-11">
-          <div className="pointer-events-none absolute -top-16 -right-10 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
-          <div className="relative flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
-            <h2 className="max-w-2xl font-[var(--font-display)] text-2xl font-extrabold leading-[1.15] tracking-[-0.02em] text-white sm:text-3xl md:text-[34px]">
-              ¿Listo para escalar tu operación con el mejor talento humano?
-            </h2>
-            <Link
-              href="/servicios"
-              className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 font-[var(--font-ui)] text-sm font-semibold text-brand-navy transition-transform hover:-translate-y-0.5"
-            >
-              Solicita una cotización
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-        </div>
+    <footer className="bg-white pt-12 md:pt-16">
+      <div className="mx-auto max-w-[1280px] px-4 md:px-8">
+        {/* Panel del footer — bloque propio, separado del resto de la página */}
+        <div className="rounded-[28px] border border-border bg-surface p-5 md:p-7">
+          <div className="grid gap-5 lg:grid-cols-[minmax(0,300px)_1fr]">
+            {/* ---------- Tarjeta de marca (azul) ---------- */}
+            <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-brand-gradient p-6 min-h-[280px]">
+              <div className="pointer-events-none absolute -top-14 -right-10 h-48 w-48 rounded-full bg-white/10 blur-3xl" />
+              <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo-asignar-blanco.svg"
+                  alt="Asignar Servicios Temporales"
+                  className="h-9 w-auto"
+                />
+              </div>
 
-        {/* ---------- Columnas ---------- */}
-        <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-10 lg:grid-cols-4 lg:gap-x-10">
-          {/* Marca */}
-          <div className="col-span-2 flex flex-col items-start lg:col-span-1">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo-asignar.svg"
-              alt="Asignar Servicios Temporales"
-              className="h-9 w-auto"
-            />
-            <p className="mt-5 font-[var(--font-display)] text-base font-bold text-brand-navy">
-              Creemos en ti y en tu talento
-            </p>
-            <p className="mt-2 max-w-xs font-[var(--font-body)] text-sm leading-relaxed text-text-secondary">
-              +20 años conectando talento con empresas líderes de Colombia.
-            </p>
-            <div className="mt-5 flex gap-2.5">
-              {socialLinks.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white text-text-secondary transition-all hover:border-brand-blue hover:bg-brand-blue hover:text-white"
-                >
-                  {s.icon}
-                </a>
-              ))}
+              <div className="relative mt-10">
+                <p className="font-[var(--font-display)] text-[19px] font-extrabold leading-snug text-white">
+                  Creemos en ti
+                  <br />y en tu talento
+                </p>
+                <p className="mt-2 font-[var(--font-body)] text-[13px] leading-relaxed text-white/70">
+                  +20 años conectando talento con empresas líderes de Colombia.
+                </p>
+
+                <p className="mt-5 font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-white/50">
+                  Síguenos
+                </p>
+                <div className="mt-2 flex gap-2">
+                  {socialLinks.map((s) => (
+                    <a
+                      key={s.label}
+                      href={s.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.label}
+                      className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/12 text-white transition-colors hover:bg-white hover:text-brand-blue"
+                    >
+                      {s.icon}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ---------- Contenido derecho ---------- */}
+            <div className="flex flex-col gap-5">
+              {/* Columnas de enlaces */}
+              <div className="grid grid-cols-2 gap-x-6 gap-y-8 rounded-3xl bg-white p-6 sm:grid-cols-3 md:p-7">
+                <div>
+                  <ColTitle>¿Buscas empleo?</ColTitle>
+                  <ul className="space-y-2.5">
+                    {candidatos.map((l) => (
+                      <li key={l.label}>
+                        <FLink href={l.href}>{l.label}</FLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <ColTitle>Empresas</ColTitle>
+                  <ul className="space-y-2.5">
+                    {empresas.map((l) => (
+                      <li key={l.label}>
+                        <FLink href={l.href}>{l.label}</FLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="col-span-2 sm:col-span-1">
+                  <ColTitle>Contacto</ColTitle>
+                  <ul className="space-y-3">
+                    <li>
+                      <a href="tel:+576043220310" className="group flex items-start gap-2.5">
+                        <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+                        <span>
+                          <span className="block font-[var(--font-body)] text-sm text-text-secondary transition-colors group-hover:text-brand-blue">
+                            (57) 604 322 0310
+                          </span>
+                          <span className="font-[var(--font-ui)] text-[11px] text-text-muted">
+                            Línea nacional
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="mailto:marketingdigital@asignar.com.co"
+                        className="group flex items-start gap-2.5"
+                      >
+                        <MailIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+                        <span className="min-w-0">
+                          <span className="block break-all font-[var(--font-body)] text-sm text-text-secondary transition-colors group-hover:text-brand-blue">
+                            marketingdigital@asignar.com.co
+                          </span>
+                          <span className="font-[var(--font-ui)] text-[11px] text-text-muted">
+                            Escríbenos
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href={maps(PRINCIPAL)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-start gap-2.5"
+                      >
+                        <PinIcon className="mt-0.5 h-4 w-4 shrink-0 text-brand-blue" />
+                        <span>
+                          <span className="block font-[var(--font-body)] text-sm text-text-secondary transition-colors group-hover:text-brand-blue">
+                            Cra. 48 #10-45, El Poblado
+                          </span>
+                          <span className="font-[var(--font-ui)] text-[11px] text-text-muted">
+                            Sede principal · Medellín
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Cobertura + CTA */}
+              <div className="rounded-3xl bg-white p-6 md:p-7">
+                <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+                  <div className="min-w-0">
+                    <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-text-muted">
+                      Cobertura nacional
+                    </p>
+                    <div className="mt-2.5 flex flex-wrap gap-1.5">
+                      {sedes.map((s) => (
+                        <a
+                          key={s.ciudad}
+                          href={maps(s.q)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-full border border-border px-2.5 py-1 font-[var(--font-ui)] text-[12px] font-medium text-text-secondary transition-colors hover:border-brand-blue hover:text-brand-blue"
+                        >
+                          {s.ciudad}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="shrink-0 lg:border-l lg:border-border lg:pl-7">
+                    <p className="font-[var(--font-display)] text-[15px] font-bold leading-snug text-brand-navy">
+                      ¿Listo para escalar tu operación?
+                    </p>
+                    <Link
+                      href="/servicios"
+                      className="group mt-3 inline-flex items-center gap-2 rounded-full bg-brand-blue px-6 py-3 font-[var(--font-ui)] text-sm font-semibold text-white shadow-[0_8px_20px_-8px_rgba(0,122,254,0.6)] transition-transform hover:-translate-y-0.5"
+                    >
+                      Solicita una cotización
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Candidatos */}
-          <div>
-            <ColTitle>¿Buscas empleo?</ColTitle>
-            <ul className="space-y-3">
-              {candidatos.map((l) => (
-                <li key={l.label}>
-                  <FLink href={l.href}>{l.label}</FLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Empresas */}
-          <div>
-            <ColTitle>Soluciones empresariales</ColTitle>
-            <ul className="space-y-3">
-              {empresas.map((l) => (
-                <li key={l.label}>
-                  <FLink href={l.href}>{l.label}</FLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Sedes */}
-          <div className="col-span-2 lg:col-span-1">
-            <ColTitle>Cobertura nacional</ColTitle>
-            <ul className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3 lg:flex lg:flex-col lg:gap-y-2.5">
-              {sedes.map((s) => (
-                <li key={s.ciudad}>
-                  <a
-                    href={maps(s.q)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group flex items-start gap-1.5 lg:gap-2"
-                  >
-                    <PinIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-brand-blue lg:h-4 lg:w-4" />
-                    <span>
-                      <span className="font-[var(--font-body)] text-[13px] font-medium text-text-secondary transition-colors group-hover:text-brand-blue lg:text-sm">
-                        {s.ciudad}
-                        {s.nota && (
-                          <span className="ml-1 rounded bg-brand-blue/10 px-1 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-brand-blue lg:ml-1.5 lg:px-1.5 lg:text-[10px]">
-                            {s.nota}
-                          </span>
-                        )}
-                      </span>
-                      <span className="hidden font-[var(--font-body)] text-xs text-text-muted lg:block">
-                        {s.dir}
-                      </span>
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* ---------- Contacto ---------- */}
-        <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          {[
-            {
-              href: "tel:+576043220310",
-              icon: <PhoneIcon className="h-4 w-4 sm:h-5 sm:w-5" />,
-              titulo: "Línea nacional",
-              valor: "(57) 604 322 0310",
-              externo: false,
-            },
-            {
-              href: "mailto:marketingdigital@asignar.com.co",
-              icon: <MailIcon className="h-4 w-4 sm:h-5 sm:w-5" />,
-              titulo: "Escríbenos",
-              valor: "marketingdigital@asignar.com.co",
-              externo: false,
-            },
-            {
-              href: maps(PRINCIPAL),
-              icon: <PinIcon className="h-4 w-4 sm:h-5 sm:w-5" />,
-              titulo: "Sede principal",
-              valor: "Cra. 48 #10-45, El Poblado, Medellín",
-              externo: true,
-            },
-          ].map((c) => (
-            <a
-              key={c.titulo}
-              href={c.href}
-              {...(c.externo
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : {})}
-              className="group flex items-center gap-3 rounded-2xl border border-border bg-white p-4 transition-all hover:border-brand-blue/40 hover:shadow-[0_12px_30px_-20px_rgba(0,18,51,0.3)]"
-            >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue transition-colors group-hover:bg-brand-blue group-hover:text-white">
-                {c.icon}
-              </span>
-              <span className="min-w-0">
-                <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
-                  {c.titulo}
-                </span>
-                <span className="block truncate font-[var(--font-body)] text-[13px] text-text-secondary">
-                  {c.valor}
-                </span>
-              </span>
-            </a>
-          ))}
-        </div>
-
-        <div className="mt-12 h-px bg-border" />
-
-        {/* ---------- Barra inferior ---------- */}
-        <div className="flex flex-col gap-4 pt-6 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-col gap-1">
-            <p className="font-[var(--font-body)] text-[11px] text-text-muted sm:text-xs">
-              © {new Date().getFullYear()} ASIGNAR SAS · Empresa de Servicios
-              Temporales (Ley 50 de 1990) · Todos los derechos reservados.
-            </p>
-            <a
-              href="https://www.conexionoutsourcing.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-[var(--font-body)] text-[11px] text-text-muted transition-colors hover:text-brand-blue sm:text-xs"
-            >
-              Conozca nuestra empresa filial: Conexión Outsourcing S.A.S.
-            </a>
-          </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:justify-end">
-            {legal.map((l) => (
+          {/* ---------- Barra inferior ---------- */}
+          <div className="mt-6 flex flex-col gap-3 border-t border-border pt-5 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-1">
+              <p className="font-[var(--font-body)] text-[11px] text-text-muted sm:text-xs">
+                © {new Date().getFullYear()} ASIGNAR SAS · Empresa de Servicios
+                Temporales (Ley 50 de 1990) · Todos los derechos reservados.
+              </p>
               <a
-                key={l.label}
-                href={l.href}
+                href="https://www.conexionoutsourcing.com"
                 target="_blank"
                 rel="noopener noreferrer"
+                className="font-[var(--font-body)] text-[11px] text-text-muted transition-colors hover:text-brand-blue sm:text-xs"
+              >
+                Conozca nuestra empresa filial: Conexión Outsourcing S.A.S.
+              </a>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 md:justify-end">
+              {legal.map((l) => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-[var(--font-body)] text-xs text-text-muted transition-colors hover:text-brand-blue"
+                >
+                  {l.label}
+                </a>
+              ))}
+              <Link
+                href="/faq"
                 className="font-[var(--font-body)] text-xs text-text-muted transition-colors hover:text-brand-blue"
               >
-                {l.label}
-              </a>
-            ))}
-            <Link
-              href="/faq"
-              className="font-[var(--font-body)] text-xs text-text-muted transition-colors hover:text-brand-blue"
-            >
-              Línea ética (SQR)
-            </Link>
+                Línea ética (SQR)
+              </Link>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* ---------- Marca de agua ---------- */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none select-none overflow-hidden"
+      >
+        <p className="-mb-[0.18em] translate-y-[0.06em] text-center font-[var(--font-display)] text-[19vw] font-extrabold leading-none tracking-[-0.04em] text-brand-navy/[0.055]">
+          ASIGNAR
+        </p>
       </div>
     </footer>
   );
