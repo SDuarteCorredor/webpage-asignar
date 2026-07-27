@@ -103,16 +103,16 @@ export default function NosotrosPage() {
       <section className="bg-surface-gray py-16 md:py-24">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
           <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
-            <div className="flex-1 max-w-xl">
+            <div className="flex-1 max-w-xl text-center md:text-left">
               <h1 className="font-[var(--font-display)] text-4xl md:text-5xl lg:text-[48px] font-bold text-brand-navy leading-[1.15] tracking-[-0.02em] mb-6">
                 Detrás de cada satisfacción hay un equipo que nadie ve
               </h1>
-              <p className="font-[var(--font-body)] text-lg text-text-secondary leading-relaxed mb-8 max-w-lg">
+              <p className="font-[var(--font-body)] text-lg text-text-secondary leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
                 Desde 2006, Asignar conecta el talento colombiano con las empresas que mueven el país. No somos una agencia más: somos el equipo que garantiza que tu operación nunca se detenga — con personal calificado, cumplimiento total y presencia en 7+ ciudades.
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                 <Link
-                  href="/soluciones"
+                  href="/servicios"
                   className="group inline-flex items-center gap-2 rounded-full bg-brand-blue px-6 py-3 font-[var(--font-ui)] text-sm font-semibold text-white transition-all hover:bg-brand-deep-blue hover:-translate-y-0.5"
                 >
                   Conoce nuestros servicios
@@ -188,11 +188,11 @@ export default function NosotrosPage() {
       {/* 04 — DOCA Values */}
       <section className="py-16 md:py-24 bg-surface-gray">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <div className="mb-12">
+          <div className="mb-12 text-center lg:text-left">
             <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy mb-3">
               Lo que nos mueve: DOCA
             </h2>
-            <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl">
+            <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl mx-auto lg:mx-0">
               Cuatro principios que guían cada decisión, cada proceso y cada persona que enviamos a tu operación.
             </p>
           </div>
@@ -225,11 +225,11 @@ export default function NosotrosPage() {
       {/* 05 — National Presence */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <div className="mb-12">
+          <div className="mb-12 text-center lg:text-left">
             <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy mb-3">
               Presencia nacional, atención local
             </h2>
-            <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl">
+            <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl mx-auto lg:mx-0">
               Operamos en las principales ciudades de Colombia con equipos locales. Haz clic en cualquier ciudad para ver la ubicación exacta.
             </p>
           </div>
@@ -303,11 +303,11 @@ export default function NosotrosPage() {
       {/* 06 — Social Connect */}
       <section className="py-16 md:py-24 bg-surface-gray">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <div className="mb-12">
+          <div className="mb-12 text-center lg:text-left">
             <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-bold text-brand-navy mb-3">
               Síguenos y conoce nuestro día a día
             </h2>
-            <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl">
+            <p className="font-[var(--font-body)] text-lg text-text-secondary max-w-2xl mx-auto lg:mx-0">
               Historias reales de nuestro equipo, vacantes activas y la cultura que nos define.
             </p>
           </div>

@@ -405,7 +405,7 @@ export default function VacantesClient() {
       <section className="relative overflow-hidden bg-brand-navy">
         <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: "url('/home/hero.jpg')" }} />
         <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/90 to-brand-navy/60" />
-        <div className="relative max-w-[1280px] mx-auto px-4 md:px-16 py-10 md:py-14">
+        <div className="relative max-w-[1280px] mx-auto px-4 md:px-16 py-10 md:py-14 text-center md:text-left">
           <p className="font-[var(--font-display)] text-2xl md:text-[32px] font-extrabold text-white leading-tight">
             Encuentra tu próximo empleo
           </p>

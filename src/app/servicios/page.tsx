@@ -168,7 +168,7 @@ export default function SolucionesPage() {
       <section className="bg-surface py-16 md:py-[72px]">
         <div className="max-w-[var(--container-max)] mx-auto px-4 md:px-16 flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
           {/* Left — copy */}
-          <div className="flex-1 max-w-2xl">
+          <div className="flex-1 max-w-2xl text-center lg:text-left">
             <span className="inline-block font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[1px] text-brand-blue bg-brand-blue/[0.09] rounded-full px-3 py-1.5 mb-5">
               Para empresas
             </span>
@@ -181,7 +181,7 @@ export default function SolucionesPage() {
               cumplimiento total —Ley 50/1990, SG-SST y ARL SURA— para los
               sectores más exigentes de Colombia.
             </p>
-            <div className="flex flex-wrap gap-3.5 mb-6">
+            <div className="flex flex-wrap gap-3.5 mb-6 justify-center lg:justify-start">
               <Link
                 href="/contacto"
                 className="inline-flex items-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold px-7 py-[15px] rounded-full shadow-[0_4px_14px_0_rgba(0,122,254,0.39)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200"
@@ -197,7 +197,7 @@ export default function SolucionesPage() {
                 Ver portafolio
               </a>
             </div>
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5 justify-center lg:justify-start">
               <span className="font-[var(--font-ui)] text-[13px] font-semibold text-text-muted">
                 Respaldo:
               </span>
@@ -286,7 +286,7 @@ export default function SolucionesPage() {
       {/* 02b ¿Por qué Asignar? — photo cards */}
       <section className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] bg-white">
         <div className="max-w-[var(--container-max)] mx-auto px-4 md:px-16">
-          <div className="mb-10">
+          <div className="mb-10 text-center lg:text-left">
             <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-blue mb-3 block">
               Nuestros diferenciales
             </span>
@@ -341,7 +341,7 @@ export default function SolucionesPage() {
       {/* 03 Proceso */}
       <section className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] bg-surface">
         <div className="max-w-[var(--container-max)] mx-auto px-4 md:px-16">
-          <div className="mb-12">
+          <div className="mb-12 text-center lg:text-left">
             <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-blue mb-3 block">
               Cómo trabajamos
             </span>
