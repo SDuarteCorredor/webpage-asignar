@@ -11,6 +11,8 @@ const maps = (q: string) =>
 /* Comercial (cotizaciones y empresas) y talento (hojas de vida) son buzones
    distintos: el de comercial lo consume la automatización n8n de Paula. */
 const COMERCIAL = "comercialbog@asignar.com.co";
+/* Copia a gerencia y coordinación, como hacía el formulario anterior. */
+const COMERCIAL_CC = ["gerenciaop@asignar.com.co", "coorantioquia@asignar.com.co"];
 const TALENTO = "marketingdigital@asignar.com.co";
 const SQR_EMAIL = "sqr@asignar.com.co";
 const TEL = "+576043220310";
@@ -103,9 +105,11 @@ export default function ContactoPage() {
       "",
       `Mensaje: ${fd.get("mensaje") || "Solicito una propuesta comercial."}`,
     ].join("\n");
-    window.location.href = `mailto:${COMERCIAL}?subject=${encodeURIComponent(
-      `Nuevo Contacto empresarial — ${fd.get("empresa")}`
-    )}&body=${encodeURIComponent(cuerpo)}`;
+    window.location.href =
+      `mailto:${COMERCIAL}` +
+      `?cc=${encodeURIComponent(COMERCIAL_CC.join(","))}` +
+      `&subject=${encodeURIComponent(`Nuevo Contacto empresarial — ${fd.get("empresa")}`)}` +
+      `&body=${encodeURIComponent(cuerpo)}`;
     setEnviado(true);
   }
 

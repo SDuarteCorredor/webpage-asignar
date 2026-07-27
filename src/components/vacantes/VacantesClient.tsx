@@ -177,10 +177,14 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
   const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault();
     if (!validar()) return;
+    // Formato pensado para el flujo n8n "Router Aspirantes" que corre sobre
+    // marketingdigital@: clasifica con IA y enruta al equipo de selección según
+    // la CIUDAD. Por eso la ciudad va sola en su línea (sin departamento) y
+    // usando el mismo nombre de la lista de ciudades del router.
     const cuerpo = [
       `POSTULACIÓN A VACANTE`,
+      `Ciudad: ${v.ciudad}`,
       `Cargo: ${v.cargo}`,
-      `Ciudad: ${v.ciudad}, ${v.departamento}`,
       `Sector: ${v.sector}`,
       "",
       `Nombres: ${form.nombre}`,
@@ -188,10 +192,14 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
       `Edad: ${form.edad}`,
       `Teléfono: ${form.telefono}`,
       `WhatsApp: ${form.whatsapp || "—"}`,
-      form.hojaVida ? `Hoja de vida: ${form.hojaVida} (adjuntar a este correo)` : "",
+      `Hoja de vida: ${
+        form.hojaVida
+          ? `${form.hojaVida} (recuerda adjuntarla a este correo)`
+          : "no adjunta"
+      }`,
       "",
       "— Autorizo el tratamiento de mis datos personales (Ley 1581 de 2012).",
-    ].filter(Boolean).join("\n");
+    ].join("\n");
     window.location.href = `mailto:${MARKETING_EMAIL}?subject=${encodeURIComponent(`Postulación — ${v.cargo} (${v.ciudad})`)}&body=${encodeURIComponent(cuerpo)}`;
     setEnviado(true);
   };

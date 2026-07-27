@@ -28,6 +28,9 @@ import {
    registre la solicitud y dispare la automatización del lado del servidor.
    ============================================================ */
 const COMERCIAL_EMAIL = "comercialbog@asignar.com.co";
+/* Copia a gerencia y coordinación, como hacía el formulario anterior.
+   La automatización solo corre sobre el buzón comercial. */
+const COMERCIAL_CC = ["gerenciaop@asignar.com.co", "coorantioquia@asignar.com.co"];
 const ASUNTO_AUTOMATIZACION = "Nuevo Contacto empresarial";
 
 const CIUDADES = [
@@ -103,9 +106,11 @@ export default function PropuestaForm() {
       `Mensaje: ${mensaje || "Solicito una propuesta comercial."}`,
     ].join("\n");
 
-    window.location.href = `mailto:${COMERCIAL_EMAIL}?subject=${encodeURIComponent(
-      `${ASUNTO_AUTOMATIZACION} — ${empresa}`
-    )}&body=${encodeURIComponent(cuerpo)}`;
+    window.location.href =
+      `mailto:${COMERCIAL_EMAIL}` +
+      `?cc=${encodeURIComponent(COMERCIAL_CC.join(","))}` +
+      `&subject=${encodeURIComponent(`${ASUNTO_AUTOMATIZACION} — ${empresa}`)}` +
+      `&body=${encodeURIComponent(cuerpo)}`;
     setEnviado(true);
   };
 
