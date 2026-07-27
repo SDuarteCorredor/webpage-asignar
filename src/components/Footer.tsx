@@ -41,7 +41,7 @@ const candidatos = [
 ];
 
 const empresas = [
-  { label: "Solicitar cotización", href: "/soluciones" },
+  { label: "Solicitar cotización", href: "/servicios" },
   { label: "Portafolio de servicios", href: `${POL}PORTAFOLIO%20DE%20SERVICIOS%20ASIGNAR%20SAS.pdf` },
   { label: "Ingreso clientes", href: "https://www.asignar.com.co/_admin/" },
   { label: "Paga tu factura", href: "https://www.pagosvirtualesavvillas.com.co/personal/pagos/1685" },
@@ -140,7 +140,7 @@ export default function Footer() {
             ¿Listo para escalar tu operación con el mejor talento humano?
           </h2>
           <Link
-            href="/soluciones"
+            href="/servicios"
             className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-7 py-3.5 font-[var(--font-ui)] text-sm font-semibold text-brand-navy transition-transform hover:-translate-y-0.5"
           >
             Solicita una cotización

@@ -128,7 +128,7 @@ export default function CTAWithVerticalMarquee() {
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
               </Link>
               <Link
-                href="/soluciones"
+                href="/servicios"
                 className="group relative inline-flex items-center gap-2 font-[var(--font-ui)] text-sm font-semibold px-8 py-4 rounded-full border border-border bg-white text-brand-navy hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
               >
                 <span className="relative z-10">Ver servicios</span>

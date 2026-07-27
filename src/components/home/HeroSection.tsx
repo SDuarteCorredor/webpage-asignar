@@ -90,7 +90,7 @@ export default function HeroSection() {
               <ArrowRight className="h-[18px] w-[18px] transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
-              href="/soluciones"
+              href="/servicios"
               className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 bg-white/10 px-8 py-4 font-[var(--font-ui)] text-sm font-semibold text-white backdrop-blur-md transition-all hover:-translate-y-0.5 hover:bg-white/20"
               style={{ transitionDuration: "var(--duration-base)" }}
             >
