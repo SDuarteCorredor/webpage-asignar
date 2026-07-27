@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import ServiciosExplorer from "@/components/soluciones/ServiciosExplorer";
+import { PropuestaProvider } from "@/components/servicios/PropuestaProvider";
+import PropuestaForm from "@/components/servicios/PropuestaForm";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 
@@ -142,28 +144,10 @@ const sectoresClientes = [
   },
 ];
 
-function ArrowRight({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
-      <path
-        d="M4 12h15M13 5l7 7-7 7"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 export default function SolucionesPage() {
   return (
-    <>
+    // El provider comparte el servicio elegido entre el explorador y el formulario.
+    <PropuestaProvider>
       {/* 01 Hero */}
       <section className="bg-surface py-16 md:py-[72px]">
         <div className="max-w-[var(--container-max)] mx-auto px-4 md:px-16 flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
@@ -213,70 +197,7 @@ export default function SolucionesPage() {
           </div>
 
           {/* Right — proposal form card */}
-          <div className="w-full lg:w-[440px] shrink-0 bg-white border border-border rounded-3xl p-8 shadow-[0_24px_56px_-20px_rgba(0,18,51,0.12)]">
-            <div className="mb-5">
-              <h2 className="font-[var(--font-display)] text-[23px] font-extrabold text-brand-navy tracking-[-0.46px] mb-2">
-                Solicita tu propuesta
-              </h2>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-brand-blue" />
-                <span className="font-[var(--font-body)] text-[13px] text-text-muted">
-                  Respuesta en menos de 24 h · sin compromiso
-                </span>
-              </div>
-            </div>
-
-            <form
-              action="/contacto"
-              className="flex flex-col gap-[18px]"
-            >
-              <div>
-                <label className="font-[var(--font-ui)] text-[12.5px] font-semibold text-brand-navy block mb-[7px]">
-                  Empresa
-                </label>
-                <input
-                  type="text"
-                  placeholder="Nombre de tu empresa"
-                  className="w-full bg-surface border border-border rounded-xl px-3.5 py-[13px] font-[var(--font-body)] text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-brand-blue transition-colors"
-                />
-              </div>
-              <div>
-                <label className="font-[var(--font-ui)] text-[12.5px] font-semibold text-brand-navy block mb-[7px]">
-                  Sector
-                </label>
-                <select className="w-full bg-surface border border-border rounded-xl px-3.5 py-[13px] font-[var(--font-body)] text-sm text-text-muted outline-none focus:border-brand-blue transition-colors appearance-none">
-                  <option value="">Selecciona tu sector</option>
-                  <option value="hotelero">Hotelero</option>
-                  <option value="restaurantes">Restaurantes</option>
-                  <option value="eventos">Centros de eventos</option>
-                  <option value="clubes">Clubes</option>
-                  <option value="industria">Industria</option>
-                  <option value="inmobiliario">Inmobiliario</option>
-                  <option value="otro">Otro</option>
-                </select>
-              </div>
-              <div>
-                <label className="font-[var(--font-ui)] text-[12.5px] font-semibold text-brand-navy block mb-[7px]">
-                  ¿Qué necesitas?
-                </label>
-                <textarea
-                  placeholder="Ej. 15 meseros para eventos de fin de año"
-                  rows={2}
-                  className="w-full bg-surface border border-border rounded-xl px-3.5 py-[13px] font-[var(--font-body)] text-sm text-text-primary placeholder:text-text-muted outline-none focus:border-brand-blue transition-colors resize-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold py-[15px] rounded-full shadow-[0_8px_20px_-6px_rgba(0,122,254,0.35)] hover:shadow-[0_6px_20px_rgba(0,122,254,0.23)] hover:-translate-y-0.5 transition-all duration-200"
-              >
-                <span>Enviar solicitud</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </form>
-            <p className="font-[var(--font-body)] text-xs text-text-muted text-center mt-4">
-              Tus datos están protegidos (Ley 1581 de 2012).
-            </p>
-          </div>
+          <PropuestaForm />
         </div>
       </section>
 
@@ -501,6 +422,6 @@ export default function SolucionesPage() {
 
       {/* 05 CTA Marquee */}
       <CTAWithVerticalMarquee />
-    </>
+    </PropuestaProvider>
   );
 }
