@@ -28,14 +28,14 @@ const ArrowRight = ({ className = "" }: IconProps) => (
   </svg>
 );
 
+/* `id` debe coincidir con la vacante en components/vacantes/VacantesClient.tsx
+   para que el deep link (/vacantes?v=<id>) abra la vacante correcta. */
 const vacantes = [
-  { cargo: "Mesero/a de Servicio", ciudad: "Medellín", sector: "Hotelería", Icon: Briefcase },
-  { cargo: "Auxiliar de Cocina", ciudad: "Bogotá", sector: "Restaurantes", Icon: Users },
-  { cargo: "Recepcionista Hotel", ciudad: "Cartagena", sector: "Hotelería", Icon: Star },
-  { cargo: "Auxiliar de Bodega", ciudad: "Cali", sector: "Logística", Icon: Box },
+  { id: 1, cargo: "Mesero/a de Servicio", ciudad: "Medellín", sector: "Hotelería", Icon: Briefcase },
+  { id: 2, cargo: "Auxiliar de Cocina", ciudad: "Bogotá", sector: "Restaurantes", Icon: Users },
+  { id: 3, cargo: "Recepcionista Hotel", ciudad: "Cartagena", sector: "Hotelería", Icon: Star },
+  { id: 4, cargo: "Auxiliar de Bodega", ciudad: "Cali", sector: "Logística", Icon: Box },
 ];
-
-const APLICAR_URL = "https://postulate.asignar.cloud";
 
 export default function VacantesPreview() {
   return (
@@ -62,7 +62,7 @@ export default function VacantesPreview() {
 
           {/* Right — job list */}
           <div className="scroll-reveal space-y-3" data-delay="120">
-            {vacantes.map(({ cargo, ciudad, sector, Icon }) => (
+            {vacantes.map(({ id, cargo, ciudad, sector, Icon }) => (
               <div
                 key={cargo}
                 className="group flex items-center gap-4 rounded-2xl bg-white p-4 card-elevated"
@@ -78,15 +78,14 @@ export default function VacantesPreview() {
                     {ciudad} · {sector}
                   </p>
                 </div>
-                <a
-                  href={APLICAR_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href={`/vacantes?v=${id}`}
+                  aria-label={`Aplicar a ${cargo} en ${ciudad}`}
                   className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-blue/[0.06] px-5 py-2.5 font-[var(--font-ui)] text-sm font-semibold text-brand-blue transition-all hover:bg-brand-blue hover:text-white"
                 >
                   Aplicar
                   <ArrowRight className="h-4 w-4" />
-                </a>
+                </Link>
               </div>
             ))}
           </div>

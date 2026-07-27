@@ -373,6 +373,29 @@ export default function VacantesClient() {
     return () => { document.body.style.overflow = ""; document.removeEventListener("keydown", onKey); };
   }, [mobileOpen]);
 
+  // Deep link desde el home: /vacantes?v=<id> abre esa vacante.
+  //
+  // Se lee de window y no con useSearchParams a propósito: useSearchParams
+  // exige un <Suspense> alrededor del portal y entonces el HTML estático pasa
+  // a ser el fallback, dejando las vacantes fuera del prerender (malo para SEO
+  // en un portal de empleo). El costo es un render extra al montar, y solo
+  // cuando el parámetro viene en la URL.
+  /* eslint-disable react-hooks/set-state-in-effect -- la URL no existe durante el prerender */
+  useEffect(() => {
+    const id = Number(new URLSearchParams(window.location.search).get("v"));
+    if (!id || !vacantes.some((v) => v.id === id)) return;
+    setSelectedId(id);
+    // En móvil el detalle vive en un overlay; en desktop basta con bajar a la lista.
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      setMobileOpen(true);
+    } else {
+      requestAnimationFrame(() =>
+        listaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+      );
+    }
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return vacantes.filter((v) => {
