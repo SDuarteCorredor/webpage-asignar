@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import type { FormEvent } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 /* ============================================================
    Datos — vacantes SIEMPRE activas (genéricas de Asignar).
@@ -200,6 +201,13 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
       "",
       "— Autorizo el tratamiento de mis datos personales (Ley 1581 de 2012).",
     ].join("\n");
+    trackEvent("postulacion_enviada", {
+      cargo: v.cargo,
+      ciudad: v.ciudad,
+      sector: v.sector,
+      con_hoja_de_vida: Boolean(form.hojaVida),
+    });
+
     window.location.href = `mailto:${MARKETING_EMAIL}?subject=${encodeURIComponent(`Postulación — ${v.cargo} (${v.ciudad})`)}&body=${encodeURIComponent(cuerpo)}`;
     setEnviado(true);
   };

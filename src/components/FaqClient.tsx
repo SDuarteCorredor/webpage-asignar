@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
+import { trackEvent } from "@/lib/analytics";
 
 type Faq = { cat: string; q: string; a: string };
 
@@ -307,6 +308,12 @@ export default function FaqClient() {
       `SQR ${form.tipo} — ${form.asunto}`
     )}&body=${encodeURIComponent(cuerpo)}`;
 
+    trackEvent("sqr_radicada", {
+      tipo: form.tipo,
+      sede: form.sede,
+      vinculo: form.vinculo,
+    });
+
     window.location.href = href;
     setEnviado(true);
   };
@@ -319,6 +326,8 @@ export default function FaqClient() {
       `Número de radicado: ${radicado}`,
       `Documento: ${docSeguimiento}`,
     ].join("\n");
+    trackEvent("sqr_seguimiento");
+
     window.location.href = `mailto:${SQR_EMAIL}?subject=${encodeURIComponent(
       `Seguimiento SQR — Radicado ${radicado}`
     )}&body=${encodeURIComponent(cuerpo)}`;
