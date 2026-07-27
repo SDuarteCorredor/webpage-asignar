@@ -450,7 +450,7 @@ export default function ContactoPage() {
       {/* ---------- Sedes (sección propia) ---------- */}
       <section className="py-14 md:py-20 bg-surface">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <div className="mb-9">
+          <div className="mb-9 text-center lg:text-left">
             <span className="font-[var(--font-ui)] text-xs font-semibold uppercase tracking-[0.1em] text-brand-blue mb-3 block">
               Cobertura nacional
             </span>
