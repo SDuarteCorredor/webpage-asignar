@@ -8,7 +8,12 @@ import Link from "next/link";
 const maps = (q: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 
-const COMERCIAL = "marketingdigital@asignar.com.co";
+/* Comercial (cotizaciones y empresas) y talento (hojas de vida) son buzones
+   distintos: el de comercial lo consume la automatización n8n de Paula. */
+const COMERCIAL = "comercialbog@asignar.com.co";
+/* Copia a gerencia y coordinación, como hacía el formulario anterior. */
+const COMERCIAL_CC = ["gerenciaop@asignar.com.co", "coorantioquia@asignar.com.co"];
+const TALENTO = "marketingdigital@asignar.com.co";
 const SQR_EMAIL = "sqr@asignar.com.co";
 const TEL = "+576043220310";
 
@@ -87,20 +92,24 @@ export default function ContactoPage() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    // Etiquetas y asunto acoplados al flujo n8n "Cotizaciones - Solicitudes
+    // Comercial (Paula)": filtra por el asunto y parsea estas etiquetas.
+    // "Mensaje" va al final porque su regex captura hasta el fin del correo.
     const cuerpo = [
-      `Nombre: ${fd.get("nombre")}`,
       `Empresa: ${fd.get("empresa")}`,
-      `Correo: ${fd.get("email")}`,
+      `Nombre del contacto: ${fd.get("nombre")}`,
+      `Email de contacto: ${fd.get("email")}`,
       `Teléfono: ${fd.get("telefono")}`,
       `Ciudad: ${fd.get("ciudad")}`,
-      `Sector: ${fd.get("sector")}`,
+      `Servicio de interés: ${fd.get("sector")}`,
       "",
-      "Necesidad:",
-      `${fd.get("mensaje")}`,
+      `Mensaje: ${fd.get("mensaje") || "Solicito una propuesta comercial."}`,
     ].join("\n");
-    window.location.href = `mailto:${COMERCIAL}?subject=${encodeURIComponent(
-      `Solicitud de propuesta — ${fd.get("empresa")}`
-    )}&body=${encodeURIComponent(cuerpo)}`;
+    window.location.href =
+      `mailto:${COMERCIAL}` +
+      `?cc=${encodeURIComponent(COMERCIAL_CC.join(","))}` +
+      `&subject=${encodeURIComponent(`Nuevo Contacto empresarial — ${fd.get("empresa")}`)}` +
+      `&body=${encodeURIComponent(cuerpo)}`;
     setEnviado(true);
   }
 
@@ -336,7 +345,7 @@ export default function ContactoPage() {
                 </Link>
 
                 <a
-                  href={`mailto:${COMERCIAL}?subject=${encodeURIComponent(
+                  href={`mailto:${TALENTO}?subject=${encodeURIComponent(
                     "Hoja de vida — Postulación"
                   )}`}
                   className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"

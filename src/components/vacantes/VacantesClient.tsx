@@ -177,10 +177,14 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
   const handleSubmit = (ev: FormEvent) => {
     ev.preventDefault();
     if (!validar()) return;
+    // Formato pensado para el flujo n8n "Router Aspirantes" que corre sobre
+    // marketingdigital@: clasifica con IA y enruta al equipo de selección según
+    // la CIUDAD. Por eso la ciudad va sola en su línea (sin departamento) y
+    // usando el mismo nombre de la lista de ciudades del router.
     const cuerpo = [
       `POSTULACIÓN A VACANTE`,
+      `Ciudad: ${v.ciudad}`,
       `Cargo: ${v.cargo}`,
-      `Ciudad: ${v.ciudad}, ${v.departamento}`,
       `Sector: ${v.sector}`,
       "",
       `Nombres: ${form.nombre}`,
@@ -188,10 +192,14 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
       `Edad: ${form.edad}`,
       `Teléfono: ${form.telefono}`,
       `WhatsApp: ${form.whatsapp || "—"}`,
-      form.hojaVida ? `Hoja de vida: ${form.hojaVida} (adjuntar a este correo)` : "",
+      `Hoja de vida: ${
+        form.hojaVida
+          ? `${form.hojaVida} (recuerda adjuntarla a este correo)`
+          : "no adjunta"
+      }`,
       "",
       "— Autorizo el tratamiento de mis datos personales (Ley 1581 de 2012).",
-    ].filter(Boolean).join("\n");
+    ].join("\n");
     window.location.href = `mailto:${MARKETING_EMAIL}?subject=${encodeURIComponent(`Postulación — ${v.cargo} (${v.ciudad})`)}&body=${encodeURIComponent(cuerpo)}`;
     setEnviado(true);
   };
@@ -372,6 +380,29 @@ export default function VacantesClient() {
     document.addEventListener("keydown", onKey);
     return () => { document.body.style.overflow = ""; document.removeEventListener("keydown", onKey); };
   }, [mobileOpen]);
+
+  // Deep link desde el home: /vacantes?v=<id> abre esa vacante.
+  //
+  // Se lee de window y no con useSearchParams a propósito: useSearchParams
+  // exige un <Suspense> alrededor del portal y entonces el HTML estático pasa
+  // a ser el fallback, dejando las vacantes fuera del prerender (malo para SEO
+  // en un portal de empleo). El costo es un render extra al montar, y solo
+  // cuando el parámetro viene en la URL.
+  /* eslint-disable react-hooks/set-state-in-effect -- la URL no existe durante el prerender */
+  useEffect(() => {
+    const id = Number(new URLSearchParams(window.location.search).get("v"));
+    if (!id || !vacantes.some((v) => v.id === id)) return;
+    setSelectedId(id);
+    // En móvil el detalle vive en un overlay; en desktop basta con bajar a la lista.
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      setMobileOpen(true);
+    } else {
+      requestAnimationFrame(() =>
+        listaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+      );
+    }
+  }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
