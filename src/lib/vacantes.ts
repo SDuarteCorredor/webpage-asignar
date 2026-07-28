@@ -131,13 +131,20 @@ export async function getVacantes(): Promise<{
     // sin depender de Google.
     const base =
       process.env.GOOGLE_SHEETS_API_BASE || "https://sheets.googleapis.com";
-    const url =
-      `${base}/v4/spreadsheets/${sheetId}` +
-      `/values/${encodeURIComponent(rango)}?key=${apiKey}`;
+    const pedir = (r: string) =>
+      // La página se revalida cada 5 minutos: publicar una vacante en el Sheet
+      // la muestra en el sitio sin desplegar.
+      fetch(
+        `${base}/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(r)}?key=${apiKey}`,
+        { next: { revalidate: 300 } }
+      );
 
-    // La página se revalida cada 5 minutos: publicar una vacante en el Sheet
-    // la muestra en el sitio sin desplegar.
-    const res = await fetch(url, { next: { revalidate: 300 } });
+    let res = await pedir(rango);
+    // Si la pestaña se llama distinto, se reintenta sin nombre: Sheets
+    // devuelve entonces la primera hoja del documento.
+    if (!res.ok && rango.includes("!")) {
+      res = await pedir(rango.split("!")[1]);
+    }
     if (!res.ok) throw new Error(`Sheets respondió ${res.status}`);
 
     const data: { values?: string[][] } = await res.json();

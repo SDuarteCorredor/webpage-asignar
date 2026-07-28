@@ -114,6 +114,10 @@ function VacanteItem({ v, active, onClick }: { v: Vacante; active: boolean; onCl
 function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
   const [form, setForm] = useState({ nombre: "", tipoDoc: "CC", documento: "", edad: "", telefono: "", whatsapp: "", hojaVida: "", consent: false });
   const [archivo, setArchivo] = useState<File | null>(null);
+  /* Consentimiento SEPARADO y opcional para comunicaciones comerciales.
+     El de tratamiento de datos cubre el proceso de selección; usar esos
+     mismos datos para campañas requiere autorización expresa (Ley 1581). */
+  const [autorizaMarketing, setAutorizaMarketing] = useState(false);
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
@@ -163,6 +167,7 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
       datos.set("telefono", form.telefono);
       datos.set("whatsapp", form.whatsapp);
       datos.set("autorizaDatos", "true");
+      datos.set("autorizaMarketing", String(autorizaMarketing));
       if (archivo) datos.set("hojaVida", archivo);
 
       const res = await fetch("/api/postulacion", { method: "POST", body: datos });
@@ -197,6 +202,9 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
       }`,
       "",
       "— Autorizo el tratamiento de mis datos personales (Ley 1581 de 2012).",
+      autorizaMarketing
+        ? "— Autorizo recibir información sobre nuevas vacantes y oportunidades."
+        : "— NO autorizo comunicaciones comerciales.",
     ].join("\n");
 
     window.location.href = `mailto:${MARKETING_EMAIL}?subject=${encodeURIComponent(`Postulación — ${v.cargo} (${v.ciudad})`)}&body=${encodeURIComponent(cuerpo)}`;
@@ -339,6 +347,19 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
                 </span>
               </label>
               {errores.consent && <p className="-mt-2 text-[11px] text-red-500">{errores.consent}</p>}
+
+              <label className="-mt-1 flex items-start gap-2.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={autorizaMarketing}
+                  onChange={(e) => setAutorizaMarketing(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-brand-blue"
+                />
+                <span className="font-[var(--font-body)] text-[12px] text-text-secondary leading-snug">
+                  Quiero recibir información sobre nuevas vacantes y oportunidades
+                  laborales. <span className="text-text-muted">(Opcional)</span>
+                </span>
+              </label>
               <button
                 type="submit"
                 disabled={enviando}
