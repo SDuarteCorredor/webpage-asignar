@@ -3,51 +3,8 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import type { FormEvent } from "react";
 import { trackEvent } from "@/lib/analytics";
-
-/* ============================================================
-   Datos — vacantes SIEMPRE activas (genéricas de Asignar).
-   Nota: por ahora NO se muestran nombres de empresas cliente
-   (pendiente de autorización). El empleador visible es Asignar.
-   ============================================================ */
-type Vacante = {
-  id: number;
-  cargo: string;
-  ciudad: string;
-  departamento: string;
-  sector: string;
-  contrato: string;
-  salario: string;
-  salarioDetalle: string;
-  experiencia: string;
-  jornada: string;
-  modalidad: string;
-  funciones: string;
-  icon: string;
-  destacada?: boolean;
-};
-
-const vacantes: Vacante[] = [
-  { id: 1, cargo: "Mesero/a de Servicio", ciudad: "Medellín", departamento: "Antioquia", sector: "Hotelería", contrato: "Obra o labor", salario: "$1.550.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley · + Propinas", experiencia: "Mínimo 6 meses", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Atención y servicio a mesa en restaurante de hotel, montaje de estaciones, toma de pedidos y apoyo al equipo de A&B.", icon: "room_service", destacada: true },
-  { id: 2, cargo: "Auxiliar de Cocina", ciudad: "Bogotá", departamento: "Cundinamarca", sector: "Restaurantes", contrato: "Obra o labor", salario: "$1.500.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 6 meses", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Preparación de alimentos, mise en place, control de inventario de insumos y apoyo directo al chef principal.", icon: "restaurant" },
-  { id: 3, cargo: "Recepcionista de Hotel", ciudad: "Cartagena", departamento: "Bolívar", sector: "Hotelería", contrato: "Obra o labor", salario: "$1.750.905", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 1 año", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Check-in / check-out, atención a huéspedes, manejo de reservas y apoyo administrativo. Inglés intermedio requerido.", icon: "concierge", destacada: true },
-  { id: 4, cargo: "Auxiliar de Bodega", ciudad: "Cali", departamento: "Valle del Cauca", sector: "Logística", contrato: "Obra o labor", salario: "$1.423.500", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Sin experiencia", jornada: "Diurna", modalidad: "Presencial", funciones: "Recepción, almacenamiento y despacho de mercancía, manejo de inventarios y organización de bodega.", icon: "warehouse" },
-  { id: 5, cargo: "Camarero/a de Pisos", ciudad: "Barranquilla", departamento: "Atlántico", sector: "Hotelería", contrato: "Obra o labor", salario: "$1.423.500", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 6 meses", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Limpieza y acondicionamiento de habitaciones según estándares de calidad y reposición de amenidades.", icon: "bed" },
-  { id: 6, cargo: "Auxiliar de Servicios Generales", ciudad: "Medellín", departamento: "Antioquia", sector: "Servicios", contrato: "Obra o labor", salario: "$1.423.500", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Sin experiencia", jornada: "Diurna", modalidad: "Presencial", funciones: "Mantenimiento y aseo de áreas comunes, manejo de insumos de limpieza y apoyo logístico general.", icon: "cleaning_services" },
-  { id: 7, cargo: "Bartender", ciudad: "Cartagena", departamento: "Bolívar", sector: "Hotelería", contrato: "Obra o labor", salario: "$1.600.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley · + Propinas", experiencia: "Mínimo 1 año", jornada: "Nocturna / rotativa", modalidad: "Presencial", funciones: "Preparación de cócteles y bebidas, atención en barra y manejo de inventario de licores. Experiencia en hotel o restaurante.", icon: "local_bar" },
-  { id: 8, cargo: "Operario de Producción", ciudad: "Bogotá", departamento: "Cundinamarca", sector: "Industrial", contrato: "Obra o labor", salario: "$1.500.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 6 meses", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Operación de líneas de producción, control de calidad, empaque y registro de indicadores del proceso.", icon: "factory" },
-  { id: 9, cargo: "Supervisor de Alimentos y Bebidas", ciudad: "Medellín", departamento: "Antioquia", sector: "Restaurantes", contrato: "Obra o labor", salario: "$2.200.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 2 años", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Coordinación del equipo de servicio y cocina, control de estándares, manejo de inventarios y reportes de gestión.", icon: "restaurant_menu" },
-  { id: 10, cargo: "Auxiliar Administrativo", ciudad: "Rionegro", departamento: "Antioquia", sector: "Servicios", contrato: "Obra o labor", salario: "$1.600.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 1 año", jornada: "Diurna", modalidad: "Presencial", funciones: "Gestión documental, archivo, atención de requerimientos y apoyo a las áreas administrativas.", icon: "description" },
-  { id: 11, cargo: "Steward / Lavaplatos", ciudad: "Bogotá", departamento: "Cundinamarca", sector: "Restaurantes", contrato: "Obra o labor", salario: "$1.423.500", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Sin experiencia", jornada: "Turnos rotativos", modalidad: "Presencial", funciones: "Lavado de loza y utensilios, aseo del área de cocina y apoyo en la recepción de insumos.", icon: "countertops" },
-  { id: 12, cargo: "Auxiliar de Logística", ciudad: "Cali", departamento: "Valle del Cauca", sector: "Logística", contrato: "Obra o labor", salario: "$1.550.000", salarioDetalle: "+ Auxilio de transporte · + Prestaciones de ley", experiencia: "Mínimo 6 meses", jornada: "Diurna", modalidad: "Presencial", funciones: "Coordinación de entregas, control de rutas, documentación de transporte y seguimiento de despachos.", icon: "local_shipping" },
-];
-
-const CIUDADES = ["Todas", "Medellín", "Bogotá", "Cali", "Cartagena", "Barranquilla", "Rionegro"];
-const FILTROS = [
-  { key: "sector", label: "Sector", opciones: ["Todos", "Hotelería", "Restaurantes", "Logística", "Industrial", "Servicios"] },
-  { key: "modalidad", label: "Modalidad", opciones: ["Todas", "Presencial"] },
-  { key: "experiencia", label: "Experiencia", opciones: ["Todas", "Sin experiencia", "Mínimo 6 meses", "Mínimo 1 año", "Mínimo 2 años"] },
-  { key: "contrato", label: "Contrato", opciones: ["Todos", "Obra o labor"] },
-] as const;
+import type { Vacante } from "@/lib/vacantes";
+import { opcionesDeFiltro } from "@/lib/vacantes";
 
 const MARKETING_EMAIL = "marketingdigital@asignar.com.co";
 
@@ -156,8 +113,12 @@ function VacanteItem({ v, active, onClick }: { v: Vacante; active: boolean; onCl
    ============================================================ */
 function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
   const [form, setForm] = useState({ nombre: "", tipoDoc: "CC", documento: "", edad: "", telefono: "", whatsapp: "", hojaVida: "", consent: false });
+  const [archivo, setArchivo] = useState<File | null>(null);
   const [errores, setErrores] = useState<Record<string, string>>({});
   const [enviado, setEnviado] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  /* "api" = quedó registrada y enrutada por n8n · "correo" = respaldo por mailto */
+  const [via, setVia] = useState<"api" | "correo">("api");
 
   const set = (k: string, val: string | boolean) => {
     setForm((f) => ({ ...f, [k]: val }));
@@ -175,13 +136,49 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = (ev: FormEvent) => {
+  const handleSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
-    if (!validar()) return;
-    // Formato pensado para el flujo n8n "Router Aspirantes" que corre sobre
-    // marketingdigital@: clasifica con IA y enruta al equipo de selección según
-    // la CIUDAD. Por eso la ciudad va sola en su línea (sin departamento) y
-    // usando el mismo nombre de la lista de ciudades del router.
+    if (!validar() || enviando) return;
+    setEnviando(true);
+
+    trackEvent("postulacion_enviada", {
+      cargo: v.cargo,
+      ciudad: v.ciudad,
+      sector: v.sector,
+      con_hoja_de_vida: Boolean(archivo),
+    });
+
+    // 1) Camino principal: el endpoint reenvía a n8n, que resuelve el
+    //    reclutador según la vacante y sube la hoja de vida a Drive.
+    try {
+      const datos = new FormData();
+      datos.set("vacanteId", String(v.id));
+      datos.set("cargo", v.cargo);
+      datos.set("ciudad", v.ciudad);
+      datos.set("sector", v.sector);
+      datos.set("nombre", form.nombre);
+      datos.set("tipoDocumento", form.tipoDoc);
+      datos.set("documento", form.documento);
+      datos.set("edad", form.edad);
+      datos.set("telefono", form.telefono);
+      datos.set("whatsapp", form.whatsapp);
+      datos.set("autorizaDatos", "true");
+      if (archivo) datos.set("hojaVida", archivo);
+
+      const res = await fetch("/api/postulacion", { method: "POST", body: datos });
+      if (res.ok) {
+        setVia("api");
+        setEnviado(true);
+        setEnviando(false);
+        return;
+      }
+    } catch {
+      // Sin conexión o endpoint caído: seguimos al respaldo por correo.
+    }
+
+    // 2) Respaldo: abre el correo con la postulación diligenciada. El formato
+    //    lo consume el flujo "Router Aspirantes" (clasifica y enruta por
+    //    CIUDAD), por eso la ciudad va sola en su línea.
     const cuerpo = [
       `POSTULACIÓN A VACANTE`,
       `Ciudad: ${v.ciudad}`,
@@ -201,15 +198,11 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
       "",
       "— Autorizo el tratamiento de mis datos personales (Ley 1581 de 2012).",
     ].join("\n");
-    trackEvent("postulacion_enviada", {
-      cargo: v.cargo,
-      ciudad: v.ciudad,
-      sector: v.sector,
-      con_hoja_de_vida: Boolean(form.hojaVida),
-    });
 
     window.location.href = `mailto:${MARKETING_EMAIL}?subject=${encodeURIComponent(`Postulación — ${v.cargo} (${v.ciudad})`)}&body=${encodeURIComponent(cuerpo)}`;
+    setVia("correo");
     setEnviado(true);
+    setEnviando(false);
   };
 
   return (
@@ -271,9 +264,13 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
             <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand-blue/10">
               <span className="material-symbols-outlined text-brand-blue text-3xl">mark_email_read</span>
             </div>
-            <h3 className="font-[var(--font-display)] text-xl font-bold text-brand-navy mb-2">¡Postulación lista!</h3>
+            <h3 className="font-[var(--font-display)] text-xl font-bold text-brand-navy mb-2">
+              {via === "api" ? "¡Postulación enviada!" : "¡Postulación lista!"}
+            </h3>
             <p className="font-[var(--font-body)] text-sm text-text-secondary max-w-xs">
-              Se abrió tu correo con la postulación diligenciada. Si tienes hoja de vida, adjúntala antes de enviar. Nuestro equipo te contactará muy pronto.
+              {via === "api"
+                ? "Recibimos tu postulación y la enviamos al equipo de selección de tu ciudad. Te contactaremos muy pronto."
+                : "Se abrió tu correo con la postulación diligenciada. Si tienes hoja de vida, adjúntala antes de enviar. Nuestro equipo te contactará muy pronto."}
             </p>
           </div>
         ) : (
@@ -327,7 +324,11 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
                     {form.hojaVida ? <strong className="text-brand-navy">{form.hojaVida}</strong> : <>Adjunta tu HV — <strong className="text-brand-blue">selecciona</strong></>}
                   </span>
                   <span className="font-[var(--font-ui)] text-[11px] text-text-muted">PDF o Word · máx. 5 MB</span>
-                  <input id="ap-cv" type="file" accept=".pdf,.doc,.docx" className="sr-only" onChange={(e) => set("hojaVida", e.target.files?.[0]?.name || "")} />
+                  <input id="ap-cv" type="file" accept=".pdf,.doc,.docx" className="sr-only" onChange={(e) => {
+                        const f = e.target.files?.[0] ?? null;
+                        setArchivo(f);
+                        set("hojaVida", f?.name || "");
+                      }} />
                 </label>
               </div>
               <label className="flex items-start gap-2.5 cursor-pointer">
@@ -338,9 +339,13 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
                 </span>
               </label>
               {errores.consent && <p className="-mt-2 text-[11px] text-red-500">{errores.consent}</p>}
-              <button type="submit" className="mt-1 w-full inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold py-[15px] rounded-full shadow-[0_8px_20px_-6px_rgba(0,122,254,0.35)] hover:-translate-y-0.5 transition-transform">
-                Postularme ahora
-                <span className="material-symbols-outlined text-lg">arrow_forward</span>
+              <button
+                type="submit"
+                disabled={enviando}
+                className="mt-1 w-full inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-[15px] font-semibold py-[15px] rounded-full shadow-[0_8px_20px_-6px_rgba(0,122,254,0.35)] hover:-translate-y-0.5 transition-transform disabled:opacity-60 disabled:hover:translate-y-0"
+              >
+                {enviando ? "Enviando…" : "Postularme ahora"}
+                {!enviando && <span className="material-symbols-outlined text-lg">arrow_forward</span>}
               </button>
             </form>
           </>
@@ -353,7 +358,20 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
 /* ============================================================
    Portal de vacantes
    ============================================================ */
-export default function VacantesClient() {
+export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
+  // Los filtros se derivan de lo que realmente hay publicado en el Sheet,
+  // así que al agregar una ciudad o un sector nuevo aparece solo.
+  const opciones = useMemo(() => opcionesDeFiltro(vacantes), [vacantes]);
+  const FILTROS = useMemo(
+    () => [
+      { key: "sector", label: "Sector", opciones: opciones.sectores },
+      { key: "modalidad", label: "Modalidad", opciones: opciones.modalidades },
+      { key: "experiencia", label: "Experiencia", opciones: opciones.experiencias },
+      { key: "contrato", label: "Contrato", opciones: opciones.contratos },
+    ],
+    [opciones]
+  );
+
   const [query, setQuery] = useState("");
   const [ciudad, setCiudad] = useState("Todas");
   const [sector, setSector] = useState("Todos");
@@ -361,7 +379,7 @@ export default function VacantesClient() {
   const [experiencia, setExperiencia] = useState("Todas");
   const [contrato, setContrato] = useState("Todos");
   const [openChip, setOpenChip] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<number>(vacantes[0].id);
+  const [selectedId, setSelectedId] = useState<number>(vacantes[0]?.id ?? 0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const listaRef = useRef<HTMLDivElement>(null);
 
@@ -396,7 +414,10 @@ export default function VacantesClient() {
   // a ser el fallback, dejando las vacantes fuera del prerender (malo para SEO
   // en un portal de empleo). El costo es un render extra al montar, y solo
   // cuando el parámetro viene en la URL.
-  /* eslint-disable react-hooks/set-state-in-effect -- la URL no existe durante el prerender */
+  //
+  // Corre solo al montar (deps vacías) aunque lea `vacantes`: es la lectura
+  // inicial del enlace, no algo que deba repetirse si la lista se revalida.
+  /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps -- la URL no existe durante el prerender y el deep link se lee una sola vez */
   useEffect(() => {
     const id = Number(new URLSearchParams(window.location.search).get("v"));
     if (!id || !vacantes.some((v) => v.id === id)) return;
@@ -410,7 +431,7 @@ export default function VacantesClient() {
       );
     }
   }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
+  /* eslint-enable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps */
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -423,7 +444,7 @@ export default function VacantesClient() {
       if (q && !v.cargo.toLowerCase().includes(q) && !v.sector.toLowerCase().includes(q) && !v.funciones.toLowerCase().includes(q) && !v.ciudad.toLowerCase().includes(q)) return false;
       return true;
     });
-  }, [query, ciudad, sector, modalidad, experiencia, contrato]);
+  }, [vacantes, query, ciudad, sector, modalidad, experiencia, contrato]);
 
   // La vacante seleccionada siempre debe existir dentro del filtro
   const selected = filtered.find((v) => v.id === selectedId) ?? filtered[0] ?? null;
@@ -471,7 +492,7 @@ export default function VacantesClient() {
                 aria-label="Ciudad"
                 className="w-full bg-transparent outline-none appearance-none cursor-pointer font-[var(--font-body)] text-sm text-text-primary"
               >
-                {CIUDADES.map((c) => <option key={c} value={c}>{c === "Todas" ? "Todas las ciudades" : c}</option>)}
+                {opciones.ciudades.map((c) => <option key={c} value={c}>{c === "Todas" ? "Todas las ciudades" : c}</option>)}
               </select>
               <span className="material-symbols-outlined text-text-muted text-[18px] pointer-events-none">expand_more</span>
             </div>

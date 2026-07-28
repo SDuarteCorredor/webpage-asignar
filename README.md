@@ -89,7 +89,7 @@ El asunto y las etiquetas del cuerpo de esos correos están **acoplados a las au
 
 | # | Formulario | Archivo | Envío actual | Se requiere |
 |---|---|---|---|---|
-| 1 | Postulación a vacante | `src/components/vacantes/VacantesClient.tsx` | `mailto:` a marketingdigital | Endpoint que persista la postulación **y reciba el archivo de hoja de vida** (por `mailto` el adjunto no se automatiza) |
+| 1 | Postulación a vacante | `src/app/api/postulacion/route.ts` | POST a n8n (respaldo por `mailto`) | **Crear el flujo n8n** y definir `N8N_POSTULACION_WEBHOOK`. Mientras no exista, el formulario cae al correo automáticamente |
 | 2 | Radicación de SQR | `src/components/FaqClient.tsx` | `mailto:` a sqr@ | Endpoint que genere **número de radicado** y almacene |
 | 3 | Seguimiento de SQR | `src/components/FaqClient.tsx` | `mailto:` a sqr@ | Consulta real de estado por radicado + documento |
 | 4 | Contacto empresarial | `src/app/contacto/page.tsx` | `mailto:` a comercialbog@ (copia a gerencia y coordinación) | Endpoint / integración CRM |
@@ -99,9 +99,47 @@ El asunto y las etiquetas del cuerpo de esos correos están **acoplados a las au
 
 - **Píxel de Meta**: aún no está. GTM ya está instalado, así que puede cargarse como etiqueta desde el propio contenedor sin tocar código.
 - **Imágenes restantes**: el hero del home, el bloque B2B y el de SG-SST ya usan `next/image`. Faltan por migrar las fotos de sectores, beneficios, testimonios y DOCA (se cargan vía `background-image` con rutas dinámicas).
-- **Datos de vacantes**: hoy son un arreglo estático en `VacantesClient.tsx`. Deben alimentarse del módulo interno que ya crea las vacantes.
 - **Autorización de marca**: en el portal **no se muestran nombres de empresas cliente como empleadores** — pendiente de permiso comercial. El empleador visible es Asignar.
 - **Rama `main` sin protección**: se recomienda exigir PR y checks antes de mergear.
+
+## Vacantes desde Google Sheets
+
+El equipo de vinculación publica vacantes registrando filas en un Sheet; el sitio las muestra sin necesidad de desplegar (la página se revalida cada 5 minutos).
+
+**Hoja `Vacantes`** — fila 1 son encabezados, y el orden de columnas importa:
+
+| Col | Campo | Notas |
+|---|---|---|
+| A | `activa` | `SI` publica la vacante; cualquier otro valor la oculta |
+| B | `cargo` | Obligatorio; si está vacío la fila se ignora |
+| C | `ciudad` | Alimenta el buscador y el enrutamiento de la postulación |
+| D | `departamento` | |
+| E | `sector` | |
+| F | `contrato` | Por defecto "Obra o labor" |
+| G | `salario` | Texto libre, ej. `$1.550.000` |
+| H | `salario_detalle` | ej. `+ Auxilio de transporte · + Prestaciones de ley` |
+| I | `experiencia` | |
+| J | `jornada` | |
+| K | `modalidad` | Por defecto "Presencial" |
+| L | `funciones` | |
+| M | `destacada` | `SI` le pone la etiqueta "Destacada" |
+| N | `correo_reclutador` | **Oculto: el sitio no lee esta columna** (ver abajo) |
+
+Los filtros del portal (ciudad, sector, modalidad, experiencia, contrato) se derivan de lo que haya publicado: agregar una ciudad o un sector nuevo en el Sheet lo hace aparecer solo, sin tocar código.
+
+### Privacidad
+
+- La lectura ocurre **solo en el servidor**: la API key nunca llega al navegador.
+- El sitio lee únicamente las columnas A–M. **El correo del reclutador (col. N) no se lee ni se expone**: la postulación viaja con el `vacanteId` y es n8n —con sus propias credenciales— quien resuelve a quién enrutarla.
+- ⚠️ **No conectar aquí el Sheet de control operativo de solicitudes**: ese contiene nombres de clientes y datos personales de candidatos (cédulas y nombres completos). Debe usarse una hoja aparte solo con las columnas de arriba.
+
+### Si el Sheet no está configurado
+
+`src/lib/vacantes.ts` cae a una lista de respaldo para que el portal nunca quede vacío, y el error queda en los logs del servidor. `GET /api/vacantes` indica de dónde vinieron los datos en el campo `fuente` (`sheet` o `respaldo`).
+
+### Postulaciones
+
+`POST /api/postulacion` (multipart) valida los campos mínimos, limita la hoja de vida a 5 MB en PDF/Word y reenvía todo a `N8N_POSTULACION_WEBHOOK`. Ese flujo debe: resolver el reclutador por `vacanteId`, subir el archivo a Drive y notificar. Si la variable no está definida, el endpoint responde 503 y el formulario usa el correo como respaldo.
 
 ## Medición
 
@@ -122,6 +160,11 @@ Los formularios empujan estos eventos al `dataLayer` (`src/lib/analytics.ts`). E
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://www.asignar.com.co` | Base de `metadataBase`, `sitemap.xml` y `robots.txt`. **Mientras el sitio viva en el preview de Vercel debe apuntar allí**, si no el sitemap anunciará URLs que aún no existen. |
 | `NEXT_PUBLIC_GTM_ID` | `GTM-PMHJBNJC` | Contenedor de GTM. Vacío = no se carga el script (útil en desarrollo). |
+| `VACANTES_SHEET_ID` | — | Id del Sheet de vacantes. Sin él se usa la lista de respaldo. |
+| `VACANTES_SHEET_RANGE` | `Vacantes!A:M` | Rango a leer. Deliberadamente **no incluye la columna N** (correo del reclutador). |
+| `GOOGLE_SHEETS_API_KEY` | — | API key de solo lectura para Sheets. **Sin `NEXT_PUBLIC_`: es de servidor.** |
+| `N8N_POSTULACION_WEBHOOK` | — | Webhook del flujo de postulaciones. Sin él, el formulario usa el correo. |
+| `GOOGLE_SHEETS_API_BASE` | API de Google | Solo para pruebas: permite apuntar a un simulador. |
 
 ---
 
