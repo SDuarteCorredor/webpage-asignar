@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import Link from "next/link";
+import { trackEvent } from "@/lib/analytics";
 
 /* ---------- Datos ---------- */
 const maps = (q: string) =>
@@ -105,6 +106,12 @@ export default function ContactoPage() {
       "",
       `Mensaje: ${fd.get("mensaje") || "Solicito una propuesta comercial."}`,
     ].join("\n");
+    trackEvent("solicitud_comercial", {
+      origen: "contacto_empresa",
+      sector: String(fd.get("sector") || ""),
+      ciudad: String(fd.get("ciudad") || ""),
+    });
+
     window.location.href =
       `mailto:${COMERCIAL}` +
       `?cc=${encodeURIComponent(COMERCIAL_CC.join(","))}` +

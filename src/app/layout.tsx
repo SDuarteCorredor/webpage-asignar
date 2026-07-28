@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
+import { GoogleTagManager, GTMNoScript } from "@/components/GoogleTagManager";
+import { SITE_URL } from "@/lib/site";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-display",
@@ -27,6 +29,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  // Resuelve las URLs relativas (Open Graph, canonical) a absolutas.
+  metadataBase: new URL(SITE_URL),
+  alternates: { canonical: "/" },
   title: {
     default: "Asignar SAS — Creemos en ti y en tu talento",
     template: "%s | Asignar SAS",
@@ -73,8 +78,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
+        <GoogleTagManager />
       </head>
       <body className="min-h-screen flex flex-col">
+        <GTMNoScript />
         <ScrollRevealInit />
         <Navbar />
         <main className="flex-1">{children}</main>

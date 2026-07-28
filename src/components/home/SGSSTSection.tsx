@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const features = [
   {
     titulo: "Inspección de Seguridad",
@@ -73,11 +75,12 @@ export default function SGSSTSection() {
                 }}
               />
               {/* real photo at 20% — same tint as Figma */}
-              <div
-                className="absolute inset-0 bg-cover bg-center opacity-20"
-                style={{ backgroundImage: "url('/home/sst.jpg')" }}
-                role="img"
-                aria-label="Equipo de Asignar aplicando protocolos de seguridad y salud en el trabajo"
+              <Image
+                src="/home/sst.jpg"
+                alt="Equipo de Asignar aplicando protocolos de seguridad y salud en el trabajo"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-center opacity-20"
               />
               {/* left fade into surface */}
               <div className="absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-surface via-surface/60 to-transparent" />

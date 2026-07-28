@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 // Palabras que rotan en el titular del Hero
 const words = ["talento", "futuro", "equipo", "camino"];
@@ -31,11 +32,19 @@ export default function HeroSection() {
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Background photo */}
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-brand-navy"
-        style={{ backgroundImage: "url('/home/hero.jpg')" }}
-      />
+      {/* Background photo — es el LCP de la home, por eso va con next/image
+          y `priority`: se precarga y se sirve en AVIF/WebP con srcset. */}
+      <div className="absolute inset-0 bg-brand-navy">
+        <Image
+          src="/home/hero.jpg"
+          alt=""
+          aria-hidden="true"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </div>
       {/* Legibility + brand-grade overlays */}
       <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/55 to-brand-navy/25" />
       <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/70 via-transparent to-brand-navy/20" />

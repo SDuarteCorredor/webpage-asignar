@@ -7,6 +7,7 @@ import {
   SERVICIOS_OPCIONES,
   usePropuesta,
 } from "./PropuestaProvider";
+import { trackEvent } from "@/lib/analytics";
 
 /* ============================================================
    Formulario "Solicita tu propuesta" (hero de /servicios)
@@ -105,6 +106,12 @@ export default function PropuestaForm() {
       "",
       `Mensaje: ${mensaje || "Solicito una propuesta comercial."}`,
     ].join("\n");
+
+    trackEvent("solicitud_comercial", {
+      origen: "servicios_hero",
+      servicio: servicio || "sin_definir",
+      ciudad,
+    });
 
     window.location.href =
       `mailto:${COMERCIAL_EMAIL}` +

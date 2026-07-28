@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 /* Inline SVG icons — bulletproof (no icon-font dependency) */
 const Check = ({ className = "" }: { className?: string }) => (
@@ -44,10 +45,14 @@ export default function B2BSection() {
             role="img"
             aria-label="Equipo de Asignar coordinando personal en operación"
           >
-            {/* photo layer — /b2b.jpg (drop image later). Transparent on 404 → gradient shows. */}
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: "url('/home/b2b.jpg')" }}
+            {/* photo layer — /b2b.jpg sobre el degradado de marca */}
+            <Image
+              src="/home/b2b.jpg"
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover object-center"
             />
             {/* brand grade overlay for cohesion */}
             <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-transparent" />
