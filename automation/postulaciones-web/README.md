@@ -19,23 +19,30 @@ Van **separados a propósito**: el de vacantes se comparte con todo el equipo pa
 
 Los dos ya están creados y con sus encabezados. Los nodos de Sheets apuntan a la **primera pestaña** de cada documento por `gid` (`0`), no por nombre, así que da igual cómo se llame la pestaña y se puede renombrar después sin romper nada.
 
+### Cómo queda en Drive
+
+```
+1_Marketing 2026/
+└── Webpage_Vacantes/           ← NO compartir la carpeta
+    ├── Vacantes                ← compartir este ARCHIVO con vinculación
+    ├── Postulaciones Web       ← restringido
+    └── Hojas de vida/          ← restringido (aquí las sube n8n)
+```
+
+**Compartir el archivo `Vacantes`, nunca la carpeta.** En Drive los permisos se heredan hacia abajo: si se comparte `Webpage_Vacantes` para que vinculación edite las vacantes, con ella se van también las postulaciones y las hojas de vida de los candidatos.
+
 ## Puesta en marcha
 
-### 1. Carpeta de Drive para las hojas de vida
-
-Crear una carpeta en Drive y copiar su ID (lo que va después de `/folders/` en la URL).
-
-### 2. Importar el flujo
+### 1. Importar el flujo
 
 En n8n: *Workflows → Import from File* → `postulaciones-web.n8n.json`.
 
-Luego:
+Los IDs de los dos documentos y de la carpeta ya vienen puestos en **⚙️ Configuración**. Solo queda:
 
-- **⚙️ Configuración** → reemplazar `PEGAR_AQUI_EL_ID_DE_LA_CARPETA_DE_DRIVE` por el ID de la carpeta.
 - Verificar que los tres nodos de Google tomaron las credenciales correctas (vienen apuntando a las mismas que usan los otros flujos).
 - Activar el workflow y copiar la **Production URL** del nodo webhook.
 
-### 3. Conectar el sitio
+### 2. Conectar el sitio
 
 En Vercel, variables de entorno:
 
@@ -46,6 +53,8 @@ En Vercel, variables de entorno:
 | `GOOGLE_SHEETS_API_KEY` | API key de Google Cloud con la Sheets API habilitada |
 
 Mientras `N8N_POSTULACION_WEBHOOK` no exista, el formulario **cae automáticamente al envío por correo**, así que se puede activar sin prisa.
+
+Las variables en Vercel solo entran a jugar en el **siguiente deploy**: después de crearlas hay que hacer *Redeploy*. Y hay que marcarlas para el entorno donde se quieran probar (Production / Preview / Development) — si solo quedan en Production, el preview del PR sigue mostrando la lista de respaldo.
 
 ## Qué hace cada nodo
 

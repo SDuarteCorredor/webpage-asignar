@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee el documento `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida la sube a Drive.\n4. Notifica al reclutador de la ciudad.\n5. Registra todo en el documento aparte `Postulaciones Web` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Poner el ID de la carpeta de Drive en ⚙️ Configuración.\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.\n\nLos dos nodos de Sheets apuntan a la **primera pestaña** de cada documento (gid `0`),\nasí que no importa cómo se llame la pestaña ni si la renombran después.",
+        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee el documento `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida la sube a Drive.\n4. Notifica al reclutador de la ciudad.\n5. Registra todo en el documento aparte `Postulaciones Web` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.\n\nLos dos nodos de Sheets apuntan a la **primera pestaña** de cada documento (gid `0`),\nasí que no importa cómo se llame la pestaña ni si la renombran después.",
         "height": 420,
         "width": 460,
         "color": 4
@@ -54,7 +54,7 @@
               "id": "cfg-carpeta",
               "name": "carpetaDriveHV",
               "type": "string",
-              "value": "PEGAR_AQUI_EL_ID_DE_LA_CARPETA_DE_DRIVE"
+              "value": "1EKT6EsclUdTnyopjG-Z6Ap_R27p1gTVM"
             },
             {
               "id": "cfg-fallback",
