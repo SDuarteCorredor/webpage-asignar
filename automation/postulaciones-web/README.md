@@ -8,16 +8,7 @@ Sitio  →  POST /api/postulacion  →  webhook n8n  →  Drive + Gmail + Sheets
 
 El sitio **no conoce el correo del reclutador**: envía el `vacanteId` y este flujo lo resuelve leyendo el Sheet con sus propias credenciales.
 
-## Puesta en marcha
-
-### 1. Preparar el Sheet
-
-Documento: [`Vacantes`](https://docs.google.com/spreadsheets/d/1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw/edit)
-
-1. **Renombrar la pestaña a `Vacantes`.** Al crearse quedó como `Untitled` — clic derecho sobre la pestaña → *Cambiar nombre*. (El nombre del archivo y el de la pestaña son cosas distintas.)
-2. Crear en Drive una carpeta para las hojas de vida y copiar su ID (lo que va después de `/folders/` en la URL).
-
-### Documentos
+## Documentos
 
 | Documento | Para qué | Quién debe tener acceso |
 |---|---|---|
@@ -25,6 +16,14 @@ Documento: [`Vacantes`](https://docs.google.com/spreadsheets/d/1c52d83mBFfV0f4HL
 | [`Postulaciones Web`](https://docs.google.com/spreadsheets/d/1LwXlhlJT5LN_aOQ3eFS3HurYmgNlpxksZvnQBLG6sug/edit) | Registro de quienes se postulan | **Restringido** |
 
 Van **separados a propósito**: el de vacantes se comparte con todo el equipo para que registren, mientras que el de postulaciones acumula datos personales de candidatos (nombre, documento, teléfono) y debe tener acceso más restringido. En un solo documento ambos compartirían permisos.
+
+Los dos ya están creados y con sus encabezados. Los nodos de Sheets apuntan a la **primera pestaña** de cada documento por `gid` (`0`), no por nombre, así que da igual cómo se llame la pestaña y se puede renombrar después sin romper nada.
+
+## Puesta en marcha
+
+### 1. Carpeta de Drive para las hojas de vida
+
+Crear una carpeta en Drive y copiar su ID (lo que va después de `/folders/` en la URL).
 
 ### 2. Importar el flujo
 
@@ -54,12 +53,12 @@ Mientras `N8N_POSTULACION_WEBHOOK` no exista, el formulario **cae automáticamen
 |---|---|
 | 📥 Postulación (webhook) | Recibe el formulario (multipart; la hoja de vida llega como binario) |
 | ⚙️ Configuración | IDs del Sheet y la carpeta, correo de respaldo y de copia |
-| 📋 Leer vacantes | Lee la hoja `Vacantes` |
+| 📋 Leer vacantes | Lee la primera pestaña del documento `Vacantes` |
 | 🧠 Resolver reclutador | Toma la fila `vacanteId` y saca `correo_reclutador`; arma asunto y cuerpo |
 | ❓ ¿Adjuntó hoja de vida? | Bifurca según venga o no archivo |
 | 📎 Subir a Drive | Guarda la HV como `Ciudad - Cargo - Nombre` |
 | ✉️ Notificar (2 variantes) | Envía al reclutador, con copia a marketing |
-| 🧾 Registrar postulación | Agrega la fila en `Postulaciones` |
+| 🧾 Registrar postulación | Agrega la fila en `Postulaciones Web` |
 | ✅ Responder al sitio | Devuelve `{ok: true}` para que el formulario muestre el éxito |
 
 ## Detalles que importan
@@ -88,4 +87,4 @@ curl -X POST "<PRODUCTION_URL>" \
   -F "hojaVida=@/ruta/a/hoja-de-vida.pdf"
 ```
 
-Debe responder `{"ok":true}`, llegar el correo a `seleccion4@` (Medellín) y aparecer la fila en `Postulaciones`.
+Debe responder `{"ok":true}`, llegar el correo a `seleccion4@` (Medellín) y aparecer la fila en `Postulaciones Web`.
