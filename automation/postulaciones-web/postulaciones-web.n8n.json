@@ -1,0 +1,331 @@
+{
+  "name": "Asignar - Postulaciones Web",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee la hoja `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida la sube a Drive.\n4. Notifica al reclutador de la ciudad.\n5. Registra todo en la hoja `Postulaciones` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Renombrar la pestaña del Sheet a `Vacantes`.\n- Crear la pestaña `Postulaciones` con los encabezados del README.\n- Poner el ID de la carpeta de Drive en ⚙️ Configuración.\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.",
+        "height": 420,
+        "width": 460,
+        "color": 4
+      },
+      "id": "nota-1",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1120, -140]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "postulacion-vacante",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "wh-postulacion",
+      "name": "📥 Postulación (webhook)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-1120, 340],
+      "webhookId": "asignar-postulacion-vacante"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cfg-sheet",
+              "name": "spreadsheetId",
+              "type": "string",
+              "value": "1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw"
+            },
+            {
+              "id": "cfg-carpeta",
+              "name": "carpetaDriveHV",
+              "type": "string",
+              "value": "PEGAR_AQUI_EL_ID_DE_LA_CARPETA_DE_DRIVE"
+            },
+            {
+              "id": "cfg-fallback",
+              "name": "correoFallback",
+              "type": "string",
+              "value": "contratacion2@asignar.com.co"
+            },
+            {
+              "id": "cfg-copia",
+              "name": "correoCopia",
+              "type": "string",
+              "value": "marketingdigital@asignar.com.co"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "cfg",
+      "name": "⚙️ Configuración",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-900, 340]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.spreadsheetId }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Vacantes"
+        },
+        "options": {}
+      },
+      "id": "leer-vacantes",
+      "name": "📋 Leer vacantes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [-680, 340],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OArKGhCcmGh9SsKF",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Resuelve a qué reclutador enrutar la postulación.\n//\n// El sitio NO envía el correo del reclutador: manda solo el vacanteId y aquí\n// se busca en el Sheet. vacanteId = 1 corresponde a la primera fila de datos\n// (fila 2 del Sheet, porque la 1 son encabezados).\n\nconst wh = $('📥 Postulación (webhook)').first().json;\nconst body = wh.body || {};\nconst cfg = $('⚙️ Configuración').first().json || {};\nconst filas = $('📋 Leer vacantes').all().map(i => i.json);\n\nconst idx = parseInt(body.vacanteId, 10);\nconst fila = (!isNaN(idx) && idx > 0) ? (filas[idx - 1] || {}) : {};\n\nconst limpio = v => String(v ?? '').trim();\n\n// Si la fila no trae correo (o el id no cuadró), va al buzón de revisión.\nconst reclutador = limpio(fila.correo_reclutador) || cfg.correoFallback;\nconst enrutadoOk = Boolean(limpio(fila.correo_reclutador));\n\n// Preferimos los datos del Sheet; si algo falta, usamos lo que mandó el sitio.\nconst cargo  = limpio(fila.cargo)  || limpio(body.cargo)  || '(sin cargo)';\nconst ciudad = limpio(fila.ciudad) || limpio(body.ciudad) || '(sin ciudad)';\nconst sector = limpio(fila.sector) || limpio(body.sector) || '';\n\nconst autorizaMarketing = limpio(body.autorizaMarketing).toLowerCase() === 'true';\n\n// ¿Vino hoja de vida? El webhook deja los archivos en binary.\nconst binarios = Object.keys($('📥 Postulación (webhook)').first().binary || {});\nconst propArchivo = binarios[0] || '';\nconst tieneHV = binarios.length > 0;\n\nconst nombre = limpio(body.nombre);\nconst documento = `${limpio(body.tipoDocumento) || 'CC'} ${limpio(body.documento)}`.trim();\n\nconst asunto = `[POSTULACIÓN WEB] ${ciudad} | ${cargo} - ${nombre}`;\n\nconst mensaje = [\n  'Nueva postulación recibida desde la página web.',\n  '',\n  `Cargo: ${cargo}`,\n  `Ciudad: ${ciudad}`,\n  sector ? `Sector: ${sector}` : '',\n  '',\n  '--- Datos del candidato ---',\n  `Nombre: ${nombre}`,\n  `Documento: ${documento}`,\n  `Edad: ${limpio(body.edad)}`,\n  `Teléfono: ${limpio(body.telefono)}`,\n  `WhatsApp: ${limpio(body.whatsapp) || '—'}`,\n  `Hoja de vida: ${tieneHV ? 'adjunta a este correo' : 'no adjuntó'}`,\n  '',\n  'Autoriza tratamiento de datos (Ley 1581): sí',\n  `Autoriza comunicaciones comerciales: ${autorizaMarketing ? 'sí' : 'no'}`,\n  enrutadoOk ? '' : '\\n⚠️ No se pudo identificar la vacante en el Sheet: revisar y reenviar al equipo que corresponda.',\n].filter(Boolean).join('\\n');\n\nreturn [{\n  json: {\n    vacanteId: limpio(body.vacanteId),\n    reclutador,\n    enrutadoOk,\n    cargo, ciudad, sector,\n    nombre, documento,\n    edad: limpio(body.edad),\n    telefono: limpio(body.telefono),\n    whatsapp: limpio(body.whatsapp),\n    autorizaMarketing,\n    tieneHV,\n    propArchivo,\n    nombreArchivo: tieneHV\n      ? `${ciudad} - ${cargo} - ${nombre}`.replace(/[\\\\/:*?\"<>|]/g, '-')\n      : '',\n    asunto,\n    mensaje,\n    fecha: new Date().toISOString(),\n    carpetaDriveHV: cfg.carpetaDriveHV,\n    correoCopia: cfg.correoCopia,\n  },\n  binary: $('📥 Postulación (webhook)').first().binary || {},\n}];"
+      },
+      "id": "resolver",
+      "name": "🧠 Resolver reclutador",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-460, 340]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "tiene-hv",
+              "leftValue": "={{ $json.tieneHV }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-hv",
+      "name": "❓ ¿Adjuntó hoja de vida?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-240, 340]
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.nombreArchivo }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.carpetaDriveHV }}"
+        },
+        "inputDataFieldName": "={{ $json.propArchivo }}",
+        "options": {}
+      },
+      "id": "drive-upload",
+      "name": "📎 Subir hoja de vida a Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [-20, 200],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "KZcbILhzNkg4PVmI",
+          "name": "Google Drive account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('🧠 Resolver reclutador').item.json.reclutador }}",
+        "subject": "={{ $('🧠 Resolver reclutador').item.json.asunto }}",
+        "emailType": "text",
+        "message": "={{ $('🧠 Resolver reclutador').item.json.mensaje + '\\n\\nHoja de vida en Drive: ' + ($json.webViewLink || '(no disponible)') }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "={{ $('🧠 Resolver reclutador').item.json.correoCopia }}",
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "={{ $('🧠 Resolver reclutador').item.json.propArchivo }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "gmail-con",
+      "name": "✉️ Notificar CON hoja de vida",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [200, 200],
+      "webhookId": "asignar-post-con-hv",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UDNmkq5N4mN6Ysj6",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.reclutador }}",
+        "subject": "={{ $json.asunto }}",
+        "emailType": "text",
+        "message": "={{ $json.mensaje }}",
+        "options": {
+          "appendAttribution": false,
+          "ccList": "={{ $json.correoCopia }}"
+        }
+      },
+      "id": "gmail-sin",
+      "name": "✉️ Notificar SIN hoja de vida",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [200, 460],
+      "webhookId": "asignar-post-sin-hv",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "UDNmkq5N4mN6Ysj6",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetId }}"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Postulaciones"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "FECHA": "={{ $('🧠 Resolver reclutador').item.json.fecha }}",
+            "VACANTE_ID": "={{ $('🧠 Resolver reclutador').item.json.vacanteId }}",
+            "CARGO": "={{ $('🧠 Resolver reclutador').item.json.cargo }}",
+            "CIUDAD": "={{ $('🧠 Resolver reclutador').item.json.ciudad }}",
+            "SECTOR": "={{ $('🧠 Resolver reclutador').item.json.sector }}",
+            "NOMBRE": "={{ $('🧠 Resolver reclutador').item.json.nombre }}",
+            "DOCUMENTO": "={{ $('🧠 Resolver reclutador').item.json.documento }}",
+            "EDAD": "={{ $('🧠 Resolver reclutador').item.json.edad }}",
+            "TELEFONO": "={{ $('🧠 Resolver reclutador').item.json.telefono }}",
+            "WHATSAPP": "={{ $('🧠 Resolver reclutador').item.json.whatsapp }}",
+            "HOJA_DE_VIDA": "={{ $json.webViewLink || ($('🧠 Resolver reclutador').item.json.tieneHV ? 'adjunta al correo' : 'no adjuntó') }}",
+            "RECLUTADOR": "={{ $('🧠 Resolver reclutador').item.json.reclutador }}",
+            "ENRUTADO_OK": "={{ $('🧠 Resolver reclutador').item.json.enrutadoOk ? 'SI' : 'NO' }}",
+            "AUTORIZA_MARKETING": "={{ $('🧠 Resolver reclutador').item.json.autorizaMarketing ? 'SI' : 'NO' }}",
+            "ESTADO": "Recibida"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "registrar",
+      "name": "🧾 Registrar postulación",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [420, 340],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 4000,
+      "onError": "continueRegularOutput",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OArKGhCcmGh9SsKF",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true }) }}",
+        "options": {}
+      },
+      "id": "responder",
+      "name": "✅ Responder al sitio",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [640, 340]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "📥 Postulación (webhook)": {
+      "main": [[{ "node": "⚙️ Configuración", "type": "main", "index": 0 }]]
+    },
+    "⚙️ Configuración": {
+      "main": [[{ "node": "📋 Leer vacantes", "type": "main", "index": 0 }]]
+    },
+    "📋 Leer vacantes": {
+      "main": [[{ "node": "🧠 Resolver reclutador", "type": "main", "index": 0 }]]
+    },
+    "🧠 Resolver reclutador": {
+      "main": [[{ "node": "❓ ¿Adjuntó hoja de vida?", "type": "main", "index": 0 }]]
+    },
+    "❓ ¿Adjuntó hoja de vida?": {
+      "main": [
+        [{ "node": "📎 Subir hoja de vida a Drive", "type": "main", "index": 0 }],
+        [{ "node": "✉️ Notificar SIN hoja de vida", "type": "main", "index": 0 }]
+      ]
+    },
+    "📎 Subir hoja de vida a Drive": {
+      "main": [[{ "node": "✉️ Notificar CON hoja de vida", "type": "main", "index": 0 }]]
+    },
+    "✉️ Notificar CON hoja de vida": {
+      "main": [[{ "node": "🧾 Registrar postulación", "type": "main", "index": 0 }]]
+    },
+    "✉️ Notificar SIN hoja de vida": {
+      "main": [[{ "node": "🧾 Registrar postulación", "type": "main", "index": 0 }]]
+    },
+    "🧾 Registrar postulación": {
+      "main": [[{ "node": "✅ Responder al sitio", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "tags": []
+}
