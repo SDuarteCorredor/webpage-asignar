@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee la hoja `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida la sube a Drive.\n4. Notifica al reclutador de la ciudad.\n5. Registra todo en la hoja `Postulaciones` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Renombrar la pestaña del Sheet a `Vacantes`.\n- Crear la pestaña `Postulaciones` con los encabezados del README.\n- Poner el ID de la carpeta de Drive en ⚙️ Configuración.\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.",
+        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee la hoja `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida la sube a Drive.\n4. Notifica al reclutador de la ciudad.\n5. Registra todo en la hoja `Postulaciones` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Renombrar la pestaña del Sheet a `Vacantes`.\n- El registro va al documento aparte `Postulaciones Web` (ya creado).\n- Poner el ID de la carpeta de Drive en ⚙️ Configuración.\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.",
         "height": 420,
         "width": 460,
         "color": 4
@@ -12,7 +12,10 @@
       "name": "Nota",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-1120, -140]
+      "position": [
+        -1120,
+        -140
+      ]
     },
     {
       "parameters": {
@@ -25,7 +28,10 @@
       "name": "📥 Postulación (webhook)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
-      "position": [-1120, 340],
+      "position": [
+        -1120,
+        340
+      ],
       "webhookId": "asignar-postulacion-vacante"
     },
     {
@@ -37,6 +43,12 @@
               "name": "spreadsheetId",
               "type": "string",
               "value": "1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw"
+            },
+            {
+              "id": "cfg-sheet-post",
+              "name": "spreadsheetPostulaciones",
+              "type": "string",
+              "value": "1LwXlhlJT5LN_aOQ3eFS3HurYmgNlpxksZvnQBLG6sug"
             },
             {
               "id": "cfg-carpeta",
@@ -65,7 +77,10 @@
       "name": "⚙️ Configuración",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [-900, 340]
+      "position": [
+        -900,
+        340
+      ]
     },
     {
       "parameters": {
@@ -85,7 +100,10 @@
       "name": "📋 Leer vacantes",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [-680, 340],
+      "position": [
+        -680,
+        340
+      ],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 3000,
@@ -104,7 +122,10 @@
       "name": "🧠 Resolver reclutador",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [-460, 340]
+      "position": [
+        -460,
+        340
+      ]
     },
     {
       "parameters": {
@@ -135,7 +156,10 @@
       "name": "❓ ¿Adjuntó hoja de vida?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
-      "position": [-240, 340]
+      "position": [
+        -240,
+        340
+      ]
     },
     {
       "parameters": {
@@ -157,7 +181,10 @@
       "name": "📎 Subir hoja de vida a Drive",
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [-20, 200],
+      "position": [
+        -20,
+        200
+      ],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 4000,
@@ -191,7 +218,10 @@
       "name": "✉️ Notificar CON hoja de vida",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
-      "position": [200, 200],
+      "position": [
+        200,
+        200
+      ],
       "webhookId": "asignar-post-con-hv",
       "credentials": {
         "gmailOAuth2": {
@@ -215,7 +245,10 @@
       "name": "✉️ Notificar SIN hoja de vida",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
-      "position": [200, 460],
+      "position": [
+        200,
+        460
+      ],
       "webhookId": "asignar-post-sin-hv",
       "credentials": {
         "gmailOAuth2": {
@@ -230,12 +263,12 @@
         "documentId": {
           "__rl": true,
           "mode": "id",
-          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetId }}"
+          "value": "={{ $('⚙️ Configuración').first().json.spreadsheetPostulaciones }}"
         },
         "sheetName": {
           "__rl": true,
           "mode": "name",
-          "value": "Postulaciones"
+          "value": "Postulaciones Web"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -267,7 +300,10 @@
       "name": "🧾 Registrar postulación",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [420, 340],
+      "position": [
+        420,
+        340
+      ],
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 4000,
@@ -289,43 +325,124 @@
       "name": "✅ Responder al sitio",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
-      "position": [640, 340]
+      "position": [
+        640,
+        340
+      ]
     }
   ],
   "pinData": {},
   "connections": {
     "📥 Postulación (webhook)": {
-      "main": [[{ "node": "⚙️ Configuración", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "⚙️ Configuración",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "⚙️ Configuración": {
-      "main": [[{ "node": "📋 Leer vacantes", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "📋 Leer vacantes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "📋 Leer vacantes": {
-      "main": [[{ "node": "🧠 Resolver reclutador", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "🧠 Resolver reclutador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "🧠 Resolver reclutador": {
-      "main": [[{ "node": "❓ ¿Adjuntó hoja de vida?", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "❓ ¿Adjuntó hoja de vida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "❓ ¿Adjuntó hoja de vida?": {
       "main": [
-        [{ "node": "📎 Subir hoja de vida a Drive", "type": "main", "index": 0 }],
-        [{ "node": "✉️ Notificar SIN hoja de vida", "type": "main", "index": 0 }]
+        [
+          {
+            "node": "📎 Subir hoja de vida a Drive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "✉️ Notificar SIN hoja de vida",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "📎 Subir hoja de vida a Drive": {
-      "main": [[{ "node": "✉️ Notificar CON hoja de vida", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "✉️ Notificar CON hoja de vida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "✉️ Notificar CON hoja de vida": {
-      "main": [[{ "node": "🧾 Registrar postulación", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "🧾 Registrar postulación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "✉️ Notificar SIN hoja de vida": {
-      "main": [[{ "node": "🧾 Registrar postulación", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "🧾 Registrar postulación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "🧾 Registrar postulación": {
-      "main": [[{ "node": "✅ Responder al sitio", "type": "main", "index": 0 }]]
+      "main": [
+        [
+          {
+            "node": "✅ Responder al sitio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
-  "settings": { "executionOrder": "v1" },
+  "settings": {
+    "executionOrder": "v1"
+  },
   "tags": []
 }

@@ -15,13 +15,16 @@ El sitio **no conoce el correo del reclutador**: envía el `vacanteId` y este fl
 Documento: [`Vacantes`](https://docs.google.com/spreadsheets/d/1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw/edit)
 
 1. **Renombrar la pestaña a `Vacantes`.** Al crearse quedó como `Untitled` — clic derecho sobre la pestaña → *Cambiar nombre*. (El nombre del archivo y el de la pestaña son cosas distintas.)
-2. **Crear una segunda pestaña llamada `Postulaciones`** y pegar estos encabezados en la fila 1:
+2. Crear en Drive una carpeta para las hojas de vida y copiar su ID (lo que va después de `/folders/` en la URL).
 
-```
-FECHA	VACANTE_ID	CARGO	CIUDAD	SECTOR	NOMBRE	DOCUMENTO	EDAD	TELEFONO	WHATSAPP	HOJA_DE_VIDA	RECLUTADOR	ENRUTADO_OK	AUTORIZA_MARKETING	ESTADO
-```
+### Documentos
 
-3. Crear en Drive una carpeta para las hojas de vida y copiar su ID (lo que va después de `/folders/` en la URL).
+| Documento | Para qué | Quién debe tener acceso |
+|---|---|---|
+| [`Vacantes`](https://docs.google.com/spreadsheets/d/1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw/edit) | Catálogo que publica el portal | Todo vinculación (edición) |
+| [`Postulaciones Web`](https://docs.google.com/spreadsheets/d/1LwXlhlJT5LN_aOQ3eFS3HurYmgNlpxksZvnQBLG6sug/edit) | Registro de quienes se postulan | **Restringido** |
+
+Van **separados a propósito**: el de vacantes se comparte con todo el equipo para que registren, mientras que el de postulaciones acumula datos personales de candidatos (nombre, documento, teléfono) y debe tener acceso más restringido. En un solo documento ambos compartirían permisos.
 
 ### 2. Importar el flujo
 
