@@ -125,6 +125,8 @@ El equipo de vinculación publica vacantes registrando filas en un Sheet; el sit
 | M | `destacada` | `SI` le pone la etiqueta "Destacada" |
 | N | `correo_reclutador` | **Oculto: el sitio no lee esta columna** (ver abajo) |
 
+El Sheet ya está creado y poblado con las 12 vacantes iniciales, con el `correo_reclutador` prellenado según el mismo mapeo por ciudad que usa el flujo *Router Aspirantes*.
+
 Los filtros del portal (ciudad, sector, modalidad, experiencia, contrato) se derivan de lo que haya publicado: agregar una ciudad o un sector nuevo en el Sheet lo hace aparecer solo, sin tocar código.
 
 ### Privacidad
@@ -139,7 +141,29 @@ Los filtros del portal (ciudad, sector, modalidad, experiencia, contrato) se der
 
 ### Postulaciones
 
-`POST /api/postulacion` (multipart) valida los campos mínimos, limita la hoja de vida a 5 MB en PDF/Word y reenvía todo a `N8N_POSTULACION_WEBHOOK`. Ese flujo debe: resolver el reclutador por `vacanteId`, subir el archivo a Drive y notificar. Si la variable no está definida, el endpoint responde 503 y el formulario usa el correo como respaldo.
+`POST /api/postulacion` (multipart) valida los campos mínimos, limita la hoja de vida a 5 MB en PDF/Word y reenvía todo a `N8N_POSTULACION_WEBHOOK`. Si la variable no está definida, el endpoint responde 503 y el formulario usa el correo como respaldo.
+
+Campos que recibe el webhook:
+
+| Campo | Notas |
+|---|---|
+| `vacanteId` | Número de fila en el Sheet (fila 2 = `1`). **Con este se resuelve el `correo_reclutador`** |
+| `cargo`, `ciudad`, `sector` | Copia de la vacante, para el asunto y el registro |
+| `nombre`, `tipoDocumento`, `documento`, `edad`, `telefono`, `whatsapp` | Datos del candidato |
+| `hojaVida` | Archivo binario (PDF/Word, máx. 5 MB). Puede no venir |
+| `autorizaDatos` | Siempre `true`: es obligatorio para enviar |
+| `autorizaMarketing` | `true`/`false` — **consentimiento separado y opcional** |
+
+El flujo n8n debe: leer el `correo_reclutador` de la fila `vacanteId`, subir la hoja de vida a Drive, notificar al reclutador y registrar la postulación.
+
+### Consentimiento y comunicaciones comerciales
+
+El formulario tiene **dos casillas independientes**:
+
+1. **Obligatoria** — tratamiento de datos para el proceso de selección (Ley 1581 de 2012).
+2. **Opcional** — recibir información sobre nuevas vacantes.
+
+Solo los candidatos con `autorizaMarketing = true` pueden entrar a campañas de email marketing o remarketing. El consentimiento del punto 1 **no** habilita usos comerciales, y mezclarlos expondría a la empresa. Además, una lista construida así rinde más: son personas que pidieron recibir.
 
 ## Medición
 
