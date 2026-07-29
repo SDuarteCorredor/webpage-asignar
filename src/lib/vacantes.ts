@@ -122,13 +122,24 @@ function filaAVacante(fila: string[], indice: number): Vacante | null {
 export async function getVacantes(): Promise<{
   vacantes: Vacante[];
   fuente: "sheet" | "respaldo";
+  /** Solo cuando `fuente` es "respaldo": por qué no se pudo leer el Sheet. */
+  motivo?: string;
 }> {
   const sheetId = process.env.VACANTES_SHEET_ID;
   const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
   const rango = process.env.VACANTES_SHEET_RANGE || "Vacantes!A:M";
 
   if (!sheetId || (!apiKey && !hayCuentaDeServicio())) {
-    return { vacantes: VACANTES_RESPALDO, fuente: "respaldo" };
+    // Distinguir cuál falta ahorra mucho tiempo al configurar el despliegue.
+    const faltan = [
+      !sheetId && "VACANTES_SHEET_ID",
+      !apiKey && !hayCuentaDeServicio() && "credenciales de Google",
+    ].filter(Boolean);
+    return {
+      vacantes: VACANTES_RESPALDO,
+      fuente: "respaldo",
+      motivo: `falta configurar: ${faltan.join(" y ")}`,
+    };
   }
 
   try {
@@ -172,7 +183,10 @@ export async function getVacantes(): Promise<{
     return { vacantes, fuente: "sheet" };
   } catch (error) {
     console.error("[vacantes] No se pudo leer el Sheet:", error);
-    return { vacantes: VACANTES_RESPALDO, fuente: "respaldo" };
+    // El mensaje es de nuestro propio `throw` (código de estado o motivo), no
+    // trae credenciales ni datos del Sheet.
+    const motivo = error instanceof Error ? error.message : "error desconocido";
+    return { vacantes: VACANTES_RESPALDO, fuente: "respaldo", motivo };
   }
 }
 
