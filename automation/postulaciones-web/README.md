@@ -50,7 +50,10 @@ En Vercel, variables de entorno:
 |---|---|
 | `N8N_POSTULACION_WEBHOOK` | La Production URL del webhook |
 | `VACANTES_SHEET_ID` | `1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw` |
-| `GOOGLE_SHEETS_API_KEY` | API key de Google Cloud con la Sheets API habilitada |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | El `client_email` del JSON de la cuenta de servicio |
+| `GOOGLE_SERVICE_ACCOUNT_KEY` | El `private_key` del mismo JSON, completo |
+
+La cuenta de servicio necesita la **Google Sheets API habilitada** en su proyecto, y hay que compartirle el documento `Vacantes` como **Lector** usando su correo (`...@....iam.gserviceaccount.com`).
 
 Mientras `N8N_POSTULACION_WEBHOOK` no exista, el formulario **cae automáticamente al envío por correo**, así que se puede activar sin prisa.
 

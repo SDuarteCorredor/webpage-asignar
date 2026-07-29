@@ -131,7 +131,8 @@ Los filtros del portal (ciudad, sector, modalidad, experiencia, contrato) se der
 
 ### Privacidad
 
-- La lectura ocurre **solo en el servidor**: la API key nunca llega al navegador.
+- La lectura ocurre **solo en el servidor**: las credenciales nunca llegan al navegador.
+- Se autentica con una **cuenta de servicio** (`src/lib/google-auth.ts`), no con una API key. Una API key no es una identidad: obliga a dejar el Sheet accesible para cualquiera con el enlace. La cuenta de servicio sí lo es, así que el documento se comparte **solo con ella**, en modo lector.
 - El sitio lee únicamente las columnas A–M. **El correo del reclutador (col. N) no se lee ni se expone**: la postulación viaja con el `vacanteId` y es n8n —con sus propias credenciales— quien resuelve a quién enrutarla.
 - ⚠️ **No conectar aquí el Sheet de control operativo de solicitudes**: ese contiene nombres de clientes y datos personales de candidatos (cédulas y nombres completos). Debe usarse una hoja aparte solo con las columnas de arriba.
 
@@ -186,7 +187,9 @@ Los formularios empujan estos eventos al `dataLayer` (`src/lib/analytics.ts`). E
 | `NEXT_PUBLIC_GTM_ID` | `GTM-PMHJBNJC` | Contenedor de GTM. Vacío = no se carga el script (útil en desarrollo). |
 | `VACANTES_SHEET_ID` | — | Id del Sheet de vacantes. Sin él se usa la lista de respaldo. |
 | `VACANTES_SHEET_RANGE` | `Vacantes!A:M` | Rango a leer. Deliberadamente **no incluye la columna N** (correo del reclutador). |
-| `GOOGLE_SHEETS_API_KEY` | — | API key de solo lectura para Sheets. **Sin `NEXT_PUBLIC_`: es de servidor.** |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | — | `client_email` de la cuenta de servicio. **Forma recomendada de autenticar.** |
+| `GOOGLE_SERVICE_ACCOUNT_KEY` | — | `private_key` del JSON de la cuenta de servicio, completa. **Sin `NEXT_PUBLIC_`.** |
+| `GOOGLE_SHEETS_API_KEY` | — | Alternativa a la cuenta de servicio. La organización tiene bloqueada la creación de API keys, así que normalmente no aplica. |
 | `N8N_POSTULACION_WEBHOOK` | — | Webhook del flujo de postulaciones. Sin él, el formulario usa el correo. |
 | `GOOGLE_SHEETS_API_BASE` | API de Google | Solo para pruebas: permite apuntar a un simulador. |
 
