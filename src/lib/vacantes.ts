@@ -20,11 +20,16 @@
  * Variables de entorno (sin NEXT_PUBLIC_: son de servidor):
  *   VACANTES_SHEET_ID    — id del documento
  *   VACANTES_SHEET_RANGE — rango, por defecto "Vacantes!A:M"
- *   GOOGLE_SHEETS_API_KEY— API key con acceso de solo lectura a Sheets
+ *
+ * Y para autenticar, una de dos (se prefiere la cuenta de servicio):
+ *   GOOGLE_SERVICE_ACCOUNT_EMAIL + GOOGLE_SERVICE_ACCOUNT_KEY
+ *   GOOGLE_SHEETS_API_KEY — API key de solo lectura
  *
  * Si falta configuración o el Sheet falla, se usan las vacantes de respaldo
  * para que la página nunca quede vacía.
  */
+
+import { hayCuentaDeServicio, tokenDeCuentaDeServicio } from "./google-auth";
 
 export type Vacante = {
   id: number;
@@ -122,7 +127,7 @@ export async function getVacantes(): Promise<{
   const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
   const rango = process.env.VACANTES_SHEET_RANGE || "Vacantes!A:M";
 
-  if (!sheetId || !apiKey) {
+  if (!sheetId || (!apiKey && !hayCuentaDeServicio())) {
     return { vacantes: VACANTES_RESPALDO, fuente: "respaldo" };
   }
 
@@ -131,13 +136,20 @@ export async function getVacantes(): Promise<{
     // sin depender de Google.
     const base =
       process.env.GOOGLE_SHEETS_API_BASE || "https://sheets.googleapis.com";
-    const pedir = (r: string) =>
+
+    // La cuenta de servicio tiene prioridad: es una identidad real, así que el
+    // Sheet se comparte solo con ella en vez de quedar público con enlace.
+    const token = await tokenDeCuentaDeServicio();
+
+    const pedir = (r: string) => {
+      const url = `${base}/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(r)}`;
       // La página se revalida cada 5 minutos: publicar una vacante en el Sheet
       // la muestra en el sitio sin desplegar.
-      fetch(
-        `${base}/v4/spreadsheets/${sheetId}/values/${encodeURIComponent(r)}?key=${apiKey}`,
-        { next: { revalidate: 300 } }
-      );
+      return fetch(token ? url : `${url}?key=${apiKey}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+        next: { revalidate: 300 },
+      });
+    };
 
     let res = await pedir(rango);
     // Si la pestaña se llama distinto, se reintenta sin nombre: Sheets
