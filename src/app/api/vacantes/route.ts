@@ -13,9 +13,9 @@ import { getVacantes } from "@/lib/vacantes";
 export const revalidate = 300;
 
 export async function GET() {
-  const { vacantes, fuente } = await getVacantes();
+  const { vacantes, fuente, motivo } = await getVacantes();
   return NextResponse.json(
-    { total: vacantes.length, fuente, vacantes },
+    { total: vacantes.length, fuente, motivo, vacantes },
     { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" } }
   );
 }
