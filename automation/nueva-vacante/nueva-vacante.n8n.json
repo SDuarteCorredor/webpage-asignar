@@ -1,0 +1,334 @@
+{
+  "name": "Nueva vacante desde formulario",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Alta de vacantes\n\nFormulario para que vinculación publique una vacante sin entrar al Sheet.\n\n**Por qué existe**\nEl `vacanteId` con el que el portal y el flujo de postulaciones identifican una\nvacante **es el número de fila**. Escribir a mano en la hoja invita a ordenar,\ninsertar o borrar filas, y cualquiera de las tres reasigna los ids: los enlaces\ndel sitio apuntan a otra vacante y las postulaciones le llegan al reclutador\nequivocado. Este formulario solo **agrega al final**, que es la única operación\nsegura.\n\n**Qué se deduce solo**\nDepartamento y correo del equipo de selección salen de la ciudad. El salario se\nformatea acá, para que el portal no muestre `1550000` en unas y `$1.550.000` en\notras — los filtros del sitio se construyen con estos valores.\n\n**Para cerrar una vacante** no se borra la fila: se pone `activa` en `NO`.",
+        "height": 520,
+        "width": 460
+      },
+      "id": "nota",
+      "name": "Nota",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1180,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "path": "nueva-vacante",
+        "formTitle": "Publicar una vacante",
+        "formDescription": "Se publica en el portal en menos de 5 minutos. El departamento y el equipo de selección se asignan solos según la ciudad.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Cargo",
+              "placeholder": "Ej. Auxiliar de Cocina",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Ciudad",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Medellín"
+                  },
+                  {
+                    "option": "Bogotá"
+                  },
+                  {
+                    "option": "Cali"
+                  },
+                  {
+                    "option": "Cartagena"
+                  },
+                  {
+                    "option": "Barranquilla"
+                  },
+                  {
+                    "option": "Rionegro"
+                  },
+                  {
+                    "option": "Otra (escribir abajo)"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Otra ciudad",
+              "placeholder": "Solo si elegiste «Otra» arriba"
+            },
+            {
+              "fieldLabel": "Otro departamento",
+              "placeholder": "Solo si elegiste «Otra» arriba"
+            },
+            {
+              "fieldLabel": "Correo del equipo de selección",
+              "fieldType": "email",
+              "placeholder": "Solo si elegiste «Otra» arriba"
+            },
+            {
+              "fieldLabel": "Sector",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Hotelería"
+                  },
+                  {
+                    "option": "Restaurantes"
+                  },
+                  {
+                    "option": "Logística"
+                  },
+                  {
+                    "option": "Industrial"
+                  },
+                  {
+                    "option": "Servicios"
+                  },
+                  {
+                    "option": "Salud"
+                  },
+                  {
+                    "option": "Comercio"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Tipo de contrato",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Obra o labor"
+                  },
+                  {
+                    "option": "Término fijo"
+                  },
+                  {
+                    "option": "Término indefinido"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Salario mensual",
+              "fieldType": "number",
+              "placeholder": "Solo el número, sin puntos. Ej. 1550000",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Detalle del salario",
+              "placeholder": "Se deja el estándar si lo dejas vacío"
+            },
+            {
+              "fieldLabel": "Experiencia",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Sin experiencia"
+                  },
+                  {
+                    "option": "Mínimo 6 meses"
+                  },
+                  {
+                    "option": "Mínimo 1 año"
+                  },
+                  {
+                    "option": "Mínimo 2 años"
+                  },
+                  {
+                    "option": "Mínimo 3 años"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Jornada",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Diurna"
+                  },
+                  {
+                    "option": "Nocturna / rotativa"
+                  },
+                  {
+                    "option": "Turnos rotativos"
+                  },
+                  {
+                    "option": "Medio tiempo"
+                  },
+                  {
+                    "option": "Fines de semana"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Modalidad",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Presencial"
+                  },
+                  {
+                    "option": "Híbrida"
+                  },
+                  {
+                    "option": "Remota"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Funciones principales",
+              "fieldType": "textarea",
+              "placeholder": "Qué hace la persona en el cargo. Se muestra tal cual en el portal.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "¿Destacada en el portal?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "No"
+                  },
+                  {
+                    "option": "Sí"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "onReceived",
+        "options": {
+          "formSubmittedText": "Vacante registrada. Aparece en el portal en unos minutos."
+        }
+      },
+      "id": "form",
+      "name": "📝 Nueva vacante (formulario)",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        -640,
+        300
+      ],
+      "webhookId": "asignar-nueva-vacante"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma la fila tal como la espera la hoja `Vacantes`.\n//\n// El reclutador no escribe departamento ni correo de selección: se deducen de\n// la ciudad. Así no hay forma de que queden inconsistentes con el resto de la\n// hoja, que es de donde el portal saca los filtros.\n\nconst f = $input.first().json;\nconst limpio = (v) => String(v ?? '').trim();\n\nconst EQUIPOS = {\n  'Medellín':     ['Antioquia',       'seleccion4@asignar.com.co'],\n  'Bogotá':       ['Cundinamarca',    'reclutamientobog4@asignar.com.co'],\n  'Cali':         ['Valle del Cauca', 'seleccioncali@asignar.com.co'],\n  'Cartagena':    ['Bolívar',         'seleccioncartagena407@gmail.com'],\n  'Barranquilla': ['Atlántico',       'seleccionbarranquilla@asignar.com.co'],\n  'Rionegro':     ['Antioquia',       'seleccion4@asignar.com.co'],\n};\n\nconst elegida = limpio(f['Ciudad']);\nconst esOtra = elegida.startsWith('Otra');\n\n// Con una ciudad nueva no hay a quién enrutar: se usa el buzón de respaldo y\n// queda registrado, en vez de dejar la celda vacía y romper la postulación.\nconst RESPALDO = 'contratacion2@asignar.com.co';\n\nconst ciudad = esOtra ? (limpio(f['Otra ciudad']) || 'Sin definir') : elegida;\nconst departamento = esOtra\n  ? limpio(f['Otro departamento'])\n  : (EQUIPOS[elegida]?.[0] ?? '');\nconst reclutador = esOtra\n  ? (limpio(f['Correo del equipo de selección']) || RESPALDO)\n  : (EQUIPOS[elegida]?.[1] ?? RESPALDO);\n\n// El portal muestra el salario tal como esté escrito en la celda, así que se\n// formatea acá una sola vez en lugar de confiar en cómo lo escriba cada quien.\nconst monto = Number(String(f['Salario mensual']).replace(/[^\\d]/g, ''));\nconst salario = monto > 0\n  ? '$' + monto.toLocaleString('es-CO')\n  : limpio(f['Salario mensual']);\n\nconst DETALLE_ESTANDAR = '+ Auxilio de transporte · + Prestaciones de ley';\n\nreturn [{\n  json: {\n    activa: 'SI',                       // toda vacante nueva nace publicada\n    cargo: limpio(f['Cargo']),\n    ciudad,\n    departamento,\n    sector: limpio(f['Sector']),\n    contrato: limpio(f['Tipo de contrato']),\n    salario,\n    salario_detalle: limpio(f['Detalle del salario']) || DETALLE_ESTANDAR,\n    experiencia: limpio(f['Experiencia']),\n    jornada: limpio(f['Jornada']),\n    modalidad: limpio(f['Modalidad']),\n    funciones: limpio(f['Funciones principales']),\n    destacada: limpio(f['¿Destacada en el portal?']) === 'Sí' ? 'SI' : '',\n    correo_reclutador: reclutador,\n  },\n}];\n"
+      },
+      "id": "armar",
+      "name": "🧮 Armar fila",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "308421811"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "activa": "={{ $json.activa }}",
+            "cargo": "={{ $json.cargo }}",
+            "ciudad": "={{ $json.ciudad }}",
+            "departamento": "={{ $json.departamento }}",
+            "sector": "={{ $json.sector }}",
+            "contrato": "={{ $json.contrato }}",
+            "salario": "={{ $json.salario }}",
+            "salario_detalle": "={{ $json.salario_detalle }}",
+            "experiencia": "={{ $json.experiencia }}",
+            "jornada": "={{ $json.jornada }}",
+            "modalidad": "={{ $json.modalidad }}",
+            "funciones": "={{ $json.funciones }}",
+            "destacada": "={{ $json.destacada }}",
+            "correo_reclutador": "={{ $json.correo_reclutador }}"
+          },
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "id": "agregar",
+      "name": "➕ Agregar a Vacantes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -160,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OArKGhCcmGh9SsKF",
+          "name": "Google Sheets account 2"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "📝 Nueva vacante (formulario)": {
+      "main": [
+        [
+          {
+            "node": "🧮 Armar fila",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧮 Armar fila": {
+      "main": [
+        [
+          {
+            "node": "➕ Agregar a Vacantes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
