@@ -3,7 +3,7 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee el documento `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida la sube a Drive.\n4. Notifica al reclutador de la ciudad.\n5. Registra todo en el documento aparte `Postulaciones Web` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.\n\nLos dos nodos de Sheets apuntan a la pestaña por **gid**, no por nombre, así que\nrenombrarlas no rompe nada. El gid sale de la URL del documento, después de `#gid=`.",
+        "content": "## Postulaciones desde la web\n\nRecibe el formulario de /vacantes, resuelve el reclutador y notifica.\n\n**Flujo**\n1. Webhook recibe la postulación (multipart, con hoja de vida opcional).\n2. Lee el documento `Vacantes` y toma la fila `vacanteId` para sacar `correo_reclutador`.\n3. Si trae hoja de vida: la sube a Drive **y** notifica al reclutador, en paralelo.\n   Van en paralelo a propósito — el nodo de Drive no reenvía el archivo binario,\n   así que si Gmail colgara de él ya no tendría qué adjuntar.\n4. Registra todo en el documento aparte `Postulaciones Web` (incluye `autorizaMarketing`).\n\n**Antes de activar**\n- Copiar la Production URL del webhook a `N8N_POSTULACION_WEBHOOK` en Vercel.\n\nLos dos nodos de Sheets apuntan a la pestaña por **gid**, no por nombre, así que\nrenombrarlas no rompe nada. El gid sale de la URL del documento, después de `#gid=`.",
         "height": 420,
         "width": 460,
         "color": 4
@@ -201,7 +201,7 @@
         "sendTo": "={{ $('🧠 Resolver reclutador').item.json.reclutador }}",
         "subject": "={{ $('🧠 Resolver reclutador').item.json.asunto }}",
         "emailType": "text",
-        "message": "={{ $('🧠 Resolver reclutador').item.json.mensaje + '\\n\\nHoja de vida en Drive: ' + ($json.webViewLink || '(no disponible)') }}",
+        "message": "={{ $('🧠 Resolver reclutador').item.json.mensaje }}",
         "options": {
           "appendAttribution": false,
           "ccList": "={{ $('🧠 Resolver reclutador').item.json.correoCopia }}",
@@ -219,8 +219,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        200,
-        200
+        -20,
+        40
       ],
       "webhookId": "asignar-post-con-hv",
       "credentials": {
@@ -246,7 +246,7 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        200,
+        -20,
         460
       ],
       "webhookId": "asignar-post-sin-hv",
@@ -301,7 +301,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        420,
+        300,
         340
       ],
       "retryOnFail": true,
@@ -326,7 +326,7 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
       "position": [
-        640,
+        520,
         340
       ]
     }
@@ -384,6 +384,11 @@
             "node": "📎 Subir hoja de vida a Drive",
             "type": "main",
             "index": 0
+          },
+          {
+            "node": "✉️ Notificar CON hoja de vida",
+            "type": "main",
+            "index": 0
           }
         ],
         [
@@ -399,7 +404,7 @@
       "main": [
         [
           {
-            "node": "✉️ Notificar CON hoja de vida",
+            "node": "🧾 Registrar postulación",
             "type": "main",
             "index": 0
           }
@@ -408,13 +413,7 @@
     },
     "✉️ Notificar CON hoja de vida": {
       "main": [
-        [
-          {
-            "node": "🧾 Registrar postulación",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "✉️ Notificar SIN hoja de vida": {

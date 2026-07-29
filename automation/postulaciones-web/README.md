@@ -76,7 +76,7 @@ Las variables en Vercel solo entran a jugar en el **siguiente deploy**: después
 | 🧠 Resolver reclutador | Toma la fila `vacanteId` y saca `correo_reclutador`; arma asunto y cuerpo |
 | ❓ ¿Adjuntó hoja de vida? | Bifurca según venga o no archivo |
 | 📎 Subir a Drive | Guarda la HV como `Ciudad - Cargo - Nombre` |
-| ✉️ Notificar (2 variantes) | Envía al reclutador, con copia a marketing |
+| ✉️ Notificar (2 variantes) | Envía al reclutador, con copia a marketing, con la HV adjunta |
 | 🧾 Registrar postulación | Agrega la fila en `Postulaciones Web` |
 | ✅ Responder al sitio | Devuelve `{ok: true}` para que el formulario muestre el éxito |
 
@@ -86,6 +86,7 @@ Las variables en Vercel solo entran a jugar en el **siguiente deploy**: después
 - **Reordenar filas cambia los ids.** Mientras solo se agreguen vacantes al final y se marquen como no activas las que se cierran, los ids se mantienen estables. Si se van a reordenar con frecuencia, conviene migrar a una columna de id propia.
 - **`AUTORIZA_MARKETING`** viene del consentimiento **separado y opcional** del formulario. Solo las filas en `SI` pueden entrar a campañas de email marketing: el consentimiento obligatorio cubre el proceso de selección, no usos comerciales (Ley 1581 de 2012).
 - Los nodos de Drive y Sheets usan `continueRegularOutput`: si Drive o el registro fallan, **el correo al reclutador igual sale**. Es preferible perder la trazabilidad que perder la postulación.
+- **Drive y Gmail cuelgan en paralelo del IF**, no uno detrás del otro. El nodo de Google Drive no reenvía el archivo binario que recibe —su salida son los metadatos del archivo ya subido—, así que un Gmail encadenado después se queda sin nada que adjuntar. Colgando ambos del mismo punto, los dos reciben el ítem que todavía trae la hoja de vida.
 
 ## Probarlo
 
