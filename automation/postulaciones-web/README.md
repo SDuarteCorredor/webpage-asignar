@@ -17,7 +17,14 @@ El sitio **no conoce el correo del reclutador**: envía el `vacanteId` y este fl
 
 Van **separados a propósito**: el de vacantes se comparte con todo el equipo para que registren, mientras que el de postulaciones acumula datos personales de candidatos (nombre, documento, teléfono) y debe tener acceso más restringido. En un solo documento ambos compartirían permisos.
 
-Los dos ya están creados y con sus encabezados. Los nodos de Sheets apuntan a la **primera pestaña** de cada documento por `gid` (`0`), no por nombre, así que da igual cómo se llame la pestaña y se puede renombrar después sin romper nada.
+Los dos ya están creados y con sus encabezados. Los nodos de Sheets apuntan a la pestaña por **`gid`**, no por nombre, así que renombrarlas no rompe nada:
+
+| Documento | Pestaña | `gid` |
+|---|---|---|
+| `Vacantes` | `Vacantes` | `308421811` |
+| `Postulaciones Web` | `Untitled` | `91274160` |
+
+El `gid` no siempre es `0`, ni siquiera en la primera pestaña de un documento recién creado. Sale de la URL del documento, después de `#gid=`, con la pestaña abierta.
 
 ### Cómo queda en Drive
 
