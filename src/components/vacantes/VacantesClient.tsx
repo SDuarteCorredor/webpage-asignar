@@ -8,6 +8,14 @@ import { opcionesDeFiltro } from "@/lib/vacantes";
 
 const MARKETING_EMAIL = "marketingdigital@asignar.com.co";
 
+/** Vacantes por página. Con cientos publicadas, una lista completa deja de
+    ser navegable y pesa de más en el HTML. */
+const POR_PAGINA = 10;
+
+/* Alto y posición de las tres columnas en desktop. El 156 sale de sumar el
+   navbar (80) y la barra de filtros (~68), más un respiro. */
+const COLUMNA = "lg:sticky lg:top-[156px] lg:h-[calc(100vh-172px)]";
+
 /* ---------- Estilos de formulario ---------- */
 const labelCls = "font-[var(--font-ui)] text-[12.5px] font-semibold text-brand-navy block mb-[7px]";
 const baseInput = "w-full bg-surface border rounded-xl px-3.5 py-[13px] font-[var(--font-body)] text-sm text-text-primary placeholder:text-text-muted outline-none transition-colors";
@@ -106,12 +114,114 @@ function VacanteItem({ v, active, onClick }: { v: Vacante; active: boolean; onCl
 }
 
 /* ============================================================
-   Panel de detalle + formulario (columna derecha)
-   Fluye con el scroll del contenedor padre — sin scroll anidado.
-   Envío interino por correo a marketing (automatización lee/enruta).
-   TODO(TI): conectar al backend/endpoint real de postulación.
+   Paginador — la lista se corta de a 10 para que siga siendo usable
+   cuando haya cientos de vacantes publicadas.
    ============================================================ */
-function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
+function Paginador({
+  pagina, total, onCambiar,
+}: { pagina: number; total: number; onCambiar: (p: number) => void }) {
+  if (total <= 1) return null;
+
+  // Con muchas páginas no se listan todas: se muestra una ventana alrededor
+  // de la actual, más la primera y la última.
+  const numeros: (number | "…")[] = [];
+  for (let p = 1; p <= total; p++) {
+    if (p === 1 || p === total || Math.abs(p - pagina) <= 2) numeros.push(p);
+    else if (numeros.at(-1) !== "…") numeros.push("…");
+  }
+
+  const flecha = "flex h-8 w-8 items-center justify-center rounded-lg border border-border text-text-secondary transition-colors hover:border-brand-blue/50 hover:text-brand-blue disabled:opacity-35 disabled:hover:border-border disabled:hover:text-text-secondary";
+
+  return (
+    <nav aria-label="Paginación de vacantes" className="flex items-center justify-center gap-1 border-t border-border bg-white px-2 py-2.5">
+      <button type="button" onClick={() => onCambiar(pagina - 1)} disabled={pagina === 1} aria-label="Página anterior" className={flecha}>
+        <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+      </button>
+      {numeros.map((n, i) =>
+        n === "…" ? (
+          <span key={`e${i}`} className="px-1 font-[var(--font-ui)] text-[13px] text-text-muted">…</span>
+        ) : (
+          <button
+            key={n}
+            type="button"
+            onClick={() => onCambiar(n)}
+            aria-current={n === pagina ? "page" : undefined}
+            className={`h-8 min-w-8 rounded-lg px-2 font-[var(--font-ui)] text-[13px] font-semibold transition-colors ${
+              n === pagina ? "bg-brand-blue text-white" : "text-text-secondary hover:bg-surface"
+            }`}
+          >
+            {n}
+          </button>
+        )
+      )}
+      <button type="button" onClick={() => onCambiar(pagina + 1)} disabled={pagina === total} aria-label="Página siguiente" className={flecha}>
+        <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+      </button>
+    </nav>
+  );
+}
+
+/* ============================================================
+   Info de la vacante (bloque del medio)
+   ============================================================ */
+function InfoVacante({ v, onClose }: { v: Vacante; onClose?: () => void }) {
+  return (
+    <div className="relative overflow-hidden rounded-3xl bg-brand-gradient p-6 text-white">
+      <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+      {onClose && (
+        <button type="button" onClick={onClose} aria-label="Cerrar" className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white lg:hidden">
+          <span className="material-symbols-outlined">close</span>
+        </button>
+      )}
+      <div className="relative">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 font-[var(--font-ui)] text-[11px] font-semibold">
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
+          </span>
+          Vacante activa
+        </span>
+        <h2 className="mt-4 font-[var(--font-display)] text-2xl font-extrabold leading-tight">{v.cargo}</h2>
+        <p className="mt-1.5 flex items-center gap-1.5 font-[var(--font-body)] text-sm text-white/80">
+          <span className="material-symbols-outlined text-[18px]">location_on</span>
+          {v.ciudad}, {v.departamento}
+        </p>
+
+        <div className="mt-5 rounded-2xl border border-white/15 bg-white/10 p-4">
+          <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-wide text-white/60">Salario mensual</p>
+          <p className="font-[var(--font-display)] text-2xl font-extrabold">{v.salario}</p>
+          <p className="mt-0.5 font-[var(--font-body)] text-[12px] text-white/70">{v.salarioDetalle}</p>
+        </div>
+
+        <div className="mt-3 grid grid-cols-2 gap-2.5">
+          {[
+            { i: "work_history", l: "Experiencia", val: v.experiencia },
+            { i: "assignment", l: "Contrato", val: v.contrato },
+            { i: "schedule", l: "Jornada", val: v.jornada },
+            { i: "business", l: "Modalidad", val: v.modalidad },
+          ].map((h) => (
+            <div key={h.l} className="rounded-xl border border-white/10 bg-white/[0.07] p-3">
+              <span className="material-symbols-outlined text-[19px] text-brand-light-blue">{h.i}</span>
+              <p className="mt-1 font-[var(--font-ui)] text-[10px] font-semibold uppercase tracking-wide text-white/55">{h.l}</p>
+              <p className="font-[var(--font-body)] text-[13px] font-medium leading-snug text-white">{h.val}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4">
+          <p className="mb-1.5 font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-wide text-white/55">Funciones principales</p>
+          <p className="font-[var(--font-body)] text-[13px] leading-relaxed text-white/85">{v.funciones}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Formulario de postulación (bloque derecho)
+   Envía al endpoint; si falla, cae al correo.
+   ============================================================ */
+function FormPostulacion({ v }: { v: Vacante }) {
   const [form, setForm] = useState({ nombre: "", tipoDoc: "CC", documento: "", edad: "", telefono: "", whatsapp: "", hojaVida: "", consent: false });
   const [archivo, setArchivo] = useState<File | null>(null);
   /* Consentimiento SEPARADO y opcional para comunicaciones comerciales.
@@ -214,58 +324,7 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
   };
 
   return (
-    <div className="rounded-3xl border border-border bg-white overflow-hidden">
-      {/* Info del cargo */}
-      <div className="relative bg-brand-gradient text-white p-6 md:p-7">
-        <div className="absolute top-0 right-0 h-40 w-40 rounded-full bg-white/10 blur-3xl pointer-events-none" />
-        {onClose && (
-          <button type="button" onClick={onClose} aria-label="Cerrar" className="absolute top-4 right-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-white lg:hidden">
-            <span className="material-symbols-outlined">close</span>
-          </button>
-        )}
-        <div className="relative">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 font-[var(--font-ui)] text-[11px] font-semibold">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
-            </span>
-            Vacante activa
-          </span>
-          <h2 className="mt-4 font-[var(--font-display)] text-2xl md:text-[28px] font-extrabold leading-tight">{v.cargo}</h2>
-          <p className="mt-1.5 flex items-center gap-1.5 font-[var(--font-body)] text-sm text-white/80">
-            <span className="material-symbols-outlined text-[18px]">location_on</span>
-            {v.ciudad}, {v.departamento}
-          </p>
-
-          <div className="mt-5 rounded-2xl bg-white/10 border border-white/15 p-4">
-            <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-wide text-white/60">Salario mensual</p>
-            <p className="font-[var(--font-display)] text-2xl font-extrabold">{v.salario}</p>
-            <p className="font-[var(--font-body)] text-[12px] text-white/70 mt-0.5">{v.salarioDetalle}</p>
-          </div>
-
-          <div className="mt-3 grid grid-cols-2 gap-2.5 xl:grid-cols-4">
-            {[
-              { i: "work_history", l: "Experiencia", val: v.experiencia },
-              { i: "assignment", l: "Contrato", val: v.contrato },
-              { i: "schedule", l: "Jornada", val: v.jornada },
-              { i: "business", l: "Modalidad", val: v.modalidad },
-            ].map((h) => (
-              <div key={h.l} className="rounded-xl bg-white/[0.07] border border-white/10 p-3">
-                <span className="material-symbols-outlined text-brand-light-blue text-[19px]">{h.i}</span>
-                <p className="mt-1 font-[var(--font-ui)] text-[10px] font-semibold uppercase tracking-wide text-white/55">{h.l}</p>
-                <p className="font-[var(--font-body)] text-[13px] font-medium text-white leading-snug">{h.val}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-4">
-            <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-wide text-white/55 mb-1.5">Funciones principales</p>
-            <p className="font-[var(--font-body)] text-[13px] text-white/85 leading-relaxed">{v.funciones}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Formulario */}
+    <div className="rounded-3xl border border-border bg-white">
       <div className="p-6 md:p-7">
         {enviado ? (
           <div className="flex flex-col items-center justify-center text-center py-8">
@@ -404,8 +463,10 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
   const [openChip, setOpenChip] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<number>(vacantes[0]?.id ?? 0);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [pagina, setPagina] = useState(1);
   const listaRef = useRef<HTMLDivElement>(null);
-  const detalleRef = useRef<HTMLDivElement>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
 
   const setters: Record<string, (v: string) => void> = {
     sector: setSector, modalidad: setModalidad, experiencia: setExperiencia, contrato: setContrato,
@@ -444,8 +505,12 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
   /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps -- la URL no existe durante el prerender y el deep link se lee una sola vez */
   useEffect(() => {
     const id = Number(new URLSearchParams(window.location.search).get("v"));
-    if (!id || !vacantes.some((v) => v.id === id)) return;
+    const indice = vacantes.findIndex((v) => v.id === id);
+    if (!id || indice === -1) return;
     setSelectedId(id);
+    // Al montar no hay filtros, así que la posición en la lista completa da
+    // la página. Sin esto, un enlace a la vacante 30 no mostraría nada.
+    setPagina(Math.floor(indice / POR_PAGINA) + 1);
     // En móvil el detalle vive en un overlay; en desktop basta con bajar a la lista.
     if (window.matchMedia("(max-width: 1023px)").matches) {
       setMobileOpen(true);
@@ -470,13 +535,40 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
     });
   }, [vacantes, query, ciudad, sector, modalidad, experiencia, contrato]);
 
-  // La vacante seleccionada siempre debe existir dentro del filtro
-  const selected = filtered.find((v) => v.id === selectedId) ?? filtered[0] ?? null;
+  const totalPaginas = Math.max(1, Math.ceil(filtered.length / POR_PAGINA));
+  // Al filtrar puede desaparecer la página en la que se estaba; se acota en
+  // vez de dejar la lista vacía.
+  const paginaActual = Math.min(pagina, totalPaginas);
+  const visibles = useMemo(
+    () => filtered.slice((paginaActual - 1) * POR_PAGINA, paginaActual * POR_PAGINA),
+    [filtered, paginaActual]
+  );
+
+  // La vacante abierta debe ser una de las que se ven en la lista: si no,
+  // los otros dos bloques mostrarían algo que el usuario no tiene enfrente.
+  const selected = visibles.find((v) => v.id === selectedId) ?? visibles[0] ?? null;
 
   const hayFiltros = query !== "" || ciudad !== "Todas" || sector !== "Todos" || modalidad !== "Todas" || experiencia !== "Todas" || contrato !== "Todos";
-  const limpiar = useCallback(() => {
-    setQuery(""); setCiudad("Todas"); setSector("Todos"); setModalidad("Todas"); setExperiencia("Todas"); setContrato("Todos");
+
+  /* Cualquier cambio de filtro devuelve a la página 1: quedarse en la 7 con
+     tres resultados no tiene sentido. Se hace en los manejadores y no en un
+     efecto para no encadenar un render extra. */
+  const filtrar = useCallback((aplicar: () => void) => {
+    aplicar();
+    setPagina(1);
   }, []);
+
+  const limpiar = useCallback(() => {
+    filtrar(() => {
+      setQuery(""); setCiudad("Todas"); setSector("Todos"); setModalidad("Todas"); setExperiencia("Todas"); setContrato("Todos");
+    });
+  }, [filtrar]);
+
+  const cambiarPagina = (p: number) => {
+    setPagina(Math.min(Math.max(1, p), totalPaginas));
+    // Volver arriba de la lista: si no, la página nueva empieza a media altura.
+    listaRef.current?.querySelector("[data-lista]")?.scrollTo({ top: 0 });
+  };
 
   const selectVacante = (id: number, abrirMovil = false) => {
     setSelectedId(id);
@@ -484,11 +576,10 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
       setMobileOpen(true);
       return;
     }
-    // En desktop el detalle está arriba a la derecha: si se eligió una vacante
-    // del final de la lista, quedaría fuera de pantalla.
-    if (detalleRef.current && detalleRef.current.getBoundingClientRect().top < 0) {
-      detalleRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    // Los bloques de la derecha conservan su scroll entre vacantes: si venías
+    // de leer las funciones abajo, la siguiente arrancaría por la mitad.
+    infoRef.current?.scrollTo({ top: 0 });
+    formRef.current?.scrollTo({ top: 0 });
   };
 
   return (
@@ -511,14 +602,14 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
             <div className="flex flex-1 items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 sm:border-0 sm:bg-transparent sm:py-1.5">
               <span className="material-symbols-outlined text-[20px] text-text-muted">search</span>
               <input
-                type="text" value={query} onChange={(e) => setQuery(e.target.value)}
+                type="text" value={query} onChange={(e) => filtrar(() => setQuery(e.target.value))}
                 placeholder="Cargo, sector o palabra clave"
                 aria-label="Buscar por cargo, sector o palabra clave"
                 className="w-full bg-transparent font-[var(--font-body)] text-sm text-text-primary outline-none placeholder:text-text-muted"
               />
               {query && (
                 <button
-                  type="button" onClick={() => setQuery("")} aria-label="Limpiar búsqueda"
+                  type="button" onClick={() => filtrar(() => setQuery(""))} aria-label="Limpiar búsqueda"
                   className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface-gray hover:text-brand-navy"
                 >
                   <span className="material-symbols-outlined text-[16px]">close</span>
@@ -529,7 +620,7 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
             <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 sm:min-w-[195px] sm:border-0 sm:bg-transparent sm:py-1.5">
               <span className="material-symbols-outlined text-[20px] text-brand-blue">location_on</span>
               <select
-                value={ciudad} onChange={(e) => setCiudad(e.target.value)}
+                value={ciudad} onChange={(e) => filtrar(() => setCiudad(e.target.value))}
                 aria-label="Ciudad"
                 className="w-full cursor-pointer appearance-none bg-transparent font-[var(--font-body)] text-sm text-text-primary outline-none"
               >
@@ -550,7 +641,7 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
                 opciones={f.opciones}
                 open={openChip === f.key}
                 onToggle={() => setOpenChip(openChip === f.key ? null : f.key)}
-                onChange={(v) => { setters[f.key](v); setOpenChip(null); }}
+                onChange={(v) => { filtrar(() => setters[f.key](v)); setOpenChip(null); }}
               />
             ))}
             {hayFiltros && (
@@ -567,49 +658,60 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
         </div>
       </section>
 
-      {/* ---------- Dos columnas: lista + detalle ---------- */}
+      {/* ---------- Tres bloques: lista · info · formulario ----------
+          Cada uno se queda fijo en su sitio y desplaza su propio contenido.
+          Es lo que hace que la página aguante cien vacantes: la lista puede
+          crecer sin arrastrar consigo el detalle ni el formulario. */}
       <section className="bg-surface" ref={listaRef}>
-        <div className="mx-auto max-w-[1600px] px-4 py-5 md:px-8 md:py-7">
+        <div className="mx-auto max-w-[1600px] px-4 py-5 md:px-8 md:py-6">
           {filtered.length === 0 ? (
-            <div className="text-center py-16">
-              <span className="material-symbols-outlined text-5xl text-text-muted/30 mb-3 block">search_off</span>
-              <p className="font-[var(--font-display)] text-lg font-bold text-brand-navy mb-2">No hay vacantes con esos filtros</p>
+            <div className="py-16 text-center">
+              <span className="material-symbols-outlined mb-3 block text-5xl text-text-muted/30">search_off</span>
+              <p className="mb-2 font-[var(--font-display)] text-lg font-bold text-brand-navy">No hay vacantes con esos filtros</p>
               <p className="font-[var(--font-body)] text-sm text-text-secondary">
                 Prueba con otros filtros o envía tu hoja de vida a{" "}
                 <a href={`mailto:${MARKETING_EMAIL}`} className="text-brand-blue underline">{MARKETING_EMAIL}</a>
               </p>
             </div>
           ) : (
-            /* Ambas columnas van con el scroll de la página: ni scroll anidado
-               ni columnas pegajosas, que era lo que hacía sentir la página con
-               dos scrolls peleando. Al elegir una vacante lejos del inicio, el
-               detalle se trae a la vista. */
-            <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(320px,390px)_1fr] xl:gap-6">
-              <div className="flex flex-col gap-3">
-                {filtered.map((v) => (
-                  <VacanteItem
-                    key={v.id}
-                    v={v}
-                    active={selected?.id === v.id}
-                    onClick={() => selectVacante(v.id, true)}
-                  />
-                ))}
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1fr_2fr] lg:items-start xl:gap-5">
+              {/* Lista + paginador. El paginador queda anclado abajo para que
+                  no haya que recorrer las 10 tarjetas para cambiar de página. */}
+              <div className={`${COLUMNA} flex flex-col overflow-hidden rounded-2xl border border-border bg-white lg:border`}>
+                <div data-lista className="flex flex-col gap-2.5 overflow-y-auto p-2.5 lg:flex-1">
+                  {visibles.map((v) => (
+                    <VacanteItem
+                      key={v.id}
+                      v={v}
+                      active={selected?.id === v.id}
+                      onClick={() => selectVacante(v.id, true)}
+                    />
+                  ))}
+                </div>
+                <Paginador pagina={paginaActual} total={totalPaginas} onCambiar={cambiarPagina} />
               </div>
 
-              <div ref={detalleRef} className="hidden scroll-mt-[184px] lg:block">
-                {selected && <DetailPanel key={selected.id} v={selected} />}
+              {/* Info de la vacante */}
+              <div ref={infoRef} className={`${COLUMNA} hidden overflow-y-auto lg:block`}>
+                {selected && <InfoVacante v={selected} />}
+              </div>
+
+              {/* Formulario */}
+              <div ref={formRef} className={`${COLUMNA} hidden overflow-y-auto lg:block`}>
+                {selected && <FormPostulacion key={selected.id} v={selected} />}
               </div>
             </div>
           )}
         </div>
       </section>
 
-      {/* ---------- Overlay móvil de detalle ---------- */}
+      {/* ---------- Overlay móvil: info + formulario juntos ---------- */}
       {mobileOpen && selected && (
-        <div className="lg:hidden fixed inset-0 z-[100] bg-brand-navy/60 backdrop-blur-sm overflow-y-auto animate-[fadeIn_0.2s_ease-out]" onClick={() => setMobileOpen(false)}>
-          <div className="min-h-full flex items-start justify-center p-3 pt-6" onClick={(e) => e.stopPropagation()}>
-            <div className="w-full max-w-lg">
-              <DetailPanel key={selected.id} v={selected} onClose={() => setMobileOpen(false)} />
+        <div className="fixed inset-0 z-[100] overflow-y-auto bg-brand-navy/60 backdrop-blur-sm animate-[fadeIn_0.2s_ease-out] lg:hidden" onClick={() => setMobileOpen(false)}>
+          <div className="flex min-h-full items-start justify-center p-3 pt-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex w-full max-w-lg flex-col gap-3">
+              <InfoVacante v={selected} onClose={() => setMobileOpen(false)} />
+              <FormPostulacion key={selected.id} v={selected} />
             </div>
           </div>
         </div>
