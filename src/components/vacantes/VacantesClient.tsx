@@ -243,7 +243,7 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
             <p className="font-[var(--font-body)] text-[12px] text-white/70 mt-0.5">{v.salarioDetalle}</p>
           </div>
 
-          <div className="mt-3 grid grid-cols-2 gap-2.5">
+          <div className="mt-3 grid grid-cols-2 gap-2.5 xl:grid-cols-4">
             {[
               { i: "work_history", l: "Experiencia", val: v.experiencia },
               { i: "assignment", l: "Contrato", val: v.contrato },
@@ -295,7 +295,9 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
                 <input id="ap-nombre" type="text" value={form.nombre} onChange={(e) => set("nombre", e.target.value)} placeholder="Ej. María Camila López Restrepo" className={inputCls(!!errores.nombre)} />
                 {errores.nombre && <p className="mt-1 text-[11px] text-red-500">{errores.nombre}</p>}
               </div>
-              <div className="grid grid-cols-[104px_1fr] gap-3">
+              {/* En pantallas anchas los campos cortos van en fila: el panel es
+                  ancho y campos de 900px para una edad se ven desproporcionados. */}
+              <div className="grid grid-cols-[104px_1fr] gap-3 sm:grid-cols-[104px_1fr_130px]">
                 <div>
                   <label htmlFor="ap-tipodoc" className={labelCls}>Tipo ID</label>
                   <select id="ap-tipodoc" value={form.tipoDoc} onChange={(e) => set("tipoDoc", e.target.value)} className={`${inputCls()} appearance-none`}>
@@ -307,22 +309,22 @@ function DetailPanel({ v, onClose }: { v: Vacante; onClose?: () => void }) {
                   <input id="ap-doc" type="text" inputMode="numeric" value={form.documento} onChange={(e) => set("documento", e.target.value)} placeholder="Sin puntos ni comas" className={inputCls(!!errores.documento)} />
                   {errores.documento && <p className="mt-1 text-[11px] text-red-500">{errores.documento}</p>}
                 </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
+                <div className="col-span-2 sm:col-span-1">
                   <label htmlFor="ap-edad" className={labelCls}>Edad <span className="text-red-500">*</span></label>
                   <input id="ap-edad" type="number" inputMode="numeric" min={18} max={70} value={form.edad} onChange={(e) => set("edad", e.target.value)} placeholder="Años" className={inputCls(!!errores.edad)} />
                   {errores.edad && <p className="mt-1 text-[11px] text-red-500">{errores.edad}</p>}
                 </div>
-                <div className="sm:col-span-2">
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div>
                   <label htmlFor="ap-tel" className={labelCls}>Teléfono <span className="text-red-500">*</span></label>
                   <input id="ap-tel" type="tel" inputMode="tel" value={form.telefono} onChange={(e) => set("telefono", e.target.value)} placeholder="Ej. 300 123 4567" className={inputCls(!!errores.telefono)} />
                   {errores.telefono && <p className="mt-1 text-[11px] text-red-500">{errores.telefono}</p>}
                 </div>
-              </div>
-              <div>
-                <label htmlFor="ap-wa" className={labelCls}>WhatsApp <span className="text-text-muted font-normal">(opcional)</span></label>
-                <input id="ap-wa" type="tel" inputMode="tel" value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} placeholder="Ej. 300 123 4567" className={inputCls()} />
+                <div>
+                  <label htmlFor="ap-wa" className={labelCls}>WhatsApp <span className="text-text-muted font-normal">(opcional)</span></label>
+                  <input id="ap-wa" type="tel" inputMode="tel" value={form.whatsapp} onChange={(e) => set("whatsapp", e.target.value)} placeholder="Ej. 300 123 4567" className={inputCls()} />
+                </div>
               </div>
               <div>
                 <label className={labelCls}>Hoja de vida <span className="text-text-muted font-normal">(opcional)</span></label>
@@ -403,6 +405,7 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
   const [selectedId, setSelectedId] = useState<number>(vacantes[0]?.id ?? 0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const listaRef = useRef<HTMLDivElement>(null);
+  const detalleRef = useRef<HTMLDivElement>(null);
 
   const setters: Record<string, (v: string) => void> = {
     sector: setSector, modalidad: setModalidad, experiencia: setExperiencia, contrato: setContrato,
@@ -477,90 +480,96 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
 
   const selectVacante = (id: number, abrirMovil = false) => {
     setSelectedId(id);
-    if (abrirMovil) setMobileOpen(true);
+    if (abrirMovil && window.matchMedia("(max-width: 1023px)").matches) {
+      setMobileOpen(true);
+      return;
+    }
+    // En desktop el detalle está arriba a la derecha: si se eligió una vacante
+    // del final de la lista, quedaría fuera de pantalla.
+    if (detalleRef.current && detalleRef.current.getBoundingClientRect().top < 0) {
+      detalleRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   return (
     <>
-      {/* ---------- Banner de búsqueda (estilo portal) ---------- */}
-      <section className="relative overflow-hidden bg-brand-navy">
-        <div className="absolute inset-0 bg-cover bg-center opacity-30" style={{ backgroundImage: "url('/home/hero.jpg')" }} />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/90 to-brand-navy/60" />
-        <div className="relative max-w-[1280px] mx-auto px-4 md:px-16 py-10 md:py-14 text-center md:text-left">
-          <p className="font-[var(--font-display)] text-2xl md:text-[32px] font-extrabold text-white leading-tight">
-            Encuentra tu próximo empleo
-          </p>
-          <p className="font-[var(--font-body)] text-sm md:text-base text-white/70 mt-1.5">
-            {vacantes.length} vacantes activas en hotelería, restaurantes, logística e industria.
-          </p>
+      {/* El portal no lleva título visible —la barra de búsqueda ya dice qué es
+          esta página—, pero el h1 debe existir para lectores de pantalla y
+          para el buscador de Google. */}
+      <h1 className="sr-only">Vacantes de empleo en Colombia</h1>
 
-          {/* Barra de búsqueda */}
-          <div className="mt-6 flex flex-col md:flex-row gap-2.5 md:gap-0 md:rounded-full md:bg-white md:p-1.5 md:shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)]">
-            <div className="relative flex-1 flex items-center gap-2 bg-white rounded-full md:rounded-none px-4 py-3 md:py-2">
-              <span className="material-symbols-outlined text-brand-blue">work</span>
+      {/* ---------- Buscador y filtros ----------
+          Una sola barra clara pegada bajo el navbar (h-20). Los portales de
+          empleo la mantienen a la vista porque buscar y filtrar es la acción
+          principal y se repite todo el tiempo. */}
+      {/* Fija solo en desktop: en móvil los chips ocupan dos filas y una barra
+          fija de ~230px se comería un tercio de la pantalla. */}
+      <section className="z-30 border-b border-border bg-white/95 backdrop-blur-md lg:sticky lg:top-20">
+        <div className="mx-auto flex max-w-[1600px] flex-col gap-2.5 px-4 py-3 md:px-8 lg:flex-row lg:items-center lg:gap-4">
+          {/* Cargo + ciudad, unidos en una sola pastilla en pantallas medianas */}
+          <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-0 sm:rounded-full sm:border sm:border-border sm:bg-surface sm:p-1 sm:transition-colors sm:focus-within:border-brand-blue/60 lg:min-w-[420px] lg:flex-1 lg:max-w-[620px]">
+            <div className="flex flex-1 items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 sm:border-0 sm:bg-transparent sm:py-1.5">
+              <span className="material-symbols-outlined text-[20px] text-text-muted">search</span>
               <input
                 type="text" value={query} onChange={(e) => setQuery(e.target.value)}
                 placeholder="Cargo, sector o palabra clave"
-                aria-label="Buscar por cargo"
-                className="w-full bg-transparent outline-none font-[var(--font-body)] text-sm text-text-primary placeholder:text-text-muted"
+                aria-label="Buscar por cargo, sector o palabra clave"
+                className="w-full bg-transparent font-[var(--font-body)] text-sm text-text-primary outline-none placeholder:text-text-muted"
               />
+              {query && (
+                <button
+                  type="button" onClick={() => setQuery("")} aria-label="Limpiar búsqueda"
+                  className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-surface-gray hover:text-brand-navy"
+                >
+                  <span className="material-symbols-outlined text-[16px]">close</span>
+                </button>
+              )}
             </div>
-            <div className="hidden md:block w-px my-1.5 bg-border" />
-            <div className="relative flex items-center gap-2 bg-white rounded-full md:rounded-none px-4 py-3 md:py-2 md:min-w-[220px]">
-              <span className="material-symbols-outlined text-brand-blue">location_on</span>
+            <div className="hidden sm:block h-6 w-px shrink-0 bg-border" />
+            <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 sm:min-w-[195px] sm:border-0 sm:bg-transparent sm:py-1.5">
+              <span className="material-symbols-outlined text-[20px] text-brand-blue">location_on</span>
               <select
                 value={ciudad} onChange={(e) => setCiudad(e.target.value)}
                 aria-label="Ciudad"
-                className="w-full bg-transparent outline-none appearance-none cursor-pointer font-[var(--font-body)] text-sm text-text-primary"
+                className="w-full cursor-pointer appearance-none bg-transparent font-[var(--font-body)] text-sm text-text-primary outline-none"
               >
                 {opciones.ciudades.map((c) => <option key={c} value={c}>{c === "Todas" ? "Todas las ciudades" : c}</option>)}
               </select>
-              <span className="material-symbols-outlined text-text-muted text-[18px] pointer-events-none">expand_more</span>
+              <span className="material-symbols-outlined pointer-events-none text-[18px] text-text-muted">expand_more</span>
             </div>
-            <button
-              type="button"
-              onClick={() => listaRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
-              className="inline-flex items-center justify-center gap-2 bg-brand-blue text-white font-[var(--font-ui)] text-sm font-semibold px-6 py-3 md:py-2 rounded-full hover:bg-brand-deep-blue transition-colors"
-            >
-              <span className="material-symbols-outlined text-[20px]">search</span>
-              Buscar
-            </button>
           </div>
-        </div>
-      </section>
 
-      {/* ---------- Filtros (estilo Magneto) ---------- */}
-      <section className="bg-white border-b border-border">
-        <div className="max-w-[1280px] mx-auto px-4 md:px-16 py-4 flex flex-wrap items-center gap-2.5">
-          <span className="hidden sm:inline-flex items-center gap-1 font-[var(--font-ui)] text-[13px] font-semibold text-text-muted mr-1">
-            <span className="material-symbols-outlined text-[18px]">tune</span> Filtrar
-          </span>
-          {FILTROS.map((f) => (
-            <FilterChip
-              key={f.key}
-              label={f.label}
-              value={valores[f.key]}
-              opciones={f.opciones}
-              open={openChip === f.key}
-              onToggle={() => setOpenChip(openChip === f.key ? null : f.key)}
-              onChange={(v) => { setters[f.key](v); setOpenChip(null); }}
-            />
-          ))}
-          {hayFiltros && (
-            <button type="button" onClick={limpiar} className="inline-flex items-center gap-1 font-[var(--font-ui)] text-[13px] font-semibold text-text-muted hover:text-brand-blue transition-colors">
-              <span className="material-symbols-outlined text-[16px]">close</span> Limpiar
-            </button>
-          )}
-        </div>
-      </section>
+          {/* Los chips envuelven en vez de tener scroll horizontal: un
+              contenedor con overflow recortaría sus desplegables. */}
+          <div className="flex flex-wrap items-center gap-2">
+            {FILTROS.map((f) => (
+              <FilterChip
+                key={f.key}
+                label={f.label}
+                value={valores[f.key]}
+                opciones={f.opciones}
+                open={openChip === f.key}
+                onToggle={() => setOpenChip(openChip === f.key ? null : f.key)}
+                onChange={(v) => { setters[f.key](v); setOpenChip(null); }}
+              />
+            ))}
+            {hayFiltros && (
+              <button type="button" onClick={limpiar} className="inline-flex items-center gap-1 font-[var(--font-ui)] text-[13px] font-semibold text-text-muted transition-colors hover:text-brand-blue">
+                <span className="material-symbols-outlined text-[16px]">close</span> Limpiar
+              </button>
+            )}
+          </div>
 
-      {/* ---------- Dos bloques: lista + detalle ---------- */}
-      <section className="bg-surface" ref={listaRef}>
-        <div className="max-w-[1280px] mx-auto px-4 md:px-16 py-6 md:py-8">
-          <p className="font-[var(--font-ui)] text-sm text-text-muted mb-4">
-            <strong className="text-brand-navy">{filtered.length}</strong> {filtered.length === 1 ? "vacante encontrada" : "vacantes encontradas"}
+          <p className="font-[var(--font-ui)] text-[13px] text-text-muted lg:ml-auto lg:shrink-0">
+            <strong className="text-brand-navy">{filtered.length}</strong>{" "}
+            {filtered.length === 1 ? "vacante" : "vacantes"}
           </p>
+        </div>
+      </section>
 
+      {/* ---------- Dos columnas: lista + detalle ---------- */}
+      <section className="bg-surface" ref={listaRef}>
+        <div className="mx-auto max-w-[1600px] px-4 py-5 md:px-8 md:py-7">
           {filtered.length === 0 ? (
             <div className="text-center py-16">
               <span className="material-symbols-outlined text-5xl text-text-muted/30 mb-3 block">search_off</span>
@@ -571,9 +580,12 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-[minmax(320px,380px)_1fr] gap-6 lg:items-start">
-              {/* Lista — scroll propio en desktop */}
-              <div className="flex flex-col gap-3 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:pr-1 lg:pb-2">
+            /* Ambas columnas van con el scroll de la página: ni scroll anidado
+               ni columnas pegajosas, que era lo que hacía sentir la página con
+               dos scrolls peleando. Al elegir una vacante lejos del inicio, el
+               detalle se trae a la vista. */
+            <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(320px,390px)_1fr] xl:gap-6">
+              <div className="flex flex-col gap-3">
                 {filtered.map((v) => (
                   <VacanteItem
                     key={v.id}
@@ -584,8 +596,7 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
                 ))}
               </div>
 
-              {/* Detalle — usa el scroll de la página (sin scroll anidado) */}
-              <div className="hidden lg:block">
+              <div ref={detalleRef} className="hidden scroll-mt-[184px] lg:block">
                 {selected && <DetailPanel key={selected.id} v={selected} />}
               </div>
             </div>
