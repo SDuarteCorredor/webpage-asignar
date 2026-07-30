@@ -8,9 +8,9 @@ Reclutador  →  formulario de n8n  →  fila nueva al final de `Vacantes`  → 
 
 ## Por qué existe
 
-El `vacanteId` con el que el portal y el flujo de postulaciones identifican una vacante **es el número de fila**. Escribir a mano en la hoja invita a ordenar, insertar o borrar filas, y cualquiera de las tres reasigna los ids: los enlaces del sitio empiezan a apuntar a otra vacante y **las postulaciones le llegan al reclutador equivocado**.
+El `id` de la columna O es lo que viaja en la URL de la vacante, en su QR y en cada postulación. Tiene que ser **único y no repetirse nunca**, incluso después de cerrar vacantes.
 
-Este formulario solo hace `append` —agregar al final—, que es la única operación que no mueve nada.
+El formulario lo genera solo: lee los ids publicados y suma uno al mayor. Escribirlo a mano invita a repetirlo, y dos vacantes con el mismo id mandarían postulaciones al reclutador equivocado.
 
 ## Puesta en marcha
 

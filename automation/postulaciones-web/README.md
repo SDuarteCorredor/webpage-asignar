@@ -6,7 +6,7 @@ Flujo que recibe las postulaciones del portal `/vacantes`, las enruta al equipo 
 Sitio  →  POST /api/postulacion  →  webhook n8n  →  Drive + Gmail + Sheets
 ```
 
-El sitio **no conoce el correo del reclutador**: envía el `vacanteId` y este flujo lo resuelve leyendo el Sheet con sus propias credenciales.
+El sitio **no conoce el correo del reclutador**: envía el `id` de la vacante y este flujo lo resuelve leyendo el Sheet con sus propias credenciales.
 
 ## Documentos
 
@@ -73,7 +73,7 @@ Las variables en Vercel solo entran a jugar en el **siguiente deploy**: después
 | 📥 Postulación (webhook) | Recibe el formulario (multipart; la hoja de vida llega como binario) |
 | ⚙️ Configuración | IDs del Sheet y la carpeta, correo de respaldo y de copia |
 | 📋 Leer vacantes | Lee la primera pestaña del documento `Vacantes` |
-| 🧠 Resolver reclutador | Toma la fila `vacanteId` y saca `correo_reclutador`; arma asunto y cuerpo |
+| 🧠 Resolver reclutador | Busca la fila con ese `id` y saca `correo_reclutador`; arma asunto y cuerpo |
 | ❓ ¿Adjuntó hoja de vida? | Bifurca según venga o no archivo |
 | 📎 Subir a Drive | Guarda la HV como `Ciudad - Cargo - Nombre` |
 | ✉️ Notificar (2 variantes) | Envía al reclutador, con copia a marketing, con la HV adjunta |
@@ -82,8 +82,8 @@ Las variables en Vercel solo entran a jugar en el **siguiente deploy**: después
 
 ## Detalles que importan
 
-- **`vacanteId` = número de fila de datos.** `1` es la fila 2 del Sheet (la 1 son encabezados). Si el id no cuadra con ninguna fila, el flujo **no se cae**: enruta a `contratacion2@`, marca `ENRUTADO_OK = NO` y avisa en el correo para revisar a mano.
-- **Reordenar filas cambia los ids.** Mientras solo se agreguen vacantes al final y se marquen como no activas las que se cierran, los ids se mantienen estables. Si se van a reordenar con frecuencia, conviene migrar a una columna de id propia.
+- **`vacanteId` es el `id` de la columna O**, no la posición de la fila. Por eso ordenar o insertar filas ya no reasigna nada. Si el id no cuadra con ninguna fila, el flujo **no se cae**: enruta a `contratacion2@`, marca `ENRUTADO_OK = NO` y avisa en el correo para revisar a mano.
+- **Hay un respaldo por número de fila.** Si la columna `id` está vacía —o para enlaces viejos que sigan circulando—, se cae al comportamiento anterior. Deja de aplicar en cuanto la columna esté llena.
 - **`AUTORIZA_MARKETING`** viene del consentimiento **separado y opcional** del formulario. Solo las filas en `SI` pueden entrar a campañas de email marketing: el consentimiento obligatorio cubre el proceso de selección, no usos comerciales (Ley 1581 de 2012).
 - Los nodos de Drive y Sheets usan `continueRegularOutput`: si Drive o el registro fallan, **el correo al reclutador igual sale**. Es preferible perder la trazabilidad que perder la postulación.
 - **El registro escribe en modo `RAW`.** Google Sheets evalúa como fórmula toda celda que empiece por `+`, `=`, `-` o `@`: un teléfono escrito como `+57 300…` quedaría en `#ERROR!`. Y en modo normal un documento con ceros a la izquierda los perdería al convertirse en número.
@@ -95,7 +95,7 @@ Con el workflow activo, desde una terminal:
 
 ```bash
 curl -X POST "<PRODUCTION_URL>" \
-  -F vacanteId=1 \
+  -F vacanteId=7 \
   -F cargo="Mesero/a de Servicio" \
   -F ciudad="Medellín" \
   -F nombre="Prueba Candidato" \
