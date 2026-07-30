@@ -294,7 +294,9 @@
           "attemptToConvertTypes": false,
           "convertFieldsToString": true
         },
-        "options": {}
+        "options": {
+          "cellFormat": "RAW"
+        }
       },
       "id": "registrar",
       "name": "🧾 Registrar postulación",
