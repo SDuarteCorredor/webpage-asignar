@@ -86,6 +86,7 @@ Las variables en Vercel solo entran a jugar en el **siguiente deploy**: después
 - **Reordenar filas cambia los ids.** Mientras solo se agreguen vacantes al final y se marquen como no activas las que se cierran, los ids se mantienen estables. Si se van a reordenar con frecuencia, conviene migrar a una columna de id propia.
 - **`AUTORIZA_MARKETING`** viene del consentimiento **separado y opcional** del formulario. Solo las filas en `SI` pueden entrar a campañas de email marketing: el consentimiento obligatorio cubre el proceso de selección, no usos comerciales (Ley 1581 de 2012).
 - Los nodos de Drive y Sheets usan `continueRegularOutput`: si Drive o el registro fallan, **el correo al reclutador igual sale**. Es preferible perder la trazabilidad que perder la postulación.
+- **El registro escribe en modo `RAW`.** Google Sheets evalúa como fórmula toda celda que empiece por `+`, `=`, `-` o `@`: un teléfono escrito como `+57 300…` quedaría en `#ERROR!`. Y en modo normal un documento con ceros a la izquierda los perdería al convertirse en número.
 - **Drive y Gmail cuelgan en paralelo del IF**, no uno detrás del otro. El nodo de Google Drive no reenvía el archivo binario que recibe —su salida son los metadatos del archivo ya subido—, así que un Gmail encadenado después se queda sin nada que adjuntar. Colgando ambos del mismo punto, los dos reciben el ítem que todavía trae la hoja de vida.
 
 ## Probarlo
