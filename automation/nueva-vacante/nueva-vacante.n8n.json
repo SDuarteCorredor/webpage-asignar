@@ -60,16 +60,19 @@
             },
             {
               "fieldLabel": "Otra ciudad",
-              "placeholder": "Solo si elegiste «Otra» arriba"
+              "placeholder": "Solo si elegiste «Otra» arriba",
+              "requiredField": false
             },
             {
               "fieldLabel": "Otro departamento",
-              "placeholder": "Solo si elegiste «Otra» arriba"
+              "placeholder": "Solo si elegiste «Otra» arriba",
+              "requiredField": false
             },
             {
               "fieldLabel": "Correo del equipo de selección",
               "fieldType": "email",
-              "placeholder": "Solo si elegiste «Otra» arriba"
+              "placeholder": "Solo si elegiste «Otra» arriba",
+              "requiredField": false
             },
             {
               "fieldLabel": "Sector",
@@ -127,7 +130,18 @@
             },
             {
               "fieldLabel": "Detalle del salario",
-              "placeholder": "Se deja el estándar si lo dejas vacío"
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "+ Auxilio de transporte · + Prestaciones de ley"
+                  },
+                  {
+                    "option": "+ Auxilio de transporte · + Prestaciones de ley · + Propinas"
+                  }
+                ]
+              },
+              "requiredField": true
             },
             {
               "fieldLabel": "Experiencia",
@@ -282,7 +296,9 @@
           "attemptToConvertTypes": false,
           "convertFieldsToString": true
         },
-        "options": {}
+        "options": {
+          "cellFormat": "RAW"
+        }
       },
       "id": "agregar",
       "name": "➕ Agregar a Vacantes",

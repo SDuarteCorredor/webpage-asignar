@@ -42,7 +42,8 @@ Para una ciudad que no esté en la lista, el formulario tiene tres campos opcion
 
 - **`activa` nace en `SI`.** Toda vacante creada por el formulario se publica de una.
 - **El salario se formatea en el flujo** (`1550000` → `$1.550.000`). El portal muestra la celda tal como esté escrita, así que dejarlo al criterio de cada quien produciría unas con puntos y otras sin ellos.
-- **`salario_detalle` tiene un estándar** (`+ Auxilio de transporte · + Prestaciones de ley`) que se usa si se deja vacío.
+- **`salario_detalle` es un desplegable** con las dos variantes que se usan (con y sin propinas), no texto libre.
+- **El nodo de Sheets escribe en modo `RAW`.** Sin eso, Google Sheets evalúa como fórmula toda celda que empiece por `+`, `=`, `-` o `@` — y `+ Auxilio de transporte · + Prestaciones de ley` empieza por `+`, así que la celda quedaba en `#ERROR!`.
 - Los desplegables de sector, contrato, experiencia, jornada y modalidad existen para que los filtros del portal no se llenen de variantes: «Medellin» y «Medellín» serían dos ciudades distintas en el filtro.
 
 ## Cerrar una vacante
