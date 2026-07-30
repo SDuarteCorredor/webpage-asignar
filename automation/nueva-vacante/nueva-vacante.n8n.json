@@ -249,14 +249,46 @@
     },
     {
       "parameters": {
-        "jsCode": "// Arma la fila tal como la espera la hoja `Vacantes`.\n//\n// El reclutador no escribe departamento ni correo de selección: se deducen de\n// la ciudad. Así no hay forma de que queden inconsistentes con el resto de la\n// hoja, que es de donde el portal saca los filtros.\n\nconst f = $input.first().json;\nconst limpio = (v) => String(v ?? '').trim();\n\nconst EQUIPOS = {\n  'Medellín':     ['Antioquia',       'seleccion4@asignar.com.co'],\n  'Bogotá':       ['Cundinamarca',    'reclutamientobog4@asignar.com.co'],\n  'Cali':         ['Valle del Cauca', 'seleccioncali@asignar.com.co'],\n  'Cartagena':    ['Bolívar',         'seleccioncartagena407@gmail.com'],\n  'Barranquilla': ['Atlántico',       'seleccionbarranquilla@asignar.com.co'],\n  'Rionegro':     ['Antioquia',       'seleccion4@asignar.com.co'],\n};\n\nconst elegida = limpio(f['Ciudad']);\nconst esOtra = elegida.startsWith('Otra');\n\n// Con una ciudad nueva no hay a quién enrutar: se usa el buzón de respaldo y\n// queda registrado, en vez de dejar la celda vacía y romper la postulación.\nconst RESPALDO = 'contratacion2@asignar.com.co';\n\nconst ciudad = esOtra ? (limpio(f['Otra ciudad']) || 'Sin definir') : elegida;\nconst departamento = esOtra\n  ? limpio(f['Otro departamento'])\n  : (EQUIPOS[elegida]?.[0] ?? '');\nconst reclutador = esOtra\n  ? (limpio(f['Correo del equipo de selección']) || RESPALDO)\n  : (EQUIPOS[elegida]?.[1] ?? RESPALDO);\n\n// El portal muestra el salario tal como esté escrito en la celda, así que se\n// formatea acá una sola vez en lugar de confiar en cómo lo escriba cada quien.\nconst monto = Number(String(f['Salario mensual']).replace(/[^\\d]/g, ''));\nconst salario = monto > 0\n  ? '$' + monto.toLocaleString('es-CO')\n  : limpio(f['Salario mensual']);\n\nconst DETALLE_ESTANDAR = '+ Auxilio de transporte · + Prestaciones de ley';\n\nreturn [{\n  json: {\n    activa: 'SI',                       // toda vacante nueva nace publicada\n    cargo: limpio(f['Cargo']),\n    ciudad,\n    departamento,\n    sector: limpio(f['Sector']),\n    contrato: limpio(f['Tipo de contrato']),\n    salario,\n    salario_detalle: limpio(f['Detalle del salario']) || DETALLE_ESTANDAR,\n    experiencia: limpio(f['Experiencia']),\n    jornada: limpio(f['Jornada']),\n    modalidad: limpio(f['Modalidad']),\n    funciones: limpio(f['Funciones principales']),\n    destacada: limpio(f['¿Destacada en el portal?']) === 'Sí' ? 'SI' : '',\n    correo_reclutador: reclutador,\n  },\n}];\n"
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "1c52d83mBFfV0f4HLmn0MCgAw-P_aMkJXIerXpenJ9Yw"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "308421811"
+        },
+        "options": {}
+      },
+      "id": "leer",
+      "name": "📋 Leer ids existentes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        -400,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "OArKGhCcmGh9SsKF",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Arma la fila tal como la espera la hoja `Vacantes`.\n//\n// El reclutador no escribe departamento ni correo de selección: se deducen de\n// la ciudad. Así no hay forma de que queden inconsistentes con el resto de la\n// hoja, que es de donde el portal saca los filtros.\n\nconst f = $('📝 Nueva vacante (formulario)').first().json;\n\n// El id es lo que viaja en la URL, en el QR y en la postulación: tiene que ser\n// único y no depender de la posición de la fila. Se toma el mayor publicado y\n// se suma uno.\nconst filas = $input.all().map(i => i.json);\nconst ids = filas\n  .map(r => parseInt(String(r.id ?? '').trim(), 10))\n  .filter(n => !isNaN(n));\n// Si la columna `id` aún está vacía, los ids equivalen al número de fila, así\n// que se sigue desde ahí y no desde 1 (que chocaría con la primera vacante).\nconst siguienteId = String(ids.length ? Math.max(...ids) + 1 : filas.length + 1);\nconst limpio = (v) => String(v ?? '').trim();\n\nconst EQUIPOS = {\n  'Medellín':     ['Antioquia',       'seleccion4@asignar.com.co'],\n  'Bogotá':       ['Cundinamarca',    'reclutamientobog4@asignar.com.co'],\n  'Cali':         ['Valle del Cauca', 'seleccioncali@asignar.com.co'],\n  'Cartagena':    ['Bolívar',         'seleccioncartagena407@gmail.com'],\n  'Barranquilla': ['Atlántico',       'seleccionbarranquilla@asignar.com.co'],\n  'Rionegro':     ['Antioquia',       'seleccion4@asignar.com.co'],\n};\n\nconst elegida = limpio(f['Ciudad']);\nconst esOtra = elegida.startsWith('Otra');\n\n// Con una ciudad nueva no hay a quién enrutar: se usa el buzón de respaldo y\n// queda registrado, en vez de dejar la celda vacía y romper la postulación.\nconst RESPALDO = 'contratacion2@asignar.com.co';\n\nconst ciudad = esOtra ? (limpio(f['Otra ciudad']) || 'Sin definir') : elegida;\nconst departamento = esOtra\n  ? limpio(f['Otro departamento'])\n  : (EQUIPOS[elegida]?.[0] ?? '');\nconst reclutador = esOtra\n  ? (limpio(f['Correo del equipo de selección']) || RESPALDO)\n  : (EQUIPOS[elegida]?.[1] ?? RESPALDO);\n\n// El portal muestra el salario tal como esté escrito en la celda, así que se\n// formatea acá una sola vez en lugar de confiar en cómo lo escriba cada quien.\nconst monto = Number(String(f['Salario mensual']).replace(/[^\\d]/g, ''));\nconst salario = monto > 0\n  ? '$' + monto.toLocaleString('es-CO')\n  : limpio(f['Salario mensual']);\n\nconst DETALLE_ESTANDAR = '+ Auxilio de transporte · + Prestaciones de ley';\n\nreturn [{\n  json: {\n    id: siguienteId,\n    activa: 'SI',                       // toda vacante nueva nace publicada\n    cargo: limpio(f['Cargo']),\n    ciudad,\n    departamento,\n    sector: limpio(f['Sector']),\n    contrato: limpio(f['Tipo de contrato']),\n    salario,\n    salario_detalle: limpio(f['Detalle del salario']) || DETALLE_ESTANDAR,\n    experiencia: limpio(f['Experiencia']),\n    jornada: limpio(f['Jornada']),\n    modalidad: limpio(f['Modalidad']),\n    funciones: limpio(f['Funciones principales']),\n    destacada: limpio(f['¿Destacada en el portal?']) === 'Sí' ? 'SI' : '',\n    correo_reclutador: reclutador,\n  },\n}];\n"
       },
       "id": "armar",
       "name": "🧮 Armar fila",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -400,
+        -160,
         300
       ]
     },
@@ -276,6 +308,7 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
+            "id": "={{ $json.id }}",
             "activa": "={{ $json.activa }}",
             "cargo": "={{ $json.cargo }}",
             "ciudad": "={{ $json.ciudad }}",
@@ -305,7 +338,7 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
       "position": [
-        -160,
+        80,
         300
       ],
       "retryOnFail": true,
@@ -321,6 +354,17 @@
   ],
   "connections": {
     "📝 Nueva vacante (formulario)": {
+      "main": [
+        [
+          {
+            "node": "📋 Leer ids existentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📋 Leer ids existentes": {
       "main": [
         [
           {

@@ -69,6 +69,188 @@ function FilterChip({
 }
 
 /* ============================================================
+   Selector de ciudad
+   Era un <select> nativo: abría el menú del sistema, desalineado con el resto
+   de la barra y sin forma de buscar. Con muchas ciudades publicadas eso se
+   vuelve una lista larga imposible de recorrer.
+   ============================================================ */
+function CiudadSelector({
+  valor, opciones, onChange, open, onToggle,
+}: {
+  valor: string; opciones: readonly string[];
+  onChange: (v: string) => void; open: boolean; onToggle: () => void;
+}) {
+  const [busqueda, setBusqueda] = useState("");
+  const activo = valor !== "Todas";
+  const filtradas = opciones.filter((c) =>
+    c.toLowerCase().includes(busqueda.trim().toLowerCase())
+  );
+
+  return (
+    <div className="relative flex-1 sm:flex-none" data-chip>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex w-full items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 text-left font-[var(--font-body)] text-sm transition-colors sm:min-w-[195px] sm:border-0 sm:bg-transparent sm:py-1.5"
+      >
+        <span className="material-symbols-outlined text-[20px] text-brand-blue">location_on</span>
+        <span className={`flex-1 truncate ${activo ? "font-semibold text-brand-navy" : "text-text-primary"}`}>
+          {activo ? valor : "Todas las ciudades"}
+        </span>
+        <span className={`material-symbols-outlined text-[18px] text-text-muted transition-transform ${open ? "rotate-180" : ""}`}>
+          expand_more
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute left-0 top-full z-40 mt-2 w-full min-w-[240px] rounded-2xl border border-border bg-white p-1.5 shadow-[0_16px_40px_-16px_rgba(0,18,51,0.3)] animate-[fadeIn_0.15s_ease-out]">
+          {/* El buscador aparece solo cuando la lista lo amerita */}
+          {opciones.length > 8 && (
+            <div className="mb-1 flex items-center gap-2 rounded-xl bg-surface px-3 py-2">
+              <span className="material-symbols-outlined text-[18px] text-text-muted">search</span>
+              <input
+                autoFocus
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar ciudad"
+                aria-label="Buscar ciudad"
+                className="w-full bg-transparent font-[var(--font-body)] text-sm outline-none placeholder:text-text-muted"
+              />
+            </div>
+          )}
+          <div className="max-h-64 overflow-y-auto">
+            {filtradas.length === 0 && (
+              <p className="px-3 py-2 font-[var(--font-body)] text-sm text-text-muted">Sin coincidencias</p>
+            )}
+            {filtradas.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => { onChange(c); setBusqueda(""); }}
+                className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left font-[var(--font-body)] text-sm transition-colors ${
+                  valor === c ? "bg-brand-blue/[0.06] font-semibold text-brand-blue" : "text-text-secondary hover:bg-surface"
+                }`}
+              >
+                {c === "Todas" ? "Todas las ciudades" : c}
+                {valor === c && <span className="material-symbols-outlined text-[18px]">check</span>}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   Compartir una vacante: enlace y QR
+   ============================================================ */
+function Compartir({ v }: { v: Vacante }) {
+  const [abierto, setAbierto] = useState(false);
+  const [copiado, setCopiado] = useState(false);
+  const [url, setUrl] = useState("");
+
+  // El origen real solo se conoce en el navegador: en el prerender no existe,
+  // y así el enlace sirve igual en el preview de Vercel y en producción. Se
+  // calcula al abrir, no en un efecto, para no encadenar un render de más.
+  const alternar = () => {
+    setAbierto((a) => {
+      if (!a) setUrl(`${window.location.origin}/vacantes?v=${encodeURIComponent(v.id)}`);
+      return !a;
+    });
+  };
+
+  // Cerrar al hacer clic afuera, como los demás desplegables de la página.
+  useEffect(() => {
+    if (!abierto) return;
+    const onDown = (e: MouseEvent) => {
+      if (!(e.target as HTMLElement).closest("[data-compartir]")) setAbierto(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [abierto]);
+
+  const copiar = async () => {
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      // Sin permiso de portapapeles: el campo de texto queda para copiar a mano.
+    }
+  };
+
+  return (
+    <div className="relative" data-compartir>
+      <button
+        type="button"
+        onClick={alternar}
+        aria-expanded={abierto}
+        className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 font-[var(--font-ui)] text-[12px] font-semibold text-white transition-colors hover:bg-white/25"
+      >
+        <span className="material-symbols-outlined text-[16px]">share</span>
+        Compartir
+      </button>
+
+      {abierto && (
+        <div className="absolute right-0 top-full z-50 mt-2 w-[268px] rounded-2xl border border-border bg-white p-3 text-left shadow-[0_16px_40px_-16px_rgba(0,18,51,0.4)] animate-[fadeIn_0.15s_ease-out]">
+          <p className="mb-2 font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-wide text-text-muted">
+            Enlace de la vacante
+          </p>
+          <div className="flex items-center gap-1.5">
+            <input
+              readOnly
+              value={url}
+              onFocus={(e) => e.currentTarget.select()}
+              className="w-full rounded-lg border border-border bg-surface px-2.5 py-2 font-[var(--font-body)] text-[12px] text-text-secondary outline-none"
+            />
+            <button
+              type="button"
+              onClick={copiar}
+              aria-label="Copiar enlace"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-blue text-white transition-colors hover:bg-brand-deep-blue"
+            >
+              <span className="material-symbols-outlined text-[18px]">{copiado ? "check" : "content_copy"}</span>
+            </button>
+          </div>
+          {copiado && <p className="mt-1 font-[var(--font-ui)] text-[11px] text-brand-blue">Enlace copiado</p>}
+
+          <div className="mt-3 flex flex-col items-center rounded-xl border border-border bg-surface p-3">
+            {/* eslint-disable-next-line @next/next/no-img-element -- SVG generado al vuelo, sin optimización de next/image */}
+            <img
+              src={`/api/qr?v=${encodeURIComponent(v.id)}`}
+              alt={`Código QR de la vacante ${v.cargo}`}
+              width={140}
+              height={140}
+              className="h-[140px] w-[140px]"
+            />
+            <a
+              href={`/api/qr?v=${encodeURIComponent(v.id)}`}
+              download={`vacante-${v.id}.svg`}
+              className="mt-2 font-[var(--font-ui)] text-[12px] font-semibold text-brand-blue hover:underline"
+            >
+              Descargar QR
+            </a>
+          </div>
+
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(`${v.cargo} en ${v.ciudad} — ${url}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2.5 flex items-center justify-center gap-1.5 rounded-full border border-border py-2 font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy transition-colors hover:border-brand-blue/50 hover:text-brand-blue"
+          >
+            <span className="material-symbols-outlined text-[17px]">chat</span>
+            Enviar por WhatsApp
+          </a>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
    Ítem de la lista (columna izquierda)
    ============================================================ */
 function VacanteItem({ v, active, onClick }: { v: Vacante; active: boolean; onClick: () => void }) {
@@ -174,14 +356,20 @@ function InfoVacante({ v, onClose }: { v: Vacante; onClose?: () => void }) {
         </button>
       )}
       <div className="relative">
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 font-[var(--font-ui)] text-[11px] font-semibold">
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
+        <div className="flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 font-[var(--font-ui)] text-[11px] font-semibold">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-400" />
+            </span>
+            Vacante activa
           </span>
-          Vacante activa
-        </span>
-        <h2 className="mt-4 font-[var(--font-display)] text-2xl font-extrabold leading-tight">{v.cargo}</h2>
+          {!onClose && <Compartir v={v} />}
+        </div>
+        <p className="mt-3 font-[var(--font-ui)] text-[11px] text-white/45">
+          Ref. {v.id}
+        </p>
+        <h2 className="mt-1 font-[var(--font-display)] text-2xl font-extrabold leading-tight">{v.cargo}</h2>
         <p className="mt-1.5 flex items-center gap-1.5 font-[var(--font-body)] text-sm text-white/80">
           <span className="material-symbols-outlined text-[18px]">location_on</span>
           {v.ciudad}, {v.departamento}
@@ -461,7 +649,7 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
   const [experiencia, setExperiencia] = useState("Todas");
   const [contrato, setContrato] = useState("Todos");
   const [openChip, setOpenChip] = useState<string | null>(null);
-  const [selectedId, setSelectedId] = useState<number>(vacantes[0]?.id ?? 0);
+  const [selectedId, setSelectedId] = useState<string>(vacantes[0]?.id ?? "");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [pagina, setPagina] = useState(1);
   const listaRef = useRef<HTMLDivElement>(null);
@@ -504,7 +692,7 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
   // inicial del enlace, no algo que deba repetirse si la lista se revalida.
   /* eslint-disable react-hooks/set-state-in-effect, react-hooks/exhaustive-deps -- la URL no existe durante el prerender y el deep link se lee una sola vez */
   useEffect(() => {
-    const id = Number(new URLSearchParams(window.location.search).get("v"));
+    const id = (new URLSearchParams(window.location.search).get("v") ?? "").trim();
     const indice = vacantes.findIndex((v) => v.id === id);
     if (!id || indice === -1) return;
     setSelectedId(id);
@@ -570,8 +758,17 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
     listaRef.current?.querySelector("[data-lista]")?.scrollTo({ top: 0 });
   };
 
-  const selectVacante = (id: number, abrirMovil = false) => {
+  const selectVacante = (id: string, abrirMovil = false) => {
     setSelectedId(id);
+
+    /* La URL refleja la vacante abierta, así que copiarla de la barra del
+       navegador ya sirve para compartir. Se usa replaceState y no pushState
+       para no llenar el historial: recorrer diez vacantes dejaría diez pasos
+       de «atrás» antes de salir de la página. */
+    const url = new URL(window.location.href);
+    url.searchParams.set("v", id);
+    window.history.replaceState(null, "", url);
+
     if (abrirMovil && window.matchMedia("(max-width: 1023px)").matches) {
       setMobileOpen(true);
       return;
@@ -617,17 +814,13 @@ export default function VacantesClient({ vacantes }: { vacantes: Vacante[] }) {
               )}
             </div>
             <div className="hidden sm:block h-6 w-px shrink-0 bg-border" />
-            <div className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2.5 sm:min-w-[195px] sm:border-0 sm:bg-transparent sm:py-1.5">
-              <span className="material-symbols-outlined text-[20px] text-brand-blue">location_on</span>
-              <select
-                value={ciudad} onChange={(e) => filtrar(() => setCiudad(e.target.value))}
-                aria-label="Ciudad"
-                className="w-full cursor-pointer appearance-none bg-transparent font-[var(--font-body)] text-sm text-text-primary outline-none"
-              >
-                {opciones.ciudades.map((c) => <option key={c} value={c}>{c === "Todas" ? "Todas las ciudades" : c}</option>)}
-              </select>
-              <span className="material-symbols-outlined pointer-events-none text-[18px] text-text-muted">expand_more</span>
-            </div>
+            <CiudadSelector
+              valor={ciudad}
+              opciones={opciones.ciudades}
+              open={openChip === "ciudad"}
+              onToggle={() => setOpenChip(openChip === "ciudad" ? null : "ciudad")}
+              onChange={(c) => { filtrar(() => setCiudad(c)); setOpenChip(null); }}
+            />
           </div>
 
           {/* Los chips envuelven en vez de tener scroll horizontal: un

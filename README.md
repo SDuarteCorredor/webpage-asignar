@@ -124,8 +124,17 @@ El equipo de vinculación publica vacantes registrando filas en un Sheet; el sit
 | L | `funciones` | |
 | M | `destacada` | `SI` le pone la etiqueta "Destacada" |
 | N | `correo_reclutador` | **Oculto: el sitio no lee esta columna** (ver abajo) |
+| O | `id` | Identificador estable y **único**. Es lo que viaja en la URL, el QR y la postulación |
 
 El Sheet ya está creado y poblado con las 12 vacantes iniciales, con el `correo_reclutador` prellenado según el mismo mapeo por ciudad que usa el flujo *Router Aspirantes*.
+
+### Por qué el `id` va en una columna propia
+
+Antes el identificador era el **número de fila**, lo que obligaba a no ordenar, no insertar y no borrar filas: cualquiera de las tres reasignaba los ids y las postulaciones empezaban a llegarle al reclutador equivocado.
+
+Con la columna `id` esa restricción desaparece. Lo único que hay que respetar es que **un id no se reutilice ni cambie** una vez publicada la vacante: hay enlaces y códigos QR circulando con él. El formulario de alta lo genera solo (mayor id + 1), así que en la práctica nadie lo escribe a mano.
+
+Mientras la columna esté vacía, el sitio y el flujo de postulaciones siguen usando el número de fila, así que la migración no rompe nada a mitad de camino.
 
 Los filtros del portal (ciudad, sector, modalidad, experiencia, contrato) se derivan de lo que haya publicado: agregar una ciudad o un sector nuevo en el Sheet lo hace aparecer solo, sin tocar código.
 
@@ -133,7 +142,7 @@ Los filtros del portal (ciudad, sector, modalidad, experiencia, contrato) se der
 
 - La lectura ocurre **solo en el servidor**: las credenciales nunca llegan al navegador.
 - Se autentica con una **cuenta de servicio** (`src/lib/google-auth.ts`), no con una API key. Una API key no es una identidad: obliga a dejar el Sheet accesible para cualquiera con el enlace. La cuenta de servicio sí lo es, así que el documento se comparte **solo con ella**, en modo lector.
-- El sitio lee únicamente las columnas A–M. **El correo del reclutador (col. N) no se lee ni se expone**: la postulación viaja con el `vacanteId` y es n8n —con sus propias credenciales— quien resuelve a quién enrutarla.
+- El sitio pide los rangos **A:M y O:O en una sola llamada**, saltándose la N a propósito. **El correo del reclutador (col. N) no se lee ni siquiera en el servidor**: la postulación viaja con el `id` de la vacante y es n8n —con sus propias credenciales— quien resuelve a quién enrutarla.
 - ⚠️ **No conectar aquí el Sheet de control operativo de solicitudes**: ese contiene nombres de clientes y datos personales de candidatos (cédulas y nombres completos). Debe usarse una hoja aparte solo con las columnas de arriba.
 
 ### Si el Sheet no está configurado
@@ -148,14 +157,14 @@ Campos que recibe el webhook:
 
 | Campo | Notas |
 |---|---|
-| `vacanteId` | Número de fila en el Sheet (fila 2 = `1`). **Con este se resuelve el `correo_reclutador`** |
+| `vacanteId` | El `id` estable de la columna O. **Con este se resuelve el `correo_reclutador`** |
 | `cargo`, `ciudad`, `sector` | Copia de la vacante, para el asunto y el registro |
 | `nombre`, `tipoDocumento`, `documento`, `edad`, `telefono`, `whatsapp` | Datos del candidato |
 | `hojaVida` | Archivo binario (PDF/Word, máx. 5 MB). Puede no venir |
 | `autorizaDatos` | Siempre `true`: es obligatorio para enviar |
 | `autorizaMarketing` | `true`/`false` — **consentimiento separado y opcional** |
 
-El flujo n8n debe: leer el `correo_reclutador` de la fila `vacanteId`, subir la hoja de vida a Drive, notificar al reclutador y registrar la postulación.
+El flujo n8n debe: buscar la fila cuyo `id` coincide con `vacanteId`, leer su `correo_reclutador`, subir la hoja de vida a Drive, notificar al reclutador y registrar la postulación.
 
 ### Consentimiento y comunicaciones comerciales
 
@@ -186,7 +195,7 @@ Los formularios empujan estos eventos al `dataLayer` (`src/lib/analytics.ts`). E
 | `NEXT_PUBLIC_SITE_URL` | `https://www.asignar.com.co` | Base de `metadataBase`, `sitemap.xml` y `robots.txt`. **Mientras el sitio viva en el preview de Vercel debe apuntar allí**, si no el sitemap anunciará URLs que aún no existen. |
 | `NEXT_PUBLIC_GTM_ID` | `GTM-PMHJBNJC` | Contenedor de GTM. Vacío = no se carga el script (útil en desarrollo). |
 | `VACANTES_SHEET_ID` | — | Id del Sheet de vacantes. Sin él se usa la lista de respaldo. |
-| `VACANTES_SHEET_RANGE` | `Vacantes!A:M` | Rango a leer. Deliberadamente **no incluye la columna N** (correo del reclutador). |
+| `VACANTES_SHEET_RANGE` | `Vacantes!A:M` | Rango publicable. Deliberadamente **no incluye la columna N** (correo del reclutador). El `id` se lee siempre de la O. |
 | `GOOGLE_SERVICE_ACCOUNT_EMAIL` | — | `client_email` de la cuenta de servicio. **Forma recomendada de autenticar.** |
 | `GOOGLE_SERVICE_ACCOUNT_KEY` | — | `private_key` del JSON de la cuenta de servicio, completa. **Sin `NEXT_PUBLIC_`.** |
 | `GOOGLE_SHEETS_API_KEY` | — | Alternativa a la cuenta de servicio. La organización tiene bloqueada la creación de API keys, así que normalmente no aplica. |
