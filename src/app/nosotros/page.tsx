@@ -5,7 +5,7 @@ import StatsBar from "@/components/nosotros/StatsBar";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export const metadata: Metadata = {
-  title: "Nosotros — Asignar SAS",
+  title: "Nosotros",
   description:
     "Conoce a Asignar SAS: +20 años conectando talento humano con las mejores empresas de Colombia. Nuestra historia, valores DOCA y presencia en 7+ ciudades.",
 };
