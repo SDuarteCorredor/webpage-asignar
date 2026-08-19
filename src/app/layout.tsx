@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: "/" },
   title: {
-    default: "Asignar SAS — Creemos en ti y en tu talento",
+    default: "Personal temporal y outsourcing en Colombia | Asignar SAS",
     template: "%s | Asignar SAS",
   },
   description:
