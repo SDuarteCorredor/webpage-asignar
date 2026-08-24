@@ -2,10 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 
+/* Arranca en el valor final a propósito: el HTML que sirve el servidor debe
+   traer el número real, porque es lo que leen Google y los motores de
+   respuesta con IA. El 0 lo pone el primer frame de la animación, ya en el
+   cliente. Con reduced-motion no se anima y el número queda en su valor. */
 function useCountUp(end: number, duration = 2000, start = false) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(end);
+
   useEffect(() => {
     if (!start) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let t0: number;
     let raf: number;
     const step = (ts: number) => {
@@ -31,7 +37,7 @@ function StatItem({ value, prefix, suffix, dot, label, inView }: {
   value: number; prefix?: string; suffix?: string; dot?: boolean; label: string; inView: boolean;
 }) {
   const count = useCountUp(value, 2000, inView);
-  const display = dot ? (inView ? count : 0).toLocaleString("es-CO") : String(inView ? count : 0);
+  const display = dot ? count.toLocaleString("es-CO") : String(count);
   return (
     <div className="text-center py-4 px-6">
       <span className="block font-[var(--font-display)] text-4xl md:text-5xl lg:text-[56px] font-extrabold text-white tracking-[-0.02em] leading-tight">

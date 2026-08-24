@@ -9,11 +9,19 @@ const stats = [
   { value: 1000, suffix: "+", label: "Trabajadores gestionados" },
 ];
 
+/* Arranca en el valor final a propósito: el HTML que sirve el servidor debe
+   traer el número real. Google y los motores de respuesta con IA leen ese
+   HTML, y publicar "0+ años de experiencia" es peor que no tener contador.
+   El 0 lo pone el primer frame de la animación —ya en el cliente y justo
+   cuando la franja entra en pantalla—, así que nunca se sirve un 0 y el
+   conteo se sigue viendo completo. Con reduced-motion no se anima y el
+   número se queda en su valor real. */
 function useCountUp(end: number, duration = 2000, start = false) {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(end);
 
   useEffect(() => {
     if (!start) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let startTime: number;
     let animationFrame: number;
 
@@ -47,7 +55,7 @@ function StatItem({
   inView: boolean;
 }) {
   const count = useCountUp(value, 2000, inView);
-  const display = (inView ? count : 0).toLocaleString("es-CO");
+  const display = count.toLocaleString("es-CO");
 
   return (
     <div className="text-center">

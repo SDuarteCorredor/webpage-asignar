@@ -3,6 +3,10 @@ import VacantesClient from "@/components/vacantes/VacantesClient";
 import { getVacantes } from "@/lib/vacantes";
 
 export const metadata: Metadata = {
+  /* Fijo y sin parámetros a propósito: `/vacantes?v=<id>` (el enlace que abren
+     los QR) sirve exactamente la misma página, así que apunta al canónico y no
+     compite con él en el índice. */
+  alternates: { canonical: "/vacantes" },
   title: "Vacantes de empleo",
   description:
     "Vacantes activas en hotelería, restaurantes, logística e industria en Colombia. Filtra por ciudad, sector y tipo de contrato, y postúlate en menos de 2 minutos con Asignar SAS.",

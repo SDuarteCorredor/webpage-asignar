@@ -31,7 +31,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   // Resuelve las URLs relativas (Open Graph, canonical) a absolutas.
   metadataBase: new URL(SITE_URL),
-  alternates: { canonical: "/" },
+  // OJO: el canonical NO va aquí. Next fusiona `metadata` de forma shallow por
+  // clave de primer nivel: si el layout raíz declara `alternates`, toda página
+  // que no lo sobrescriba hereda el objeto completo y termina apuntando su
+  // canonical al home — Google las trataría como duplicados y solo indexaría
+  // el home. Cada página declara el suyo (ver src/app/*/page.tsx).
   title: {
     default: "Personal temporal y outsourcing en Colombia | Asignar SAS",
     template: "%s | Asignar SAS",
