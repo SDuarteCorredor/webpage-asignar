@@ -145,14 +145,13 @@ export default function SGSSTSection() {
                     Respaldado por
                   </p>
                   <div className="mt-1.5 flex items-center justify-between gap-3">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/clientes-brand/sura.png"
-                      alt="SURA"
-                      width={88}
-                      height={29}
-                      className="h-[29px] w-auto"
-                    />
+                    {/* Iba un <img> a /clientes-brand/sura.png, que no existe en
+                        el repo: el home mostraba un ícono de imagen rota. Queda
+                        el nombre en texto hasta tener el logo autorizado; al
+                        reponerlo, sustituir este <span> por la imagen. */}
+                    <span className="font-[var(--font-display)] text-[19px] font-extrabold tracking-[-0.01em] text-brand-navy">
+                      SURA
+                    </span>
                     <span className="rounded-full bg-brand-blue/10 px-3.5 py-1.5 font-[var(--font-ui)] text-[11px] font-semibold text-brand-blue">
                       ARL · Cobertura total
                     </span>

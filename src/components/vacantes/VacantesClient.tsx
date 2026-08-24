@@ -356,7 +356,12 @@ function InfoVacante({ v, onClose }: { v: Vacante; onClose?: () => void }) {
         </button>
       )}
       <div className="relative">
-        <div className="flex items-center justify-between gap-2">
+        {/* En el overlay móvil el botón de cerrar es absoluto (right-4 top-4),
+            así que la fila reserva espacio a la derecha para que "Compartir"
+            no le quede debajo. Compartir tiene que existir sobre todo aquí:
+            una vacante se pasa a un amigo desde el celular, no desde el
+            escritorio. */}
+        <div className={`flex items-center justify-between gap-2 ${onClose ? "pr-10 lg:pr-0" : ""}`}>
           <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 font-[var(--font-ui)] text-[11px] font-semibold">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
@@ -364,7 +369,7 @@ function InfoVacante({ v, onClose }: { v: Vacante; onClose?: () => void }) {
             </span>
             Vacante activa
           </span>
-          {!onClose && <Compartir v={v} />}
+          <Compartir v={v} />
         </div>
         <p className="mt-3 font-[var(--font-ui)] text-[11px] text-white/45">
           Ref. {v.id}

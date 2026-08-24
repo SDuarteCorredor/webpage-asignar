@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollRevealInit from "@/components/ScrollRevealInit";
 import { GoogleTagManager, GTMNoScript } from "@/components/GoogleTagManager";
+import WhatsAppFAB from "@/components/WhatsAppFAB";
 import { SITE_URL } from "@/lib/site";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -90,6 +91,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <WhatsAppFAB />
       </body>
     </html>
   );
