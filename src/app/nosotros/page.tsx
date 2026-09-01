@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/nosotros" },
   title: "Nosotros",
   description:
-    "Conoce a Asignar SAS: +20 años conectando talento humano con las mejores empresas de Colombia. Nuestra historia, valores DOCA y presencia en 7+ ciudades.",
+    "Conoce a Asignar SAS: +20 años conectando talento humano con las mejores empresas de Colombia. Nuestra historia, valores DOCA y presencia en 9 ciudades.",
 };
 
 /* ─── Inline icons ─── */
@@ -109,7 +109,7 @@ export default function NosotrosPage() {
                 Detrás de cada satisfacción hay un equipo que nadie ve
               </h1>
               <p className="font-[var(--font-body)] text-lg text-text-secondary leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
-                Desde 2006, Asignar conecta el talento colombiano con las empresas que mueven el país. No somos una agencia más: somos el equipo que garantiza que tu operación nunca se detenga — con personal calificado, cumplimiento total y presencia en 7+ ciudades.
+                Desde 2006, Asignar conecta el talento colombiano con las empresas que mueven el país. No somos una agencia más: somos el equipo que garantiza que tu operación nunca se detenga — con personal calificado, cumplimiento total y presencia en 9 ciudades.
               </p>
               <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                 <Link
@@ -172,7 +172,7 @@ export default function NosotrosPage() {
                   En Medellín, una ciudad que reinventa su futuro cada día, nació Asignar con una premisa simple: las empresas necesitan personas confiables, y las personas merecen oportunidades dignas. Lo que empezó como una respuesta al sector hotelero se convirtió en la red de talento temporal más especializada de Colombia.
                 </p>
                 <p>
-                  Hoy operamos en más de 7 ciudades, gestionamos más de 5.000 colaboradores en misión y atendemos sectores desde hotelería y restaurantes hasta logística e industria. Todo bajo la Ley 50 de 1990, con licencia del Ministerio de Trabajo, SG-SST certificado y el respaldo de ARL SURA.
+                  Hoy operamos en 9 ciudades, gestionamos más de 5.000 colaboradores en misión y atendemos sectores desde hotelería y restaurantes hasta logística e industria. Todo bajo la Ley 50 de 1990, con licencia del Ministerio de Trabajo, SG-SST certificado y el respaldo de ARL SURA.
                 </p>
               </div>
               <blockquote className="mt-6 border-l-4 border-brand-blue pl-5 font-[var(--font-body)] text-base italic text-text-primary">

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 const stats = [
   { value: 20, suffix: "+", label: "Años de experiencia" },
-  { value: 7, suffix: "+", label: "Sedes en Colombia" },
+  { value: 9, label: "Sedes en Colombia" },
   { value: 500, suffix: "+", label: "Empresas cliente" },
   { value: 1000, suffix: "+", label: "Trabajadores gestionados" },
 ];
@@ -50,7 +50,8 @@ function StatItem({
   inView,
 }: {
   value: number;
-  suffix: string;
+  /* Opcional: las cifras exactas (p. ej. las 9 sedes) van sin "+". */
+  suffix?: string;
   label: string;
   inView: boolean;
 }) {

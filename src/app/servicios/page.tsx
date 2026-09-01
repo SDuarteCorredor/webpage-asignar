@@ -5,6 +5,7 @@ import { PropuestaProvider } from "@/components/servicios/PropuestaProvider";
 import PropuestaForm from "@/components/servicios/PropuestaForm";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { altDeLogo } from "@/lib/clientes";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/servicios" },
@@ -328,7 +329,7 @@ export default function SolucionesPage() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={src}
-                        alt="Cliente Asignar"
+                        alt={altDeLogo(src)}
                         loading="lazy"
                         className="w-full h-full object-contain rounded-full"
                       />

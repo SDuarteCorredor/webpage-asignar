@@ -28,7 +28,7 @@ function useCountUp(end: number, duration = 2000, start = false) {
 
 const stats = [
   { value: 20, prefix: "+", label: "Años de experiencia" },
-  { value: 7, suffix: "+", label: "Ciudades con presencia" },
+  { value: 9, label: "Ciudades con presencia" },
   { value: 5000, prefix: "+", dot: true, label: "Colaboradores en misión" },
   { value: 64, prefix: "+", label: "Clientes activos" },
 ];
