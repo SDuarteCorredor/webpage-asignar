@@ -7,6 +7,7 @@ import ScrollRevealInit from "@/components/ScrollRevealInit";
 import { GoogleTagManager, GTMNoScript } from "@/components/GoogleTagManager";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import { SITE_URL } from "@/lib/site";
+import { aJsonLd, organizacionSchema, sitioWebSchema } from "@/lib/schema";
 
 const plusJakarta = Plus_Jakarta_Sans({
   variable: "--font-display",
@@ -84,6 +85,17 @@ export default function RootLayout({
           rel="stylesheet"
         />
         <GoogleTagManager />
+        {/* Datos estructurados del sitio. Van en el layout para que estén en
+            todas las rutas: identifican a la empresa una sola vez y las demás
+            páginas pueden referenciar el nodo por @id. */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: aJsonLd(organizacionSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: aJsonLd(sitioWebSchema) }}
+        />
       </head>
       <body className="min-h-screen flex flex-col">
         <GTMNoScript />
