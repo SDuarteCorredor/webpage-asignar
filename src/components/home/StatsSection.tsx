@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from "react";
 const stats = [
   { value: 20, suffix: "+", label: "Años de experiencia" },
   { value: 9, label: "Sedes en Colombia" },
-  { value: 500, suffix: "+", label: "Empresas cliente" },
-  { value: 1000, suffix: "+", label: "Trabajadores gestionados" },
+  { value: 64, suffix: "+", label: "Empresas cliente" },
+  { value: 5000, suffix: "+", label: "Trabajadores gestionados" },
 ];
 
 /* Arranca en el valor final a propósito: el HTML que sirve el servidor debe
