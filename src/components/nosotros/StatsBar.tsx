@@ -51,7 +51,7 @@ function StatItem({ value, prefix, suffix, dot, label, inView }: {
 }
 
 export default function StatsBar() {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLUListElement>(null);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
@@ -66,16 +66,23 @@ export default function StatsBar() {
   }, []);
 
   return (
-    <section className="py-16 md:py-20 bg-brand-gradient">
-      <div
-        ref={ref}
-        className="max-w-[1280px] mx-auto px-4 md:px-16 grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-0"
-      >
-        {stats.map((s, i) => (
-          <div key={s.label} className={i > 0 ? "lg:border-l border-white/15" : ""}>
-            <StatItem {...s} inView={inView} />
-          </div>
-        ))}
+    <section className="py-16 md:py-20 bg-brand-gradient" aria-labelledby="cifras-heading">
+      <div className="max-w-[1280px] mx-auto px-4 md:px-16">
+        {/* Título solo para lectores de pantalla y para el esquema de
+            encabezados: la banda es visualmente autoexplicativa. */}
+        <h2 id="cifras-heading" className="sr-only">
+          Asignar en cifras
+        </h2>
+        <ul
+          ref={ref}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-0"
+        >
+          {stats.map((s, i) => (
+            <li key={s.label} className={i > 0 ? "lg:border-l border-white/15" : ""}>
+              <StatItem {...s} inView={inView} />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
