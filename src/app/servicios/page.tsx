@@ -6,6 +6,8 @@ import PropuestaForm from "@/components/servicios/PropuestaForm";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { altDeLogo } from "@/lib/clientes";
+import ResumenClave from "@/components/servicios/ResumenClave";
+import ComparativaServicios from "@/components/servicios/ComparativaServicios";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/servicios" },
@@ -203,8 +205,14 @@ export default function SolucionesPage() {
         </div>
       </section>
 
+      {/* 01b Resumen extraíble — justo después del H1 */}
+      <ResumenClave />
+
       {/* 02 Servicios Explorer */}
       <ServiciosExplorer />
+
+      {/* 02b Comparativa de servicios */}
+      <ComparativaServicios />
 
       {/* 02b ¿Por qué Asignar? — photo cards */}
       <section className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] bg-white">
@@ -275,9 +283,11 @@ export default function SolucionesPage() {
 
           <div className="relative">
             <div className="hidden lg:block absolute top-7 left-[7%] right-[7%] h-0.5 bg-gradient-to-r from-brand-blue/20 via-brand-blue/40 to-brand-blue" />
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+            {/* Es una secuencia real (solicitud → primer día), por eso <ol> y
+                no <div>: se lee y se extrae como los 7 pasos que es. */}
+            <ol className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 list-none">
               {procesoSteps.map((step, i) => (
-                <div key={step.num} className="text-center group relative">
+                <li key={step.num} className="text-center group relative">
                   <div
                     className={`w-14 h-14 rounded-full mx-auto flex items-center justify-center font-[var(--font-display)] text-lg font-bold mb-3 transition-colors duration-300 ${
                       i === procesoSteps.length - 1
@@ -293,9 +303,9 @@ export default function SolucionesPage() {
                   <p className="font-[var(--font-body)] text-[11px] text-text-muted mt-1">
                     {step.desc}
                   </p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </div>
       </section>
@@ -370,7 +380,7 @@ export default function SolucionesPage() {
                 </div>
                 <div>
                   <p className="font-[var(--font-display)] text-3xl md:text-4xl font-extrabold text-brand-blue">
-                    7 sedes
+                    9 sedes
                   </p>
                   <p className="font-[var(--font-body)] text-sm text-text-muted mt-1">
                     cobertura nacional
@@ -409,9 +419,11 @@ export default function SolucionesPage() {
                       />
                     </svg>
                   </div>
-                  <h4 className="font-[var(--font-display)] text-base font-bold text-brand-navy mb-1">
+                  {/* H3 y no H4: es subsección directa del H2 "Respaldo que
+                      protege tu operación", sin nivel intermedio. */}
+                  <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy mb-1">
                     {c.titulo}
-                  </h4>
+                  </h3>
                   <p className="font-[var(--font-body)] text-sm text-text-secondary leading-relaxed">
                     {c.descripcion}
                   </p>
