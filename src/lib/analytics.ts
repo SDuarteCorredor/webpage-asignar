@@ -19,7 +19,9 @@ export type ConversionEvent =
   /** Consulta del estado de una SQR. */
   | "sqr_seguimiento"
   /** Clic en el botón flotante de WhatsApp. */
-  | "whatsapp_click";
+  | "whatsapp_click"
+  /** Compartir una vacante puntual (copiar enlace o enviar por WhatsApp). */
+  | "vacante_compartida";
 
 type DataLayerWindow = Window & { dataLayer?: Record<string, unknown>[] };
 

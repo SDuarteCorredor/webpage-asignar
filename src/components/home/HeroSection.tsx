@@ -127,9 +127,9 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* +500 */}
+          {/* +64 */}
           <div className="float-card absolute bottom-24 right-20 rounded-2xl border border-white/25 bg-white/10 px-6 py-4 backdrop-blur-md" style={{ animationDelay: "2s" }}>
-            <p className="font-[var(--font-display)] text-3xl font-extrabold leading-none text-white">+500</p>
+            <p className="font-[var(--font-display)] text-3xl font-extrabold leading-none text-white">+64</p>
             <p className="mt-1.5 font-[var(--font-ui)] text-xs text-white/80">empresas cliente</p>
           </div>
         </div>

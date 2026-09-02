@@ -51,9 +51,9 @@ export default function SGSSTSection() {
                     </span>
                   </div>
                   <div>
-                    <h4 className="font-[var(--font-display)] text-sm font-bold text-brand-navy mb-0.5">
+                    <h3 className="font-[var(--font-display)] text-sm font-bold text-brand-navy mb-0.5">
                       {f.titulo}
-                    </h4>
+                    </h3>
                     <p className="font-[var(--font-body)] text-xs text-text-secondary leading-relaxed">
                       {f.desc}
                     </p>

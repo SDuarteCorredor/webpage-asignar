@@ -144,9 +144,9 @@ function FLink({ href, children }: { href: string; children: React.ReactNode }) 
 
 function ColTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h4 className="mb-4 font-[var(--font-ui)] text-[13px] font-bold uppercase tracking-[0.08em] text-brand-navy">
+    <h3 className="mb-4 font-[var(--font-ui)] text-[13px] font-bold uppercase tracking-[0.08em] text-brand-navy">
       {children}
-    </h4>
+    </h3>
   );
 }
 

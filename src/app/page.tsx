@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import HeroSection from "@/components/home/HeroSection";
+import TLDRSection from "@/components/home/TLDRSection";
 import VacantesPreview from "@/components/home/VacantesPreview";
 import StatsSection from "@/components/home/StatsSection";
 import ClientLogos from "@/components/home/ClientLogos";
@@ -22,6 +23,7 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
+      <TLDRSection />
       <VacantesPreview />
       <StatsSection />
       <ClientLogos />
