@@ -10,12 +10,12 @@ const ArrowRight = ({ className = "" }: { className?: string }) => (
 
 // Cada tarjeta enlaza a la categoría relacionada del FAQ (vía hash #slug).
 const beneficios = [
-  { titulo: "Pagos quincenales", sub: "Puntuales y seguros", img: "/home/ben-1.jpg", href: "/faq#nomina" },
-  { titulo: "Seguridad social", sub: "EPS, Pensión, ARL y Caja", img: "/home/ben-2.jpg", href: "/faq#seguridad-social" },
-  { titulo: "Prestaciones de ley", sub: "Prima, cesantías y vacaciones", img: "/home/ben-3.jpg", href: "/faq#nomina" },
-  { titulo: "Capacitaciones", sub: "Gratuitas para tu perfil", img: "/home/ben-4.jpg", href: "/faq#sst" },
-  { titulo: "Acompañamiento", sub: "De nuestro equipo experto", img: "/home/ben-5.jpg", href: "/faq#vinculacion" },
-  { titulo: "Flexibilidad", sub: "Opciones de horarios", img: "/home/ben-6.jpg", href: "/faq#marcacion" },
+  { titulo: "Pagos quincenales", sub: "Puntuales y seguros", img: "/home/pagos-quincenales.jpg", href: "/faq#nomina" },
+  { titulo: "Seguridad social", sub: "EPS, Pensión, ARL y Caja", img: "/home/seguridad-social.jpg", href: "/faq#seguridad-social" },
+  { titulo: "Prestaciones de ley", sub: "Prima, cesantías y vacaciones", img: "/home/prestaciones-de-ley.jpg", href: "/faq#nomina" },
+  { titulo: "Capacitaciones", sub: "Gratuitas para tu perfil", img: "/home/capacitaciones.jpg", href: "/faq#sst" },
+  { titulo: "Acompañamiento", sub: "De nuestro equipo experto", img: "/home/acompanamiento-equipo-experto.jpg", href: "/faq#vinculacion" },
+  { titulo: "Flexibilidad", sub: "Opciones de horarios", img: "/home/flexibilidad-horarios.jpg", href: "/faq#marcacion" },
 ];
 
 export default function BeneficiosSection() {

@@ -22,28 +22,28 @@ const diferenciadores = [
     descripcion:
       "Asignar cumple con todos los lineamientos de ley para personal temporal eventual y tiempo completo.",
     icon: "verified_user",
-    img: "/images/servicios/diferenciador-4.webp",
+    img: "/images/servicios/cumplimiento-normatividad-legal.webp",
   },
   {
     titulo: "Cobertura a nivel nacional",
     descripcion:
       "Nuestras sedes: Medellín, Rionegro, Bogotá, Cali, Barranquilla, Santa Marta, Cartagena, Pereira, Manizales.",
     icon: "location_on",
-    img: "/images/servicios/diferenciador-2.webp",
+    img: "/images/servicios/cobertura-nacional.webp",
   },
   {
     titulo: "Especialistas en sector HORECA",
     descripcion:
       "Hoteles de alto perfil, clubes, cadenas de restaurantes y centros de convenciones.",
     icon: "apartment",
-    img: "/images/servicios/diferenciador-3.webp",
+    img: "/images/servicios/especialistas-sector-horeca.webp",
   },
   {
     titulo: "Software propio",
     descripcion:
       "QR en dispositivos electrónicos para agilizar nómina y requisiciones en tiempo real.",
     icon: "desktop_windows",
-    img: "/images/servicios/diferenciador-1.webp",
+    img: "/images/servicios/software-propio.webp",
   },
 ];
 
