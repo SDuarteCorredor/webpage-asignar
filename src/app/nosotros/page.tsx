@@ -5,9 +5,10 @@ import StatsBar from "@/components/nosotros/StatsBar";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 
 export const metadata: Metadata = {
-  title: "Nosotros — Asignar SAS",
+  alternates: { canonical: "/nosotros" },
+  title: "Nosotros",
   description:
-    "Conoce a Asignar SAS: +20 años conectando talento humano con las mejores empresas de Colombia. Nuestra historia, valores DOCA y presencia en 7+ ciudades.",
+    "Conoce a Asignar SAS: +20 años conectando talento humano con las mejores empresas de Colombia. Nuestra historia, valores DOCA y presencia en 9 ciudades.",
 };
 
 /* ─── Inline icons ─── */
@@ -17,7 +18,34 @@ const ArrowRight = ({ className = "" }: { className?: string }) => (
   </svg>
 );
 
+const Check = ({ className = "" }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+    <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
 /* ─── Data ─── */
+/* Resumen de entrada (TL;DR). Solo afirma cosas que el resto de la página ya
+   sustenta: trayectoria, cobertura, respaldo legal y el modelo DOCA. */
+const resumen = [
+  {
+    title: "Desde 2006",
+    desc: "más de 20 años operando como Empresa de Servicios Temporales colombiana, con sede principal en Medellín.",
+  },
+  {
+    title: "9 ciudades",
+    desc: "Medellín, Bogotá, Rionegro, Cali, Cartagena, Barranquilla, Santa Marta, Pereira y Manizales, con equipos locales en cada una.",
+  },
+  {
+    title: "Respaldo legal completo",
+    desc: "contratación bajo la Ley 50 de 1990, licencia del Ministerio de Trabajo, SG-SST certificado y respaldo de ARL SURA.",
+  },
+  {
+    title: "Modelo DOCA",
+    desc: "Disposición, Oportunidad, Calidad y Acompañamiento: respuesta en menos de 48 horas, selección verificada y supervisión in situ después de la vinculación.",
+  },
+];
+
 const doca = [
   {
     num: "01",
@@ -108,7 +136,7 @@ export default function NosotrosPage() {
                 Detrás de cada satisfacción hay un equipo que nadie ve
               </h1>
               <p className="font-[var(--font-body)] text-lg text-text-secondary leading-relaxed mb-8 max-w-lg mx-auto md:mx-0">
-                Desde 2006, Asignar conecta el talento colombiano con las empresas que mueven el país. No somos una agencia más: somos el equipo que garantiza que tu operación nunca se detenga — con personal calificado, cumplimiento total y presencia en 7+ ciudades.
+                Desde 2006, Asignar conecta el talento colombiano con las empresas que mueven el país. No somos una agencia más: somos el equipo que garantiza que tu operación nunca se detenga — con personal calificado, cumplimiento total y presencia en 9 ciudades.
               </p>
               <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                 <Link
@@ -143,6 +171,31 @@ export default function NosotrosPage() {
         </div>
       </section>
 
+      {/* 01b — TL;DR: resumen de confianza, justo después del H1 */}
+      <section aria-labelledby="resumen-heading" className="bg-white pt-12 md:pt-16">
+        <div className="max-w-[1280px] mx-auto px-4 md:px-16">
+          <div className="rounded-2xl border border-border bg-surface-gray p-6 md:p-8">
+            <h2
+              id="resumen-heading"
+              className="font-[var(--font-display)] text-xl md:text-2xl font-bold text-brand-navy mb-6"
+            >
+              En resumen: por qué confiar en Asignar
+            </h2>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
+              {resumen.map((r) => (
+                <li key={r.title} className="flex items-start gap-3">
+                  <Check className="mt-1 h-4 w-4 shrink-0 text-brand-blue" />
+                  <p className="font-[var(--font-body)] text-base text-text-secondary leading-relaxed">
+                    <strong className="font-bold text-brand-navy">{r.title}:</strong>{" "}
+                    {r.desc}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* 02 — Origin Story */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
@@ -171,7 +224,7 @@ export default function NosotrosPage() {
                   En Medellín, una ciudad que reinventa su futuro cada día, nació Asignar con una premisa simple: las empresas necesitan personas confiables, y las personas merecen oportunidades dignas. Lo que empezó como una respuesta al sector hotelero se convirtió en la red de talento temporal más especializada de Colombia.
                 </p>
                 <p>
-                  Hoy operamos en más de 7 ciudades, gestionamos más de 5.000 colaboradores en misión y atendemos sectores desde hotelería y restaurantes hasta logística e industria. Todo bajo la Ley 50 de 1990, con licencia del Ministerio de Trabajo, SG-SST certificado y el respaldo de ARL SURA.
+                  Hoy operamos en 9 ciudades, gestionamos más de 5.000 colaboradores en misión y atendemos sectores desde hotelería y restaurantes hasta logística e industria. Todo bajo la Ley 50 de 1990, con licencia del Ministerio de Trabajo, SG-SST certificado y el respaldo de ARL SURA.
                 </p>
               </div>
               <blockquote className="mt-6 border-l-4 border-brand-blue pl-5 font-[var(--font-body)] text-base italic text-text-primary">
@@ -196,9 +249,9 @@ export default function NosotrosPage() {
               Cuatro principios que guían cada decisión, cada proceso y cada persona que enviamos a tu operación.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {doca.map((d) => (
-              <div
+              <li
                 key={d.num}
                 className="group relative bg-white rounded-2xl shadow-[0_0_0_1px_rgba(0,18,51,0.04),0_1px_3px_rgba(0,18,51,0.06),0_6px_16px_rgba(0,18,51,0.04)] overflow-hidden transition-all duration-300 hover:shadow-[0_0_0_1px_rgba(0,122,254,0.08),0_2px_6px_rgba(0,18,51,0.08),0_12px_24px_rgba(0,18,51,0.06)] hover:-translate-y-0.5"
               >
@@ -216,9 +269,9 @@ export default function NosotrosPage() {
                     {d.desc}
                   </p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
@@ -234,69 +287,74 @@ export default function NosotrosPage() {
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-6">
+          <ul className="flex flex-col md:flex-row gap-6">
             {/* Featured — Medellín */}
-            <a
-              href={maps(sedes[0].q)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group relative md:w-5/12 aspect-[4/3] md:aspect-auto md:min-h-[400px] rounded-2xl overflow-hidden bg-brand-navy"
-            >
-              {/* Foto de Medellín */}
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                style={{ backgroundImage: "url('/images/nosotros/medellin-sede.webp')" }}
-              />
-              {/* Tinte navy #000826 al 40% */}
-              <div className="absolute inset-0 z-10" style={{ backgroundColor: "rgba(0,8,38,0.4)" }} />
-              {/* Gradiente lineal para legibilidad del texto */}
-              <div className="absolute inset-0 z-10 bg-gradient-to-t from-brand-navy/85 via-brand-navy/25 to-transparent" />
-              <div className="absolute bottom-8 left-8 right-8 z-20">
-                <span className="inline-flex items-center rounded-full bg-brand-blue px-3.5 py-1 font-[var(--font-ui)] text-[11px] font-semibold text-white uppercase tracking-wider mb-3">
-                  Sede principal
-                </span>
-                <h3 className="font-[var(--font-display)] text-3xl md:text-4xl font-extrabold text-white mb-1">
-                  Medellín
-                </h3>
-                <p className="font-[var(--font-body)] text-base text-white/70 mb-2">
-                  Cra. 48 #10-45, El Poblado
-                </p>
-                <span className="font-[var(--font-ui)] text-sm font-medium text-brand-light-blue transition-colors group-hover:text-white">
-                  Ver en Google Maps →
-                </span>
-              </div>
-            </a>
+            <li className="md:w-5/12 aspect-[4/3] md:aspect-auto md:min-h-[400px]">
+              <a
+                href={maps(sedes[0].q)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative block h-full w-full rounded-2xl overflow-hidden bg-brand-navy"
+              >
+                {/* Foto de Medellín */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                  style={{ backgroundImage: "url('/images/nosotros/medellin-sede.webp')" }}
+                />
+                {/* Tinte navy #000826 al 40% */}
+                <div className="absolute inset-0 z-10" style={{ backgroundColor: "rgba(0,8,38,0.4)" }} />
+                {/* Gradiente lineal para legibilidad del texto */}
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-brand-navy/85 via-brand-navy/25 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8 z-20">
+                  <span className="inline-flex items-center rounded-full bg-brand-blue px-3.5 py-1 font-[var(--font-ui)] text-[11px] font-semibold text-white uppercase tracking-wider mb-3">
+                    Sede principal
+                  </span>
+                  <h3 className="font-[var(--font-display)] text-3xl md:text-4xl font-extrabold text-white mb-1">
+                    Medellín
+                  </h3>
+                  <p className="font-[var(--font-body)] text-base text-white/70 mb-2">
+                    Cra. 48 #10-45, El Poblado
+                  </p>
+                  <span className="font-[var(--font-ui)] text-sm font-medium text-brand-light-blue transition-colors group-hover:text-white">
+                    Ver en Google Maps →
+                  </span>
+                </div>
+              </a>
+            </li>
 
             {/* Other cities grid */}
-            <div className="flex-1 grid grid-cols-2 gap-4">
-              {sedes.slice(1).map((s) => (
-                <a
-                  key={s.ciudad}
-                  href={maps(s.q)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex flex-col gap-1 rounded-xl border border-border bg-surface-gray p-5 transition-all hover:border-brand-blue/30 hover:shadow-md hover:-translate-y-0.5"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue/10">
-                      <span className="h-2 w-2 rounded-full bg-brand-blue" />
-                    </span>
-                    <span className="font-[var(--font-display)] text-base font-bold text-brand-navy">
-                      {s.ciudad}
-                    </span>
-                  </div>
-                  {s.dir && (
-                    <span className="font-[var(--font-body)] text-[13px] text-text-muted ml-9">
-                      {s.dir}
-                    </span>
-                  )}
-                  <span className="font-[var(--font-ui)] text-[13px] font-medium text-brand-blue ml-9 transition-colors group-hover:text-brand-deep-blue">
-                    Ver en mapa →
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
+            <li className="flex-1">
+              <ul className="grid grid-cols-2 gap-4">
+                {sedes.slice(1).map((s) => (
+                  <li key={s.ciudad}>
+                    <a
+                      href={maps(s.q)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex h-full flex-col gap-1 rounded-xl border border-border bg-surface-gray p-5 transition-all hover:border-brand-blue/30 hover:shadow-md hover:-translate-y-0.5"
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-blue/10">
+                          <span className="h-2 w-2 rounded-full bg-brand-blue" />
+                        </span>
+                        <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy">
+                          {s.ciudad}
+                        </h3>
+                      </div>
+                      {s.dir && (
+                        <span className="font-[var(--font-body)] text-[13px] text-text-muted ml-9">
+                          {s.dir}
+                        </span>
+                      )}
+                      <span className="font-[var(--font-ui)] text-[13px] font-medium text-brand-blue ml-9 transition-colors group-hover:text-brand-deep-blue">
+                        Ver en mapa →
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -312,33 +370,34 @@ export default function NosotrosPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <ul className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {social.map((s) => (
-              <a
-                key={s.platform}
-                href={s.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group bg-white rounded-2xl border border-border p-6 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand-blue/20"
-              >
-                <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white mb-4`}>
-                  {s.icon}
-                </div>
-                <h3 className="font-[var(--font-display)] text-lg font-bold text-brand-navy mb-0.5">
-                  {s.platform}
-                </h3>
-                <p className="font-[var(--font-ui)] text-sm font-medium text-brand-blue mb-2">
-                  {s.handle}
-                </p>
-                <p className="font-[var(--font-body)] text-sm text-text-secondary leading-relaxed mb-3">
-                  {s.desc}
-                </p>
-                <span className="font-[var(--font-body)] text-xs text-text-muted">
-                  {s.url.replace("https://www.", "")}
-                </span>
-              </a>
+              <li key={s.platform}>
+                <a
+                  href={s.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block h-full bg-white rounded-2xl border border-border p-6 transition-all hover:shadow-md hover:-translate-y-0.5 hover:border-brand-blue/20"
+                >
+                  <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white mb-4`}>
+                    {s.icon}
+                  </div>
+                  <h3 className="font-[var(--font-display)] text-lg font-bold text-brand-navy mb-0.5">
+                    {s.platform}
+                  </h3>
+                  <p className="font-[var(--font-ui)] text-sm font-medium text-brand-blue mb-2">
+                    {s.handle}
+                  </p>
+                  <p className="font-[var(--font-body)] text-sm text-text-secondary leading-relaxed mb-3">
+                    {s.desc}
+                  </p>
+                  <span className="font-[var(--font-body)] text-xs text-text-muted">
+                    {s.url.replace("https://www.", "")}
+                  </span>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 

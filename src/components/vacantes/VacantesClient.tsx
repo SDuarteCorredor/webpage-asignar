@@ -176,6 +176,7 @@ function Compartir({ v }: { v: Vacante }) {
     try {
       await navigator.clipboard.writeText(url);
       setCopiado(true);
+      trackEvent("vacante_compartida", { canal: "copiar_enlace", vacante_id: v.id });
       setTimeout(() => setCopiado(false), 2000);
     } catch {
       // Sin permiso de portapapeles: el campo de texto queda para copiar a mano.
@@ -239,6 +240,7 @@ function Compartir({ v }: { v: Vacante }) {
             href={`https://wa.me/?text=${encodeURIComponent(`${v.cargo} en ${v.ciudad} — ${url}`)}`}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackEvent("vacante_compartida", { canal: "whatsapp", vacante_id: v.id })}
             className="mt-2.5 flex items-center justify-center gap-1.5 rounded-full border border-border py-2 font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy transition-colors hover:border-brand-blue/50 hover:text-brand-blue"
           >
             <span className="material-symbols-outlined text-[17px]">chat</span>
@@ -270,7 +272,7 @@ function VacanteItem({ v, active, onClick }: { v: Vacante; active: boolean; onCl
         </span>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-[var(--font-display)] text-[15px] font-bold text-brand-navy leading-snug">{v.cargo}</h3>
+            <h2 className="font-[var(--font-display)] text-[15px] font-bold text-brand-navy leading-snug">{v.cargo}</h2>
             {v.destacada && (
               <span className="shrink-0 inline-flex items-center rounded-full bg-brand-blue/10 px-2 py-0.5 font-[var(--font-ui)] text-[9px] font-semibold uppercase tracking-wide text-brand-blue">
                 Destacada
@@ -356,7 +358,12 @@ function InfoVacante({ v, onClose }: { v: Vacante; onClose?: () => void }) {
         </button>
       )}
       <div className="relative">
-        <div className="flex items-center justify-between gap-2">
+        {/* En el overlay móvil el botón de cerrar es absoluto (right-4 top-4),
+            así que la fila reserva espacio a la derecha para que "Compartir"
+            no le quede debajo. Compartir tiene que existir sobre todo aquí:
+            una vacante se pasa a un amigo desde el celular, no desde el
+            escritorio. */}
+        <div className={`flex items-center justify-between gap-2 ${onClose ? "pr-10 lg:pr-0" : ""}`}>
           <span className="inline-flex items-center gap-2 rounded-full bg-white/12 px-3 py-1 font-[var(--font-ui)] text-[11px] font-semibold">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
@@ -364,7 +371,7 @@ function InfoVacante({ v, onClose }: { v: Vacante; onClose?: () => void }) {
             </span>
             Vacante activa
           </span>
-          {!onClose && <Compartir v={v} />}
+          <Compartir v={v} />
         </div>
         <p className="mt-3 font-[var(--font-ui)] text-[11px] text-white/45">
           Ref. {v.id}

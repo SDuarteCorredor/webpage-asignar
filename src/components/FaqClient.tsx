@@ -2,142 +2,24 @@
 
 import { useState, useMemo, useEffect, useRef } from "react";
 import { trackEvent } from "@/lib/analytics";
+import RespuestaFaq from "@/components/faq/RespuestaFaq";
+import ResumenSqr from "@/components/faq/ResumenSqr";
+import {
+  CATEGORIAS_FAQ,
+  PREGUNTAS,
+  SLUG_A_CATEGORIA,
+  textoBuscable,
+} from "@/components/faq/preguntas";
+import {
+  SQR_EMAIL,
+  SQR_TELEFONO,
+  SQR_TELEFONO_HREF,
+} from "@/components/faq/contacto";
 
-type Faq = { cat: string; q: string; a: string };
+// Las preguntas viven en @/components/faq/preguntas para que el schema
+// JSON-LD del server component y este acordeón lean la misma fuente.
+const categorias = ["Todas", ...CATEGORIAS_FAQ];
 
-const faqs: Faq[] = [
-  // Vinculación
-  {
-    cat: "Vinculación",
-    q: "¿Cómo firmo mi contrato digital paso a paso?",
-    a: `1. Entra a www.asignar.com.co/_admin/usuario.php
-2. Tu usuario es tu número de cédula
-3. Tu contraseña inicial es tu número de cédula
-4. Ve a la sección «Contratos»
-5. Selecciona el contrato pendiente
-6. Crea o ingresa tu clave personal
-7. Haz clic en «Firmar»
-
-⚠️ Sin la firma no recibirás pagos ni liquidaciones.`,
-  },
-  {
-    cat: "Vinculación",
-    q: "¿Qué pasa si no firmo el contrato a tiempo?",
-    a: `Sin la firma digital no podrás recibir pagos ni liquidaciones. Es el primer paso obligatorio. Si tienes problemas para firmar, contacta al área de vinculación antes de tu primer día de trabajo.`,
-  },
-  {
-    cat: "Vinculación",
-    q: "¿Qué documentos necesito para vincularme?",
-    a: `Cédula vigente, hoja de vida actualizada, certificado de estudios si el cargo lo requiere, y cuenta bancaria a tu nombre. El área de selección te indica si hay documentos adicionales según el cargo.`,
-  },
-  // Nómina y pagos
-  {
-    cat: "Nómina y pagos",
-    q: "¿Cuáles son las fechas de pago?",
-    a: `Depende de la empresa donde estés en misión:
-
-• Esquema 1: corte el 15 y el 30 de cada mes
-• Esquema 2: corte el 5 y el 20 de cada mes
-
-Tu coordinador de Asignar te indica cuál aplica para tu caso.`,
-  },
-  {
-    cat: "Nómina y pagos",
-    q: "¿Cuánto me pagan por turno en una liquidación?",
-    a: `El valor oficial es de $16.446 por turno trabajado. Puede variar según el tipo de contrato y cargo — confirma con nómina si tienes dudas.`,
-  },
-  {
-    cat: "Nómina y pagos",
-    q: "¿Dónde veo mi colilla de pago?",
-    a: `Accede a la plataforma de Asignar con tu cédula. La colilla muestra el detalle de tu pago, deducciones y aportes. Si tienes problemas de acceso, contacta al área de nómina.`,
-  },
-  {
-    cat: "Nómina y pagos",
-    q: "¿Cuándo me pagan las prestaciones sociales?",
-    a: `Las prestaciones (prima, cesantías, intereses, vacaciones) se causan durante el tiempo que estás vinculado y se liquidan al terminar el contrato o en las fechas de ley. Nómina te da el detalle exacto.`,
-  },
-  // Seguridad Social
-  {
-    cat: "Seguridad Social",
-    q: "¿Cuándo tengo derecho a la seguridad social completa?",
-    a: `Para el aporte completo a EPS, pensión y ARL debes cumplir UNA de estas condiciones:
-
-• Haber trabajado 30 días continuos, o
-• Que tus dos quincenas del mes sumen un SMLV o más
-
-Si no cumples, el sistema hace un retiro y reingreso automático en afiliaciones.`,
-  },
-  {
-    cat: "Seguridad Social",
-    q: "¿Qué EPS puedo escoger?",
-    a: `Puedes escoger entre las EPS habilitadas por Asignar. Al momento de la vinculación te presentan las opciones disponibles en tu ciudad. Si ya tienes EPS activa puedes continuar si está en las opciones.`,
-  },
-  {
-    cat: "Seguridad Social",
-    q: "¿Qué pasa si tengo un accidente en el trabajo?",
-    a: `Repórtalo inmediatamente a tu supervisor en la empresa cliente y al área de SST de Asignar. La ARL cubre accidentes laborales. No esperes días para reportar — el tiempo es crítico para la cobertura.`,
-  },
-  // Terminaciones
-  {
-    cat: "Terminaciones",
-    q: "Me llegó una terminación de contrato y sigo trabajando. ¿Qué significa?",
-    a: `No entres en pánico. Al final de cada mes, Asignar hace un proceso masivo de terminaciones y renovaciones que es completamente normal.
-
-Esto NO significa que te quedaste sin trabajo. Si sigues activo en tu misión, tu contrato se renueva automáticamente.`,
-  },
-  {
-    cat: "Terminaciones",
-    q: "¿Cómo sé si mi contrato fue renovado?",
-    a: `Revisa la plataforma de Asignar con tu cédula — ahí aparecerá el nuevo contrato pendiente de firma. Debes firmarlo para completar el proceso.`,
-  },
-  {
-    cat: "Terminaciones",
-    q: "¿Cuánto me pagan cuando termina definitivamente mi contrato?",
-    a: `Asignar liquida todas las prestaciones causadas: prima proporcional, cesantías con intereses y vacaciones proporcionales. El monto depende del tiempo trabajado y tu salario. Nómina hace el cálculo exacto.`,
-  },
-  // Marcación
-  {
-    cat: "Marcación",
-    q: "¿Cómo marco mi asistencia?",
-    a: `La marcación se hace en el dispositivo electrónico disponible en las instalaciones del cliente, según la fecha del turno. Escanea el código QR con tu celular, o ingresa al Módulo de Empleados con tu usuario y contraseña y selecciona «Marcar Asistencia» o «Ver Resumen de Asistencias». Es indispensable habilitar la ubicación (GPS) y autorizar el acceso a la cámara del dispositivo móvil.`,
-  },
-  {
-    cat: "Marcación",
-    q: "¿Qué pasa si no marco mi asistencia?",
-    a: `La marcación es fundamental para el pago. Si no marcas puede afectar tu nómina de ese período. Si tuviste un problema con el dispositivo, repórtalo el mismo día para que se haga el ajuste a tiempo.`,
-  },
-  // SST
-  {
-    cat: "SST",
-    q: "¿Tengo que hacer una inducción SST al entrar?",
-    a: `Sí. Antes de empezar la misión debes recibir la inducción de Seguridad y Salud en el Trabajo. Te explica los riesgos de tu cargo, el uso de EPP y qué hacer ante emergencias o accidentes.`,
-  },
-  {
-    cat: "SST",
-    q: "¿Para qué son las pausas activas?",
-    a: `Son descansos cortos y obligatorios que reducen el riesgo de lesiones musculares y mejoran la concentración. Son un beneficio para tu salud, no una pérdida de tiempo.`,
-  },
-];
-
-const categorias = [
-  "Todas",
-  "Vinculación",
-  "Nómina y pagos",
-  "Seguridad Social",
-  "Terminaciones",
-  "Marcación",
-  "SST",
-];
-
-// Permite enlazar a una categoría desde otras páginas: /faq#nomina
-const slugToCat: Record<string, string> = {
-  vinculacion: "Vinculación",
-  nomina: "Nómina y pagos",
-  "seguridad-social": "Seguridad Social",
-  terminaciones: "Terminaciones",
-  marcacion: "Marcación",
-  sst: "SST",
-};
 
 // Tipos de SQR (Solicitud, Queja, Reclamo + Sugerencia/Felicitación)
 const tiposSQR = [
@@ -170,8 +52,6 @@ const vinculos = [
   "Proveedor",
   "Otro",
 ];
-
-const SQR_EMAIL = "sqr@asignar.com.co";
 
 /* ---------- Estilos reutilizables de formulario ---------- */
 const labelCls =
@@ -232,7 +112,7 @@ export default function FaqClient() {
   useEffect(() => {
     const aplicarHash = () => {
       const slug = window.location.hash.replace("#", "");
-      const categoria = slugToCat[slug];
+      const categoria = SLUG_A_CATEGORIA[slug];
       if (!categoria) return;
       setCat(categoria);
       requestAnimationFrame(() =>
@@ -249,15 +129,9 @@ export default function FaqClient() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return faqs
-      .map((f, i) => ({ ...f, id: i }))
+    return PREGUNTAS.map((f, i) => ({ ...f, id: i, buscable: textoBuscable(f) }))
       .filter((f) => cat === "Todas" || f.cat === cat)
-      .filter(
-        (f) =>
-          !q ||
-          f.q.toLowerCase().includes(q) ||
-          f.a.toLowerCase().includes(q)
-      );
+      .filter((f) => !q || f.buscable.includes(q));
   }, [query, cat]);
 
   /* ---------- Handlers del formulario ---------- */
@@ -362,6 +236,9 @@ export default function FaqClient() {
               Respondemos en máximo 15 días hábiles · de forma confidencial
             </span>
           </div>
+
+          {/* Resumen en corto — lo esencial antes del formulario */}
+          <ResumenSqr />
         </div>
       </section>
 
@@ -396,9 +273,9 @@ export default function FaqClient() {
 
               {/* Canales de atención */}
               <div className="rounded-2xl border border-border bg-white p-5">
-                <p className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-text-muted mb-3">
+                <h3 className="font-[var(--font-ui)] text-[11px] font-semibold uppercase tracking-[0.1em] text-text-muted mb-3">
                   Otros canales
-                </p>
+                </h3>
                 <div className="flex flex-col gap-3">
                   <a
                     href={`mailto:${SQR_EMAIL}`}
@@ -413,14 +290,14 @@ export default function FaqClient() {
                       {SQR_EMAIL}
                     </span>
                   </a>
-                  <a href="tel:+576043220310" className="group flex items-center gap-3">
+                  <a href={SQR_TELEFONO_HREF} className="group flex items-center gap-3">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
                       <span className="material-symbols-outlined text-lg">
                         call
                       </span>
                     </span>
                     <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors">
-                      (57) 604 322 0310
+                      {SQR_TELEFONO}
                     </span>
                   </a>
                   <div className="flex items-center gap-3">
@@ -440,6 +317,10 @@ export default function FaqClient() {
 
             {/* Derecha — tarjeta con formulario */}
             <div className="w-full bg-white border border-border rounded-3xl p-6 md:p-8 shadow-[0_24px_56px_-20px_rgba(0,18,51,0.12)]">
+              <h2 className="sr-only">
+                Radicar una SQR o consultar el estado de tu radicado
+              </h2>
+
               {/* Tabs */}
               <div className="flex gap-1 p-1 bg-surface-gray rounded-full mb-6">
                 {(
@@ -835,27 +716,31 @@ export default function FaqClient() {
                   key={f.id}
                   className="bg-white rounded-2xl border border-border overflow-hidden"
                 >
-                  <button
-                    onClick={() => setOpenId(open ? null : f.id)}
-                    aria-expanded={open}
-                    className="w-full flex items-center justify-between gap-4 text-left px-5 md:px-6 py-4"
-                  >
-                    <span className="font-[var(--font-display)] text-base font-bold text-brand-navy">
-                      {f.q}
-                    </span>
-                    <span
-                      className={`material-symbols-outlined text-brand-blue shrink-0 transition-transform duration-200 ${
-                        open ? "rotate-180" : ""
-                      }`}
+                  <h3>
+                    <button
+                      onClick={() => setOpenId(open ? null : f.id)}
+                      aria-expanded={open}
+                      aria-controls={`faq-respuesta-${f.id}`}
+                      className="w-full flex items-center justify-between gap-4 text-left px-5 md:px-6 py-4"
                     >
-                      expand_more
-                    </span>
-                  </button>
+                      <span className="font-[var(--font-display)] text-base font-bold text-brand-navy">
+                        {f.q}
+                      </span>
+                      <span
+                        className={`material-symbols-outlined text-brand-blue shrink-0 transition-transform duration-200 ${
+                          open ? "rotate-180" : ""
+                        }`}
+                      >
+                        expand_more
+                      </span>
+                    </button>
+                  </h3>
                   {open && (
-                    <div className="px-5 md:px-6 pb-5 -mt-1">
-                      <p className="font-[var(--font-body)] text-sm text-text-secondary leading-relaxed whitespace-pre-line">
-                        {f.a}
-                      </p>
+                    <div
+                      id={`faq-respuesta-${f.id}`}
+                      className="px-5 md:px-6 pb-5 -mt-1"
+                    >
+                      <RespuestaFaq bloques={f.bloques} />
                     </div>
                   )}
                 </div>
@@ -865,9 +750,9 @@ export default function FaqClient() {
 
           {/* CTA final → sube al formulario */}
           <div className="mt-12 rounded-2xl border border-border bg-surface p-8 text-center">
-            <h2 className="font-[var(--font-display)] text-xl md:text-2xl font-bold text-brand-navy mb-2">
+            <h3 className="font-[var(--font-display)] text-xl md:text-2xl font-bold text-brand-navy mb-2">
               ¿No encuentras tu respuesta?
-            </h2>
+            </h3>
             <p className="font-[var(--font-body)] text-sm text-text-secondary max-w-md mx-auto mb-6">
               Radica tu solicitud, queja, reclamo o sugerencia y nuestro equipo
               te responderá en un máximo de 15 días hábiles.

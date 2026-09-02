@@ -5,8 +5,12 @@ import { PropuestaProvider } from "@/components/servicios/PropuestaProvider";
 import PropuestaForm from "@/components/servicios/PropuestaForm";
 import CTAWithVerticalMarquee from "@/components/ui/cta-with-text-marquee";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { altDeLogo } from "@/lib/clientes";
+import ResumenClave from "@/components/servicios/ResumenClave";
+import ComparativaServicios from "@/components/servicios/ComparativaServicios";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/servicios" },
   title: "Servicios Empresariales",
   description:
     "Servicios temporales, outsourcing y selección de personal para hotelería, restaurantes, logística e industria en Colombia.",
@@ -18,28 +22,28 @@ const diferenciadores = [
     descripcion:
       "Asignar cumple con todos los lineamientos de ley para personal temporal eventual y tiempo completo.",
     icon: "verified_user",
-    img: "/images/servicios/diferenciador-4.webp",
+    img: "/images/servicios/cumplimiento-normatividad-legal.webp",
   },
   {
     titulo: "Cobertura a nivel nacional",
     descripcion:
       "Nuestras sedes: Medellín, Rionegro, Bogotá, Cali, Barranquilla, Santa Marta, Cartagena, Pereira, Manizales.",
     icon: "location_on",
-    img: "/images/servicios/diferenciador-2.webp",
+    img: "/images/servicios/cobertura-nacional.webp",
   },
   {
     titulo: "Especialistas en sector HORECA",
     descripcion:
       "Hoteles de alto perfil, clubes, cadenas de restaurantes y centros de convenciones.",
     icon: "apartment",
-    img: "/images/servicios/diferenciador-3.webp",
+    img: "/images/servicios/especialistas-sector-horeca.webp",
   },
   {
     titulo: "Software propio",
     descripcion:
       "QR en dispositivos electrónicos para agilizar nómina y requisiciones en tiempo real.",
     icon: "desktop_windows",
-    img: "/images/servicios/diferenciador-1.webp",
+    img: "/images/servicios/software-propio.webp",
   },
 ];
 
@@ -77,69 +81,69 @@ const sectoresClientes = [
     // 34 logos → en desktop (8/fila) la última fila queda con 2, sin huérfano
     nombre: "Sector Hotelero",
     logos: [
-      "/clientes-brand/logo-00.webp", "/clientes-brand/logo-01.webp",
-      "/clientes-brand/logo-03.webp", "/clientes-brand/logo-04.webp",
-      "/clientes-brand/logo-05.webp", "/clientes-brand/logo-06.webp",
-      "/clientes-brand/logo-07.webp", "/clientes-brand/logo-08.webp",
-      "/clientes-brand/logo-09.webp", "/clientes-brand/logo-10.webp",
-      "/clientes-brand/logo-11.webp", "/clientes-brand/logo-12.webp",
-      "/clientes-brand/logo-13.webp", "/clientes-brand/logo-14.webp",
-      "/clientes-brand/logo-15.webp", "/clientes-brand/logo-16.webp",
-      "/clientes-brand/logo-17.webp", "/clientes-brand/logo-18.webp",
-      "/clientes-brand/logo-19.webp", "/clientes-brand/logo-20.webp",
-      "/clientes-brand/logo-21.webp", "/clientes-brand/logo-22.webp",
-      "/clientes-brand/logo-23.webp", "/clientes-brand/logo-24.webp",
-      "/clientes-brand/logo-25.webp", "/clientes-brand/logo-26.webp",
-      "/clientes-brand/logo-27.webp", "/clientes-brand/logo-28.webp",
-      "/clientes-brand/logo-29.webp", "/clientes-brand/logo-30.webp",
-      "/clientes-brand/logo-31.webp", "/clientes-brand/logo-32.webp",
-      "/clientes-brand/logo-33.webp", "/clientes-brand/logo-34.webp",
+      "/clientes-brand/nh-hotels-y-resorts.webp", "/clientes-brand/marriott.webp",
+      "/clientes-brand/estelar.webp", "/clientes-brand/grand-hyatt.webp",
+      "/clientes-brand/tequendama-hoteles.webp", "/clientes-brand/atton-hoteles.webp",
+      "/clientes-brand/hilton-bogota.webp", "/clientes-brand/dann-carlton-hotel-y-spa.webp",
+      "/clientes-brand/hoteles-dann.webp", "/clientes-brand/exe-hotels.webp",
+      "/clientes-brand/ibis-hotels.webp", "/clientes-brand/intercontinental-movich-medellin.webp",
+      "/clientes-brand/hoteles-spiwak.webp", "/clientes-brand/movich-hotels.webp",
+      "/clientes-brand/jw-marriott.webp", "/clientes-brand/habitel-hotels.webp",
+      "/clientes-brand/hotel-caribe-cartagena.webp", "/clientes-brand/w-hotels.webp",
+      "/clientes-brand/diez-hotel-categoria-colombia.webp", "/clientes-brand/hotel-spirito-by-spiwak.webp",
+      "/clientes-brand/lagoon-hotel-llanogrande.webp", "/clientes-brand/four-seasons-hotels-and-resorts.webp",
+      "/clientes-brand/hotel-capital-ghl.webp", "/clientes-brand/fairfield-by-marriott-medellin.webp",
+      "/clientes-brand/nh-collection.webp", "/clientes-brand/sonesta-hotels-and-resorts.webp",
+      "/clientes-brand/irotama-resort.webp", "/clientes-brand/accor.webp",
+      "/clientes-brand/hotel-nutibara-medellin.webp", "/clientes-brand/the-charlee-hotels.webp",
+      "/clientes-brand/the-brown-at-luxe.webp", "/clientes-brand/crowne-plaza-barranquilla.webp",
+      "/clientes-brand/tequendama-hotel-medellin.webp", "/clientes-brand/city-express-hoteles.webp",
     ],
   },
   {
     // 7 logos → una sola fila
     nombre: "Centros de eventos",
     logos: [
-      "/clientes-brand/logo-35.webp", "/clientes-brand/logo-36.webp",
-      "/clientes-brand/logo-37.webp", "/clientes-brand/logo-38.webp",
-      "/clientes-brand/logo-39.webp", "/clientes-brand/logo-40.webp",
-      "/clientes-brand/logo-41.webp",
+      "/clientes-brand/colsubsidio.webp", "/clientes-brand/corferias.webp",
+      "/clientes-brand/agora-bogota-centro-de-convenciones.webp", "/clientes-brand/centro-de-eventos-valle-del-pacifico.webp",
+      "/clientes-brand/centro-de-convenciones-cartagena-de-indias.webp", "/clientes-brand/macarena-centro-de-negocios-y-eventos.webp",
+      "/clientes-brand/d-groupe.webp",
     ],
   },
   {
     // 5 logos → una sola fila
     nombre: "Clubes",
     logos: [
-      "/clientes-brand/logo-42.webp", "/clientes-brand/logo-43.webp",
-      "/clientes-brand/logo-44.webp", "/clientes-brand/logo-45.webp",
-      "/clientes-brand/logo-46.webp",
+      "/clientes-brand/club-el-rodeo.webp", "/clientes-brand/country-club-ejecutivos.webp",
+      "/clientes-brand/club-campestre-pereira.webp", "/clientes-brand/club-campestre-de-cali.webp",
+      "/clientes-brand/club-campestre-medellin-llanogrande.webp",
     ],
   },
   {
     // 7 logos → una sola fila
     nombre: "Restaurantes",
     logos: [
-      "/clientes-brand/logo-47.webp", "/clientes-brand/logo-48.webp",
-      "/clientes-brand/logo-49.webp", "/clientes-brand/logo-50.webp",
-      "/clientes-brand/logo-51.webp", "/clientes-brand/logo-52.webp",
-      "/clientes-brand/logo-53.webp",
+      "/clientes-brand/casal-casa-alimenticia.webp", "/clientes-brand/la-kasta-grill-y-wine.webp",
+      "/clientes-brand/mangiare-pizzeria-enoteca.webp", "/clientes-brand/la-causa-marisqueria.webp",
+      "/clientes-brand/romero-cocina-artesanal.webp", "/clientes-brand/izumi-asian-fusion.webp",
+      "/clientes-brand/casa-soller-cocina-mediterranea.webp",
     ],
   },
   {
     // 3 logos → una sola fila
     nombre: "Sector Inmobiliario",
     logos: [
-      "/clientes-brand/logo-54.webp", "/clientes-brand/logo-55.webp",
-      "/clientes-brand/logo-56.webp",
+      "/clientes-brand/jalo.webp", "/clientes-brand/hashtag-98-hotel.webp",
+      "/clientes-brand/go-living-y-suites.webp",
     ],
   },
   {
     // 6 logos → una sola fila
     nombre: "Industria, Producción, Retail y Servicios",
     logos: [
-      "/clientes-brand/logo-57.webp", "/clientes-brand/logo-58.webp",
-      "/clientes-brand/logo-59.webp", "/clientes-brand/logo-60.webp",
-      "/clientes-brand/logo-61.webp", "/clientes-brand/logo-62.webp",
+      "/clientes-brand/medicox.webp", "/clientes-brand/superpack.webp",
+      "/clientes-brand/fruta-fresca-origin.webp", "/clientes-brand/gesproyect.webp",
+      "/clientes-brand/rcd-project.webp", "/clientes-brand/industrias-mecanicas-dayo.webp",
     ],
   },
 ];
@@ -201,8 +205,14 @@ export default function SolucionesPage() {
         </div>
       </section>
 
+      {/* 01b Resumen extraíble — justo después del H1 */}
+      <ResumenClave />
+
       {/* 02 Servicios Explorer */}
       <ServiciosExplorer />
+
+      {/* 02b Comparativa de servicios */}
+      <ComparativaServicios />
 
       {/* 02b ¿Por qué Asignar? — photo cards */}
       <section className="py-[var(--spacing-section-mobile)] md:py-[var(--spacing-section)] bg-white">
@@ -273,9 +283,11 @@ export default function SolucionesPage() {
 
           <div className="relative">
             <div className="hidden lg:block absolute top-7 left-[7%] right-[7%] h-0.5 bg-gradient-to-r from-brand-blue/20 via-brand-blue/40 to-brand-blue" />
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4">
+            {/* Es una secuencia real (solicitud → primer día), por eso <ol> y
+                no <div>: se lee y se extrae como los 7 pasos que es. */}
+            <ol className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 list-none">
               {procesoSteps.map((step, i) => (
-                <div key={step.num} className="text-center group relative">
+                <li key={step.num} className="text-center group relative">
                   <div
                     className={`w-14 h-14 rounded-full mx-auto flex items-center justify-center font-[var(--font-display)] text-lg font-bold mb-3 transition-colors duration-300 ${
                       i === procesoSteps.length - 1
@@ -291,9 +303,9 @@ export default function SolucionesPage() {
                   <p className="font-[var(--font-body)] text-[11px] text-text-muted mt-1">
                     {step.desc}
                   </p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </div>
         </div>
       </section>
@@ -327,7 +339,7 @@ export default function SolucionesPage() {
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={src}
-                        alt="Cliente Asignar"
+                        alt={altDeLogo(src)}
                         loading="lazy"
                         className="w-full h-full object-contain rounded-full"
                       />
@@ -368,7 +380,7 @@ export default function SolucionesPage() {
                 </div>
                 <div>
                   <p className="font-[var(--font-display)] text-3xl md:text-4xl font-extrabold text-brand-blue">
-                    7 sedes
+                    9 sedes
                   </p>
                   <p className="font-[var(--font-body)] text-sm text-text-muted mt-1">
                     cobertura nacional
@@ -407,9 +419,11 @@ export default function SolucionesPage() {
                       />
                     </svg>
                   </div>
-                  <h4 className="font-[var(--font-display)] text-base font-bold text-brand-navy mb-1">
+                  {/* H3 y no H4: es subsección directa del H2 "Respaldo que
+                      protege tu operación", sin nivel intermedio. */}
+                  <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy mb-1">
                     {c.titulo}
-                  </h4>
+                  </h3>
                   <p className="font-[var(--font-body)] text-sm text-text-secondary leading-relaxed">
                     {c.descripcion}
                   </p>

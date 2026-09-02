@@ -14,6 +14,10 @@
   --color-text-secondary: #3D4551;
   --color-text-muted: #6B7280;
 
+  /* Verde oficial de WhatsApp. Va como token y no como hex suelto porque el
+     botón flotante lo usa; es el color que la gente reconoce sin leer. */
+  --color-whatsapp: #25D366;
+
   --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-ui: "Inter", system-ui, sans-serif;

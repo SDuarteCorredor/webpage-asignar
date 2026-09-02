@@ -95,9 +95,9 @@ export default function SectoresSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-7">
+        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-7">
           {sectores.map(({ nombre, descripcion, slug, Icon, span }, i) => (
-            <article
+            <li
               key={nombre}
               className={`scroll-reveal group relative flex min-h-[260px] items-end overflow-hidden rounded-3xl bg-brand-navy lg:min-h-[300px] ${span}`}
               data-delay={String((i % 3) * 90)}
@@ -133,9 +133,9 @@ export default function SectoresSection() {
                   </span>
                 </div>
               </div>
-            </article>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

@@ -142,63 +142,69 @@ export default function ContactoPage() {
       <section className="pb-14 md:pb-20 bg-surface">
         <div className="max-w-[880px] mx-auto px-4 md:px-6">
           {/* Toggle */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-            <button
-              type="button"
-              onClick={() => setAudiencia("empresa")}
-              className={`flex items-center gap-3.5 text-left p-5 rounded-2xl border transition-all ${
-                audiencia === "empresa"
-                  ? "border-brand-blue bg-white shadow-[0_12px_30px_-16px_rgba(0,18,51,0.25)]"
-                  : "border-border bg-white/60 hover:border-brand-blue/40"
-              }`}
-            >
-              <span
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            <li>
+              <button
+                type="button"
+                onClick={() => setAudiencia("empresa")}
+                aria-pressed={audiencia === "empresa"}
+                className={`w-full flex items-center gap-3.5 text-left p-5 rounded-2xl border transition-all ${
                   audiencia === "empresa"
-                    ? "bg-brand-blue text-white"
-                    : "bg-brand-blue/10 text-brand-blue"
+                    ? "border-brand-blue bg-white shadow-[0_12px_30px_-16px_rgba(0,18,51,0.25)]"
+                    : "border-border bg-white/60 hover:border-brand-blue/40"
                 }`}
               >
-                <span className="material-symbols-outlined">apartment</span>
-              </span>
-              <span>
-                <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                  Necesito personal
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    audiencia === "empresa"
+                      ? "bg-brand-blue text-white"
+                      : "bg-brand-blue/10 text-brand-blue"
+                  }`}
+                >
+                  <span className="material-symbols-outlined">apartment</span>
                 </span>
-                <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                  Soy una empresa
+                <span>
+                  <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                    Necesito personal
+                  </span>
+                  <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                    Soy una empresa
+                  </span>
                 </span>
-              </span>
-            </button>
+              </button>
+            </li>
 
-            <button
-              type="button"
-              onClick={() => setAudiencia("candidato")}
-              className={`flex items-center gap-3.5 text-left p-5 rounded-2xl border transition-all ${
-                audiencia === "candidato"
-                  ? "border-brand-blue bg-white shadow-[0_12px_30px_-16px_rgba(0,18,51,0.25)]"
-                  : "border-border bg-white/60 hover:border-brand-blue/40"
-              }`}
-            >
-              <span
-                className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+            <li>
+              <button
+                type="button"
+                onClick={() => setAudiencia("candidato")}
+                aria-pressed={audiencia === "candidato"}
+                className={`w-full flex items-center gap-3.5 text-left p-5 rounded-2xl border transition-all ${
                   audiencia === "candidato"
-                    ? "bg-brand-blue text-white"
-                    : "bg-brand-blue/10 text-brand-blue"
+                    ? "border-brand-blue bg-white shadow-[0_12px_30px_-16px_rgba(0,18,51,0.25)]"
+                    : "border-border bg-white/60 hover:border-brand-blue/40"
                 }`}
               >
-                <span className="material-symbols-outlined">badge</span>
-              </span>
-              <span>
-                <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                  Busco empleo
+                <span
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
+                    audiencia === "candidato"
+                      ? "bg-brand-blue text-white"
+                      : "bg-brand-blue/10 text-brand-blue"
+                  }`}
+                >
+                  <span className="material-symbols-outlined">badge</span>
                 </span>
-                <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                  Soy candidato
+                <span>
+                  <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                    Busco empleo
+                  </span>
+                  <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                    Soy candidato
+                  </span>
                 </span>
-              </span>
-            </button>
-          </div>
+              </button>
+            </li>
+          </ul>
 
           {/* --- EMPRESA: formulario dominante --- */}
           {audiencia === "empresa" &&
@@ -332,134 +338,151 @@ export default function ContactoPage() {
                 Estos son los caminos más rápidos para postularte con nosotros.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <Link
-                  href="/vacantes"
-                  className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined">work</span>
-                  </span>
-                  <span className="flex-1">
-                    <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                      Ver vacantes
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <li>
+                  <Link
+                    href="/vacantes"
+                    className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                      <span className="material-symbols-outlined">work</span>
                     </span>
-                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                      Ofertas activas por ciudad
+                    <span className="flex-1">
+                      <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                        Ver vacantes
+                      </span>
+                      <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                        Ofertas activas por ciudad
+                      </span>
                     </span>
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
-                </Link>
+                    <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
+                  </Link>
+                </li>
 
-                <a
-                  href={`mailto:${TALENTO}?subject=${encodeURIComponent(
-                    "Hoja de vida — Postulación"
-                  )}`}
-                  className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined">mail</span>
-                  </span>
-                  <span className="flex-1">
-                    <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                      Envía tu hoja de vida
+                <li>
+                  <a
+                    href={`mailto:${TALENTO}?subject=${encodeURIComponent(
+                      "Hoja de vida — Postulación"
+                    )}`}
+                    className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                      <span className="material-symbols-outlined">mail</span>
                     </span>
-                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                      A nuestro equipo de selección
+                    <span className="flex-1">
+                      <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                        Envía tu hoja de vida
+                      </span>
+                      <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                        A nuestro equipo de selección
+                      </span>
                     </span>
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
-                </a>
+                    <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
+                  </a>
+                </li>
 
-                <a
-                  href="https://www.asignar.com.co/_admin/usuario.php"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined">lock_open</span>
-                  </span>
-                  <span className="flex-1">
-                    <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                      Ingreso empleados
+                <li>
+                  <a
+                    href="https://www.asignar.com.co/_admin/usuario.php"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                      <span className="material-symbols-outlined">lock_open</span>
                     </span>
-                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                      Contrato, colilla y asistencia
+                    <span className="flex-1">
+                      <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                        Ingreso empleados
+                      </span>
+                      <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                        Contrato, colilla y asistencia
+                      </span>
                     </span>
-                  </span>
-                  <span className="material-symbols-outlined text-text-muted text-base group-hover:text-brand-blue transition-colors">
-                    open_in_new
-                  </span>
-                </a>
+                    <span className="material-symbols-outlined text-text-muted text-base group-hover:text-brand-blue transition-colors">
+                      open_in_new
+                    </span>
+                  </a>
+                </li>
 
-                <Link
-                  href="/faq"
-                  className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                    <span className="material-symbols-outlined">edit_note</span>
-                  </span>
-                  <span className="flex-1">
-                    <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
-                      Radicar SQR
+                <li>
+                  <Link
+                    href="/faq"
+                    className="group flex items-center gap-3.5 p-5 rounded-2xl border border-border hover:border-brand-blue/40 hover:bg-surface transition-all"
+                  >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                      <span className="material-symbols-outlined">edit_note</span>
                     </span>
-                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
-                      Solicitud, queja o reclamo
+                    <span className="flex-1">
+                      <span className="block font-[var(--font-display)] text-[15px] font-bold text-brand-navy">
+                        Radicar SQR
+                      </span>
+                      <span className="block font-[var(--font-body)] text-[13px] text-text-muted">
+                        Solicitud, queja o reclamo
+                      </span>
                     </span>
-                  </span>
-                  <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
-                </Link>
-              </div>
+                    <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-brand-blue group-hover:translate-x-0.5 transition-all" />
+                  </Link>
+                </li>
+              </ul>
             </div>
           )}
         </div>
       </section>
 
       {/* ---------- Contacto directo (franja) ---------- */}
-      <section className="py-10 md:py-12 bg-white border-y border-border">
+      <section aria-labelledby="contacto-directo-heading" className="py-10 md:py-12 bg-white border-y border-border">
         <div className="max-w-[1280px] mx-auto px-4 md:px-16">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <a href={`tel:${TEL}`} className="group flex items-center justify-center gap-3 text-left">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
-                <span className="material-symbols-outlined">call</span>
-              </span>
-              <span>
-                <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
-                  Línea nacional
+          <h2 id="contacto-directo-heading" className="sr-only">
+            Contacto directo
+          </h2>
+          <ul className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <li>
+              <a href={`tel:${TEL}`} className="group flex items-center justify-center gap-3 text-left">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
+                  <span className="material-symbols-outlined">call</span>
                 </span>
-                <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors">
-                  (57) 604 322 0310
+                <span>
+                  <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
+                    Línea nacional
+                  </span>
+                  <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors">
+                    (57) 604 322 0310
+                  </span>
                 </span>
-              </span>
-            </a>
-            <a href={`mailto:${COMERCIAL}`} className="group flex items-center justify-center gap-3 text-left">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
-                <span className="material-symbols-outlined">mail</span>
-              </span>
-              <span>
-                <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
-                  Correo comercial
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${COMERCIAL}`} className="group flex items-center justify-center gap-3 text-left">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
+                  <span className="material-symbols-outlined">mail</span>
                 </span>
-                <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors break-all">
-                  {COMERCIAL}
+                <span>
+                  <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
+                    Correo comercial
+                  </span>
+                  <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors break-all">
+                    {COMERCIAL}
+                  </span>
                 </span>
-              </span>
-            </a>
-            <a href={`mailto:${SQR_EMAIL}`} className="group flex items-center justify-center gap-3 text-left">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
-                <span className="material-symbols-outlined">shield</span>
-              </span>
-              <span>
-                <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
-                  Línea ética (SQR)
+              </a>
+            </li>
+            <li>
+              <a href={`mailto:${SQR_EMAIL}`} className="group flex items-center justify-center gap-3 text-left">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand-blue/10 text-brand-blue">
+                  <span className="material-symbols-outlined">shield</span>
                 </span>
-                <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors break-all">
-                  {SQR_EMAIL}
+                <span>
+                  <span className="block font-[var(--font-ui)] text-[13px] font-semibold text-brand-navy">
+                    Línea ética (SQR)
+                  </span>
+                  <span className="font-[var(--font-body)] text-sm text-text-secondary group-hover:text-brand-blue transition-colors break-all">
+                    {SQR_EMAIL}
+                  </span>
                 </span>
-              </span>
-            </a>
-          </div>
+              </a>
+            </li>
+          </ul>
         </div>
       </section>
 
@@ -475,39 +498,40 @@ export default function ContactoPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {sedes.map((s) => (
-              <a
-                key={s.ciudad}
-                href={maps(s.q)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-start gap-3.5 bg-white border border-border rounded-2xl p-5 hover:border-brand-blue/40 hover:shadow-[0_12px_30px_-18px_rgba(0,18,51,0.25)] transition-all"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
-                  <span className="material-symbols-outlined text-xl">location_on</span>
-                </span>
-                <span className="flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className="font-[var(--font-display)] text-base font-bold text-brand-navy">
-                      {s.ciudad}
+              <li key={s.ciudad}>
+                <a
+                  href={maps(s.q)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-start gap-3.5 bg-white border border-border rounded-2xl p-5 hover:border-brand-blue/40 hover:shadow-[0_12px_30px_-18px_rgba(0,18,51,0.25)] transition-all"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-blue/10 text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-colors">
+                    <span className="material-symbols-outlined text-xl">location_on</span>
+                  </span>
+                  <span className="flex-1">
+                    <span className="flex items-center gap-2">
+                      <h3 className="font-[var(--font-display)] text-base font-bold text-brand-navy">
+                        {s.ciudad}
+                      </h3>
+                      {s.nota && (
+                        <span className="rounded-full bg-brand-blue/10 px-2 py-0.5 font-[var(--font-ui)] text-[10px] font-semibold uppercase tracking-wide text-brand-blue">
+                          {s.nota}
+                        </span>
+                      )}
                     </span>
-                    {s.nota && (
-                      <span className="rounded-full bg-brand-blue/10 px-2 py-0.5 font-[var(--font-ui)] text-[10px] font-semibold uppercase tracking-wide text-brand-blue">
-                        {s.nota}
-                      </span>
-                    )}
+                    <span className="block font-[var(--font-body)] text-[13px] text-text-muted mt-0.5">
+                      {s.dir}
+                    </span>
                   </span>
-                  <span className="block font-[var(--font-body)] text-[13px] text-text-muted mt-0.5">
-                    {s.dir}
+                  <span className="material-symbols-outlined text-text-muted text-base group-hover:text-brand-blue transition-colors">
+                    arrow_outward
                   </span>
-                </span>
-                <span className="material-symbols-outlined text-text-muted text-base group-hover:text-brand-blue transition-colors">
-                  arrow_outward
-                </span>
-              </a>
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
     </>

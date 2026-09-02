@@ -17,7 +17,11 @@ export type ConversionEvent =
   /** Radicación de una SQR. */
   | "sqr_radicada"
   /** Consulta del estado de una SQR. */
-  | "sqr_seguimiento";
+  | "sqr_seguimiento"
+  /** Clic en el botón flotante de WhatsApp. */
+  | "whatsapp_click"
+  /** Compartir una vacante puntual (copiar enlace o enviar por WhatsApp). */
+  | "vacante_compartida";
 
 type DataLayerWindow = Window & { dataLayer?: Record<string, unknown>[] };
 
